@@ -6,5 +6,5 @@ C_FLAGS = -g   -std=gnu99
 
 C_DEFINES = 
 
-C_INCLUDES = 
+C_INCLUDES = @CMakeFiles/sCrapper.dir/includes_C.rsp
 

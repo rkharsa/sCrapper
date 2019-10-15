@@ -1,5 +1,5 @@
 #include "header.h"
 int main() {
-    createConfig();
+    CURL *curl;
     return 0;
 }

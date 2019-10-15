@@ -4,6 +4,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include "configuration.c"
+#include "curl.h"
+typedef struct Option {
+    char *name;
+    char *value;
+} Option;
+
+typedef struct Action {
+    char *name; // nom action
+    char *url; // url du site
+    Option *options; // liste des options et de leur valeurs
+} Action;
+
 void Lecture();
 void action(FILE * fileConfig);
 void viderBuffer();

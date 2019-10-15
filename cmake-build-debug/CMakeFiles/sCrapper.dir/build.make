@@ -57,6 +57,7 @@ include CMakeFiles/sCrapper.dir/progress.make
 include CMakeFiles/sCrapper.dir/flags.make
 
 CMakeFiles/sCrapper.dir/main.c.obj: CMakeFiles/sCrapper.dir/flags.make
+CMakeFiles/sCrapper.dir/main.c.obj: CMakeFiles/sCrapper.dir/includes_C.rsp
 CMakeFiles/sCrapper.dir/main.c.obj: ../main.c
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Rkhar\CLionProjects\sCrapper\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/sCrapper.dir/main.c.obj"
 	C:\PROGRA~2\mingw-w64\i686-8.1.0-posix-dwarf-rt_v6-rev0\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\sCrapper.dir\main.c.obj   -c C:\Users\Rkhar\CLionProjects\sCrapper\main.c
@@ -78,6 +79,7 @@ sCrapper_EXTERNAL_OBJECTS =
 
 sCrapper.exe: CMakeFiles/sCrapper.dir/main.c.obj
 sCrapper.exe: CMakeFiles/sCrapper.dir/build.make
+sCrapper.exe: ../lib/libcurl.dll.a
 sCrapper.exe: CMakeFiles/sCrapper.dir/linklibs.rsp
 sCrapper.exe: CMakeFiles/sCrapper.dir/objects1.rsp
 sCrapper.exe: CMakeFiles/sCrapper.dir/link.txt
