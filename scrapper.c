@@ -20,4 +20,3 @@ void getHtmlCode(char* url){
         printf("curl_easy_init() failed");
     }
 }
-void
