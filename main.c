@@ -1,5 +1,8 @@
 #include "header.h"
-int main() {
-    CURL *curl;
+
+
+
+int main(int argc, char *argv[])
+{
     return 0;
 }

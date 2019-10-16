@@ -60,15 +60,15 @@ CMakeFiles/sCrapper.dir/main.c.obj: CMakeFiles/sCrapper.dir/flags.make
 CMakeFiles/sCrapper.dir/main.c.obj: CMakeFiles/sCrapper.dir/includes_C.rsp
 CMakeFiles/sCrapper.dir/main.c.obj: ../main.c
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Rkhar\CLionProjects\sCrapper\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/sCrapper.dir/main.c.obj"
-	C:\PROGRA~2\mingw-w64\i686-8.1.0-posix-dwarf-rt_v6-rev0\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\sCrapper.dir\main.c.obj   -c C:\Users\Rkhar\CLionProjects\sCrapper\main.c
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\sCrapper.dir\main.c.obj   -c C:\Users\Rkhar\CLionProjects\sCrapper\main.c
 
 CMakeFiles/sCrapper.dir/main.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/sCrapper.dir/main.c.i"
-	C:\PROGRA~2\mingw-w64\i686-8.1.0-posix-dwarf-rt_v6-rev0\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Rkhar\CLionProjects\sCrapper\main.c > CMakeFiles\sCrapper.dir\main.c.i
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Rkhar\CLionProjects\sCrapper\main.c > CMakeFiles\sCrapper.dir\main.c.i
 
 CMakeFiles/sCrapper.dir/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/sCrapper.dir/main.c.s"
-	C:\PROGRA~2\mingw-w64\i686-8.1.0-posix-dwarf-rt_v6-rev0\mingw32\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Rkhar\CLionProjects\sCrapper\main.c -o CMakeFiles\sCrapper.dir\main.c.s
+	C:\msys64\mingw64\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Rkhar\CLionProjects\sCrapper\main.c -o CMakeFiles\sCrapper.dir\main.c.s
 
 # Object files for target sCrapper
 sCrapper_OBJECTS = \
@@ -79,7 +79,7 @@ sCrapper_EXTERNAL_OBJECTS =
 
 sCrapper.exe: CMakeFiles/sCrapper.dir/main.c.obj
 sCrapper.exe: CMakeFiles/sCrapper.dir/build.make
-sCrapper.exe: ../lib/libcurl.dll.a
+sCrapper.exe: C:/msys64/mingw64/lib/libcurl.dll.a
 sCrapper.exe: CMakeFiles/sCrapper.dir/linklibs.rsp
 sCrapper.exe: CMakeFiles/sCrapper.dir/objects1.rsp
 sCrapper.exe: CMakeFiles/sCrapper.dir/link.txt

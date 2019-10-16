@@ -11,4 +11,5 @@ CMakeFiles/sCrapper.dir/main.c.obj: ../include/curl/urlapi.h
 CMakeFiles/sCrapper.dir/main.c.obj: ../configuration.c
 CMakeFiles/sCrapper.dir/main.c.obj: ../header.h
 CMakeFiles/sCrapper.dir/main.c.obj: ../main.c
+CMakeFiles/sCrapper.dir/main.c.obj: ../scrapper.c
 

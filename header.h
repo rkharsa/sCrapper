@@ -5,6 +5,7 @@
 #include <string.h>
 #include "configuration.c"
 #include "curl.h"
+#include "scrapper.c"
 typedef struct Option {
     char *name;
     char *value;
@@ -16,10 +17,5 @@ typedef struct Action {
     Option *options; // liste des options et de leur valeurs
 } Action;
 
-void Lecture();
-void action(FILE * fileConfig);
-void viderBuffer();
-int lire(char *chaine, int longueur);
-void aTask(FILE * fileConfig);
-void createConfig();
+void getHtmlCode(char* url);
 #endif // HEADER_H_INCLUDED
