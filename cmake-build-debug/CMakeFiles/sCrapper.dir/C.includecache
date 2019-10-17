@@ -70,29 +70,17 @@ sys/poll.h
 curl.h
 ../include/curl/curl.h
 
-C:/Users/Rkhar/CLionProjects/sCrapper/configuration.c
-header.h
-C:/Users/Rkhar/CLionProjects/sCrapper/header.h
-
-C:/Users/Rkhar/CLionProjects/sCrapper/header.h
+/Users/jeremyternisien/Documents/sCrapper/header.h
 stdio.h
 -
 stdlib.h
 -
 string.h
 -
-configuration.c
-C:/Users/Rkhar/CLionProjects/sCrapper/configuration.c
 curl.h
-C:/Users/Rkhar/CLionProjects/sCrapper/curl.h
-scrapper.c
-C:/Users/Rkhar/CLionProjects/sCrapper/scrapper.c
+/Users/jeremyternisien/Documents/sCrapper/curl.h
 
-C:/Users/Rkhar/CLionProjects/sCrapper/main.c
+/Users/jeremyternisien/Documents/sCrapper/main.c
 header.h
-C:/Users/Rkhar/CLionProjects/sCrapper/header.h
-
-C:/Users/Rkhar/CLionProjects/sCrapper/scrapper.c
-header.h
-C:/Users/Rkhar/CLionProjects/sCrapper/header.h
+/Users/jeremyternisien/Documents/sCrapper/header.h
 

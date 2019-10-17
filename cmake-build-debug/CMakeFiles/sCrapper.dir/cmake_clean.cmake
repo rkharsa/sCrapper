@@ -1,8 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/sCrapper.dir/main.c.obj"
-  "libsCrapper.dll.a"
-  "sCrapper.exe"
-  "sCrapper.exe.manifest"
+  "CMakeFiles/sCrapper.dir/configuration.c.o"
+  "CMakeFiles/sCrapper.dir/main.c.o"
+  "CMakeFiles/sCrapper.dir/scrapper.c.o"
+  "sCrapper"
   "sCrapper.pdb"
 )
 

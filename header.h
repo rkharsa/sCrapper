@@ -1,11 +1,17 @@
-#ifndef HEADER_H_INCLUDED
-#define HEADER_H_INCLUDED
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "configuration.c"
 #include "curl.h"
-#include "scrapper.c"
+
+#ifndef HEADER_H_INCLUDED
+#define HEADER_H_INCLUDED
+
+
+typedef struct StringRes {
+    char *ptr;
+    size_t len;
+} StringRes;
+
 typedef struct Option {
     char *name;
     char *value;
@@ -17,5 +23,10 @@ typedef struct Action {
     Option *options; // liste des options et de leur valeurs
 } Action;
 
-void getHtmlCode(char* url);
+
+void initString(StringRes *s);
+size_t writefunc(void *ptr, size_t size, size_t nmemb, StringRes *s);
+char *getHtmlCode(char* url);
+
+
 #endif // HEADER_H_INCLUDED

@@ -4,9 +4,11 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "C:/Users/Rkhar/CLionProjects/sCrapper/main.c" "C:/Users/Rkhar/CLionProjects/sCrapper/cmake-build-debug/CMakeFiles/sCrapper.dir/main.c.obj"
+  "/Users/jeremyternisien/Documents/sCrapper/configuration.c" "/Users/jeremyternisien/Documents/sCrapper/cmake-build-debug/CMakeFiles/sCrapper.dir/configuration.c.o"
+  "/Users/jeremyternisien/Documents/sCrapper/main.c" "/Users/jeremyternisien/Documents/sCrapper/cmake-build-debug/CMakeFiles/sCrapper.dir/main.c.o"
+  "/Users/jeremyternisien/Documents/sCrapper/scrapper.c" "/Users/jeremyternisien/Documents/sCrapper/cmake-build-debug/CMakeFiles/sCrapper.dir/scrapper.c.o"
   )
-set(CMAKE_C_COMPILER_ID "GNU")
+set(CMAKE_C_COMPILER_ID "AppleClang")
 
 # The include file search paths:
 set(CMAKE_C_TARGET_INCLUDE_PATH
