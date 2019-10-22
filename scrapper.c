@@ -9,7 +9,7 @@
  */
 
 
-
+/*
 
 void initString(StringRes *s) {
     s->len = 0;
@@ -57,4 +57,4 @@ char *getHtmlCode(char* url){
         printf("curl_easy_init() failed");
         return NULL;
     }
-}
+}*/
