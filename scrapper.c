@@ -1,6 +1,9 @@
 #include "header.h"
 
-
+/**
+ * @author Jerem
+ * @param s
+ */
 
 void initString(StringRes *s) {
     s->len = 0;
@@ -11,7 +14,14 @@ void initString(StringRes *s) {
     }
     s->ptr[0] = '\0';
 }
-
+/**
+ * @author Jerem
+ * @param ptr
+ * @param size
+ * @param nmemb
+ * @param s
+ * @return
+ */
 size_t writefunc(void *ptr, size_t size, size_t nmemb, StringRes *s) {
     size_t new_len = s->len + size * nmemb;
     s->ptr = realloc(s->ptr, new_len + 1);
@@ -56,16 +66,20 @@ char *getHtmlCode(char* url){
     }
 }
 
-
+/**
+ * @author Rani Kharsa
+ * @param url
+ * @brief extract all we need
+ */
 void extract_all(char *url) {
     char *code_html = getHtmlCode(url);
-   //char *code_html = "<a href=http:rien# lklj>";
+   //char *code_html = "<a alt=\"rien\" class=\'ro\' ref=\"http:rien#\">";
 
     FILE * file = fopen("sourceUrl.txt","w");
     if(file!=NULL) {
         //extract_href_from_html(code_html,file);
         //extract_first_title(code_html,file,"1");
-        extract_href(code_html,file,"<img","src");
+        extract_href(code_html,file,"<a","href");
         fclose(file);
     }
 }
@@ -100,17 +114,18 @@ void extract_all(char *url) {
 * @author Rani Kharsa
 * @param code_html
 * @param file
+ * @param  search_begin_tag : <a <img
+ * @param typeHrefOrSrc :href  src
 * step 1 find tag <a>
 * step 2 find position of the href attribut
-* step 3 find position of the equal symbol
-* step 4 read and write in txt file all between quotes
- * img
- * href
- * video
- * commencant par http
+* step 3 find position of the first quote
+ * step 4 find http
+* step 5 read and write in txt file all between quotes
+ * step 6 if  he find quotes then stop and next
+ * @brief extract img  href
 */
 void extract_href(char * code_html,FILE* file,char* search_begin_tag,char * typeHrefOrSrc) {
-    int  begin_tag,end_tag,find_begin_save, i,pos_href, pos_quotes,pos_apostrophe,http,pos_quotes__apostrophe;
+    int  begin_tag,end_tag,find_begin_save, i,pos_href,http;
     const char *to_search = search_begin_tag, *p = code_html;
     while ((p = strstr(p, to_search)) != NULL) {
         begin_tag = p - code_html;
@@ -131,23 +146,18 @@ void extract_href(char * code_html,FILE* file,char* search_begin_tag,char * type
                }
             } else {
                 pos_href=position_of_attribut(begin_tag,end_tag,code_html,typeHrefOrSrc);
-                if(pos_href!=-1){
-                    pos_quotes=position_of_symbole(pos_href,code_html,'"');
-                    pos_apostrophe=position_of_symbole(pos_href,code_html,'\'');
-                    if(pos_quotes!=-1 || pos_apostrophe!=-1){
-                            if(pos_quotes!=-1){
-                                pos_quotes__apostrophe=pos_quotes;
-                            }else{
-                                pos_quotes__apostrophe=pos_apostrophe;
-                            }
-                            http=position_of_attribut(pos_quotes__apostrophe,end_tag,code_html,"http");
-                            if(http!=-1) {
-                                i=http-1;
-                                find_begin_save = 1;
-                                p += strlen(to_search);
-                                continue;
+                if(pos_href!=-1 ){
+                    if(code_html[i+(begin_tag-pos_href)]=='\'' || code_html[i+(begin_tag-pos_href)]=='"'){
+                        http=position_of_attribut(i+(begin_tag-pos_href),end_tag,code_html,"http");
+                        if(http!=-1) {
+                            i=http-1;
+                            find_begin_save = 1;
+                            p += strlen(to_search);
+                            continue;
+
+                        }
                     }
-                }
+
                 }
             }
         }
@@ -155,7 +165,15 @@ void extract_href(char * code_html,FILE* file,char* search_begin_tag,char * type
         }
     }
 
-
+/**
+ * @author Rani Kharsa
+ * @param begin
+ * @param end
+ * @param code_html
+ * @param attr_to_find
+ * @return position
+ * @brief give the position of world in string
+ */
 int position_of_attribut(int begin,int end,char* code_html, char *  attr_to_find){
     char *str=malloc(sizeof(char)*(end-begin));
     int position,counter=0;
@@ -172,7 +190,14 @@ int position_of_attribut(int begin,int end,char* code_html, char *  attr_to_find
     return -1;
 
     }
-
+/**
+ * @author Rani Kharsa
+ * @param begin
+ * @param code_html
+ * @param char_to_find
+ * @return postion
+ * @brief give the position of the symbole in the string
+ */
 int position_of_symbole(int begin ,char *code_html,char char_to_find){
     for (int i = 0; i <1000 ; ++i) {
         if(code_html[begin+i]==char_to_find){
@@ -181,72 +206,3 @@ int position_of_symbole(int begin ,char *code_html,char char_to_find){
     }
     return -1;
     }
-
-
-void extract_href_from_html(char * code_html,FILE* file){
-    int stop,i,counter_quotes,find_begin,not_found,ok;
-    const char *to_search = "<a",*p = code_html;
-    while ((p = strstr(p, to_search)) != NULL) {
-        stop = 1;
-        ok=0;
-        i = p - code_html ;
-        counter_quotes = 0;
-        find_begin=0;
-        not_found=0;
-        while (stop) {
-            if(find_begin==1){
-                if (code_html[i] != '\"'&& code_html[i]!='\'' && counter_quotes<2 ) {
-                    if(code_html[i]=='#' && code_html[i+1]=='#'&& code_html[i+2]=='#' && ok==0){
-                        break;
-                    }
-                    ok++;
-                    fputc(code_html[i], file);
-                    i++;
-                }else {
-                    if(counter_quotes>=2){
-                        fputs("\n", file);
-                        counter_quotes = 0;
-                        stop = 0;
-                    }else{
-                        counter_quotes++;
-                    }
-                    i++;
-                }}else{
-                if(code_html[i] == 'h' && code_html[i+1] == 'r' && code_html[i+2] == 'e' && code_html[i+3] == 'f'  ) {
-                    i +=4 ;
-                    if(equal_position(code_html,i)==-1){
-                        break;
-                    }else{
-                        find_begin=1;
-                        i+=equal_position(code_html,i);
-                    }
-                }else{
-                    not_found++;
-                    if(not_found==10){
-                        break;
-                    }
-                    find_begin=0;
-                    i+=1;
-                }
-            }
-        }
-        p += strlen(to_search);
-    }
-}
-/**
- * @author Rani Kharsa
- * @param code_html
- * @param i
- * @return number of space + 1
- * @brief permit to find position of the equal symbol
- */
-int equal_position(char* code_html,int i){
-    int space=0,x;
-        for(x=i;x<i+10;x++){
-            if(code_html[x]=='='){
-                return  space+1;
-            }
-            space++;
-        }
-        return  -1;
-}
