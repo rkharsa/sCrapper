@@ -70,7 +70,11 @@ sys/poll.h
 curl.h
 ../include/curl/curl.h
 
-/Users/jeremyternisien/Documents/sCrapper/header.h
+C:/Users/Frantz/sCrapper/TaskManager.c
+header.h
+C:/Users/Frantz/sCrapper/header.h
+
+C:/Users/Frantz/sCrapper/header.h
 stdio.h
 -
 stdlib.h
@@ -78,9 +82,7 @@ stdlib.h
 string.h
 -
 curl.h
-/Users/jeremyternisien/Documents/sCrapper/curl.h
-
-/Users/jeremyternisien/Documents/sCrapper/main.c
-header.h
-/Users/jeremyternisien/Documents/sCrapper/header.h
+C:/Users/Frantz/sCrapper/curl.h
+time.h
+-
 
