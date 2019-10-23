@@ -29,6 +29,7 @@ char *getCurrentTime() {
 void task(int hours, int minutes, int seconds) {
     char *val = getCurrentTime();
     char *destime = malloc(sizeof(char) * 8);
+    char *fromtime = malloc(sizeof(char) * 8);
     char *hour = (char *) strtok(val, ":");
     char *minute = (char *) strtok(NULL, ":");
     char *second = (char *) strtok(NULL, ":");
@@ -41,7 +42,7 @@ void task(int hours, int minutes, int seconds) {
     int sdest = 0;
     int m = atoi(minute);
     int s = atoi(second);
-    if (hours > 0 || h + hours >= 23) {
+    if (hours > 0 && h + hours >= 23) {
        if (h == 23) {
             hdest = 0 + hours-1;
         }
@@ -71,7 +72,7 @@ void task(int hours, int minutes, int seconds) {
         mdest = minutes + m;
 
     }
-    if (seconds > 0 && s + seconds < 59) {
+    if (seconds > 0 && s + seconds >= 59) {
         if (s == 59) {
             sdest = 0 + seconds-1;
             mdest = mdest + 1;
@@ -111,7 +112,18 @@ void task(int hours, int minutes, int seconds) {
     } else {
         strcpy(seconde, itoa(sdest, seconde, 10));
     }
-    printf("Currendqqdt time is %s %s %s", heure, min, seconde);
+    strcpy(destime,heure);
+    strcat(destime,":");
+    strcat(destime,min);
+    strcat(destime,":");
+    strcat(destime,seconde);
+    fromtime = getCurrentTime();
+    while(strcmp(destime,fromtime)!=0){
+        strcpy(fromtime,getCurrentTime());
+        printf("%s\n",destime);
+    }
+        printf("call task");
+
 
 }
 
