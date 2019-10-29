@@ -1,13 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "curl.h"
-#include <time.h>
-
-#ifndef HEADER_H_INCLUDED
-#define HEADER_H_INCLUDED
-
-/*
 typedef struct StringRes {
     char *ptr;
     size_t len;
@@ -21,14 +14,30 @@ typedef struct Option {
 typedef struct Action {
     char *name; // nom action
     char *url; // url du site
-    Option *options; // liste des options et de leur valeurs
+    Option options[10]; // liste des options et de leur valeurs
 } Action;
 
+typedef struct Task {
+    Action *Action; // nom action
+    int hours;
+    int minutes;
+    int seconds;
+    char *nextOccurence; // nom action
 
+} Task;
+#include "curl.h"
+#include <time.h>
+
+#ifndef HEADER_H_INCLUDED
+#define HEADER_H_INCLUDED
+
+
+
+/*
 void initString(StringRes *s);
 size_t writefunc(void *ptr, size_t size, size_t nmemb, StringRes *s);
 char *getHtmlCode(char* url);
 */
-void task(int hours, int minute,int second);
+void task(Task *task);
 
 #endif // HEADER_H_INCLUDED

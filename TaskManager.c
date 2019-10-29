@@ -6,9 +6,7 @@
 char *getCurrentTime() {
     time_t current_time;
     char *c_time_string;
-    char *t = malloc(sizeof(char) * 8);
-    char *v;
-
+    char *t = malloc(sizeof(char) * 6);
     current_time = time(NULL);
     c_time_string = ctime(&current_time);
     c_time_string = strtok(c_time_string, " ");
@@ -19,34 +17,42 @@ char *getCurrentTime() {
     char *minute = (char *) strtok(NULL, ":");
     char *second = (char *) strtok(NULL, ":");
     strcpy(t, hour);
-    strcat(t, ":");
     strcat(t, minute);
-    strcat(t, ":");
     strcat(t, second);
     return t;
 }
 
-void task(int hours, int minutes, int seconds) {
-    char *val = getCurrentTime();
-    char *destime = malloc(sizeof(char) * 8);
-    char *fromtime = malloc(sizeof(char) * 8);
-    char *hour = (char *) strtok(val, ":");
-    char *minute = (char *) strtok(NULL, ":");
-    char *second = (char *) strtok(NULL, ":");
+char *incrementTime(char *currentTime, int hours, int minutes, int seconds) {
+    char *destime = malloc(sizeof(char) * 6);
+    char tmphour[2];
+    tmphour[0] = currentTime[0];
+    tmphour[1] = currentTime[1];
+    tmphour[2] = '\0';
+    char *hour = tmphour;
+    int h = atoi(hour);
+    char tmpminute[2];
+    tmpminute[0] = currentTime[2];
+    tmpminute[1] = currentTime[3];
+    tmpminute[2] = '\0';
+    char *minute = tmpminute;
+    int m = atoi(minute);
+    char tmpsecond[2];
+    tmpsecond[0] = currentTime[4];
+    tmpsecond[1] = currentTime[5];
+    tmpsecond[2] = '\0';
+    char *second = tmpsecond;
+    int s = atoi(second);
     char *heure = malloc(sizeof(char) * 2);
     char *min = malloc(sizeof(char) * 2);
     char *seconde = malloc(sizeof(char) * 2);
-    int h = atoi(hour);
     int hdest = 0;
     int mdest = 0;
     int sdest = 0;
-    int m = atoi(minute);
-    int s = atoi(second);
     if (hours > 0 && h + hours >= 23) {
-       if (h == 23) {
-            hdest = 0 + hours-1;
+        if (h == 23) {
+            hdest = 0 + hours - 1;
         }
-       if (h + hours > 23 && h < 23) {
+        if (h + hours > 23 && h < 23) {
 
             int tmph = 0;
             tmph = 23 - h;
@@ -54,10 +60,11 @@ void task(int hours, int minutes, int seconds) {
         }
     } else {
         hdest = hours + h;
+
     }
     if (minutes > 0 && m + minutes >= 59) {
         if (m == 59) {
-            mdest = 0 + minutes -1;
+            mdest = 0 + minutes - 1;
             hdest = hdest + 1;
 
         }
@@ -74,7 +81,7 @@ void task(int hours, int minutes, int seconds) {
     }
     if (seconds > 0 && s + seconds >= 59) {
         if (s == 59) {
-            sdest = 0 + seconds-1;
+            sdest = 0 + seconds - 1;
             mdest = mdest + 1;
         }
         if (s + seconds > 59 && s < 59) {
@@ -112,18 +119,33 @@ void task(int hours, int minutes, int seconds) {
     } else {
         strcpy(seconde, itoa(sdest, seconde, 10));
     }
-    strcpy(destime,heure);
-    strcat(destime,":");
-    strcat(destime,min);
-    strcat(destime,":");
-    strcat(destime,seconde);
-    fromtime = getCurrentTime();
-    while(strcmp(destime,fromtime)!=0){
-        strcpy(fromtime,getCurrentTime());
-        printf("%s\n",destime);
-    }
-        printf("call task");
+    strcpy(destime, heure);
+    strcat(destime, min);
+    strcat(destime, seconde);
+    return destime;
+}
 
+void task(Task *task) {
+    int j = 1;
+    char *fromtime = getCurrentTime();
+    while (j == 1) {
+        for (int i = 0; i < 2; ++i) {
+            int hours = task[i].hours;
+            int minutes = task[i].minutes;
+            int seconds = task[i].seconds;
+            char *destime;
+            if (strcmp(task[i].nextOccurence, "0") != 0) {
+                destime = task[i].nextOccurence;
+            } else {
+                destime = incrementTime(fromtime, hours, minutes, seconds);
+            }
+            if (strcmp(destime, getCurrentTime()) == 0) {
+                printf("Je compte lancer la tache %d\n", task[i].seconds);
+                task[i].nextOccurence = incrementTime(getCurrentTime(), hours, minutes, seconds);
+                _sleep(1000);
+            }
+        }
+    }
 
 }
 
