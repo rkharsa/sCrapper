@@ -1,0 +1,2 @@
+https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js 
+https://cdn.sstatic.net/Js/stub.en.js?v=b0c262fdfe62 

@@ -22,9 +22,26 @@ typedef struct Action {
     char *url; // url du site
     Option *options; // liste des options et de leur valeurs
 } Action;
-void extract_all(char *url);
-void extract_href_from_html(char * code_html,FILE* file);
-int equal_position(char* code_html,int i);
+
+typedef struct  Link{
+char *url;
+char* type;
+int passage;
+}Link;
+typedef struct LinkLibrary{
+    Link* links;
+    int nombreLink;
+    int *nombrePic;
+    int *nombreVid;
+}LinkLibrary;
+void get_code_in_file(char* url,int i );
+void treatment(char * url_find ,char * begin_tag,FILE* file,    int nb_url );
+char * get_extension(char * url );
+int is_exist_in_file(FILE * file ,char * url);
+char *filename_dynamic(char * type,int i );
+void saveImg(char* url,int i );
+void extract_all(char *url,char* filename,char* begin_tag,char * src_or_href) ;
+int check_begin(int begin_tag,int end_tag,char*  code_html,char * typeHrefOrSrc,int i,int pos_href);
 void initString(StringRes *s);
 size_t writefunc(void *ptr, size_t size, size_t nmemb, StringRes *s);
 char *getHtmlCode(char* url);
