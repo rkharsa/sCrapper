@@ -160,6 +160,8 @@ char * get_extension(char * url ){
         ext=ptr;
         ptr = strtok(NULL, delim);
     }
+    if(strlen(ext)>5)
+        return " ";
     //printf("%s\n",ext);
     return ext;
 }
@@ -170,9 +172,13 @@ void saveImg(char* url,int i ){//verif type mime
     char* ext=get_extension(url);
     char filename[200];
     int result;
+    if(!strcmp(ext," ")) {
+        sprintf(filename,"download/picture/image%i",i);
+    }else{
+        sprintf(filename,"download/picture/image%i.%s",i,ext);
+    }
 
-    sprintf(filename,"download/picture/image%i.%s",i,ext);
-    printf("%s\n",filename);
+    printf("%s    %s\n",filename,ext);
     FILE* fp=fopen(filename,"wb");
     curl=curl_easy_init();
     curl_easy_setopt(curl,CURLOPT_URL,urlCpy);
