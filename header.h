@@ -22,7 +22,7 @@ typedef struct Task {
     int hours;
     int minutes;
     int seconds;
-    char *nextOccurence; // nom action
+    long nextOccurence; // prochaine occurence
 
 } Task;
 #include "curl.h"

@@ -16,19 +16,18 @@ int main(int argc, char *argv[]) {
     task1->Action[1] = *a2;
     task1->hours = 0;
     task1->minutes = 0;
-    task1->seconds = 10;
-    task1->nextOccurence = "0";
+    task1->seconds = 5;
+    task1->nextOccurence = 0;
 
     Task *task2 = malloc(sizeof(Task));
     task2->hours = 0;
     task2->minutes = 0;
-    task2->seconds = 15;
-    task2->nextOccurence = "0";
+    task2->seconds = 5;
+    task2->nextOccurence = 0;
 
     Task *taskLst = malloc(sizeof(Task) * 2);
     taskLst = task1;
     taskLst[1] = *task2;
-    printf(taskLst[1].nextOccurence);
     task(taskLst);
     return 0;
 }
