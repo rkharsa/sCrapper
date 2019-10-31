@@ -45,7 +45,9 @@ size_t writefunc(void *ptr, size_t size, size_t nmemb, StringRes *s) {
 
 char *getHtmlCode(char* url){
     //open session curl
+
     CURL *curl =curl_easy_init();
+
     if(curl){
         StringRes s;
         initString(&s);
@@ -53,7 +55,7 @@ char *getHtmlCode(char* url){
         curl_easy_setopt(curl,CURLOPT_URL,url);//work on this url
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
-        CURLcode res = curl_easy_perform(curl);//execute all  the setopt
+        CURLcode res = curl_easy_perform(curl);//execute all  the setop
         if(res!=CURLE_OK){
             fprintf(stderr, "curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
         }
@@ -65,15 +67,16 @@ char *getHtmlCode(char* url){
         return NULL;
     }
 }
-void get_code_in_file(char* url,int i ){
+void get_code_in_file(char* url,int i ,char* begin_tag){
     char filename[200];
     int result;
 
-    sprintf(filename,"download/css/style%i.css",1);
+  //  sprintf(filename,"download/css/style%i.css",1);
+    strcpy(filename,filename_dynamic_container(begin_tag,i,"rien"));
     FILE* fp = fopen(filename,"w");
     //open session curl=
     CURL *curl =curl_easy_init();
-    printf("%s",url);
+    printf("\n %s \n \n",filename);
     if(curl){
         curl_easy_setopt(curl,CURLOPT_URL,url);//work on this url
         curl_easy_setopt(curl,CURLOPT_WRITEDATA,fp);
@@ -97,14 +100,14 @@ void get_code_in_file(char* url,int i ){
 void extract_all(char *url,char *filename,char* begin_tag,char * src_or_href) {
   char *code_html = getHtmlCode(url);
  //printf("%s",code_html);
-    //char *code_html = "<meta content=\"text/html; charset=UTF-8\" http-equiv=\"Content-Type\">";
-    FILE * file = fopen(filename,"w+");
+  //  char *code_html = "<meta content=\"text/html; charset=UTF-8\" http-equiv=\"Content-Type\">";
+  /*  FILE * file = fopen(filename,"w+");
     if(file!=NULL) {
         //extract_href_from_html(code_html,file);
         //extract_first_title(code_html,file,"1");
        extract_href(code_html,file,begin_tag,src_or_href);
         fclose(file);
-    }
+    }*/
 }
 /* extract all txt in tag extact p h1 h2 h3 h4 h5 h6 strong txthref*/
  void extract_first_title(char *  code_html,FILE* file,char * title_level){
@@ -134,23 +137,7 @@ void extract_all(char *url,char *filename,char* begin_tag,char * src_or_href) {
      }
  }
 
-/*char *filename_dynamic(char * type,int i ){
-    char *str[20];
 
-   if(!strcmp("link",type)){
-       sprintf(str, "/download/link/link%d.txt", i);
-        return *str ;
-    }else if (!strcmp("img",type)){
-       sprintf(str, "/download/link/img%d.txt", i);
-        return str;
-    }else if(!strcmp("css",type)){
-       sprintf(str, "/download/link/css%d.txt", i);
-        return str;
-    }else if(!strcmp("js",type)){
-       sprintf(str, "/download/link/js%d.txt", i);
-        return str;
-    }
-}*/
 char * get_extension(char * url ){
     char * ext;
     char delim[] = ".";
@@ -165,19 +152,50 @@ char * get_extension(char * url ){
     //printf("%s\n",ext);
     return ext;
 }
-void saveImg(char* url,int i ){//verif type mime
+
+char* filename_dynamic_txt(char * type,int i ){
+    char *str=malloc(sizeof(char)*50);
+
+    if(!strcmp("<link",type)){
+        sprintf(str, "/download/link/link%d.txt", i);
+
+    }else if (!strcmp("<img",type)){
+        sprintf(str, "/download/link/img%d.txt", i);
+
+    }else if(!strcmp("<css",type)){
+        sprintf(str, "/download/link/css%d.txt", i);
+    }else if(!strcmp("<script",type)){
+        sprintf(str, "/download/link/js%d.txt", i);
+    }
+    return str;
+}
+char* filename_dynamic_container(char * type,int i,char* ext ){
+    char *str=malloc(sizeof(char)*50);
+
+  if (!strcmp("<img",type)){
+      if(!strcmp(ext," ")) {
+          sprintf(str,"download/picture/image%i",i);
+      }else{
+          sprintf(str,"download/picture/image%i.%s",i,ext);
+      }
+    }else if(!strcmp("<video",type)){
+      sprintf(str, "download/video/video%d.%s", i,ext);
+  }
+  else if(!strcmp("<css",type)){
+        sprintf(str, "download/css/css%d.css", i);
+    }else if(!strcmp("<script",type)){
+        sprintf(str, "download/js/js%d.js", i);
+    }
+    return str;
+}
+void saveImg(char* url,int i,char* begin_tag ){//verif type mime
     CURL *curl ;
     char *urlCpy=malloc(sizeof(char)*200);
     strcpy(urlCpy,url);
     char* ext=get_extension(url);
     char filename[200];
     int result;
-    if(!strcmp(ext," ")) {
-        sprintf(filename,"download/picture/image%i",i);
-    }else{
-        sprintf(filename,"download/picture/image%i.%s",i,ext);
-    }
-
+  strcpy(filename,filename_dynamic_container(begin_tag,i,ext ));
     printf("%s    %s\n",filename,ext);
     FILE* fp=fopen(filename,"wb");
     curl=curl_easy_init();
@@ -195,61 +213,72 @@ void saveImg(char* url,int i ){//verif type mime
     curl_easy_cleanup(curl);
 }
 void treatment(char * url_find ,char * begin_tag,FILE* file,    int nb_url ) {
-        if (!strcmp(begin_tag, "<img")) {
+    printf("%s\n",url_find);
+        if (!strcmp(begin_tag, "<img") || !strcmp(begin_tag, "<video")) {
             fprintf(file, "%s \n", url_find);
-            saveImg(url_find, nb_url);
+            saveImg(url_find, nb_url,begin_tag);
         } else if (!strcmp(begin_tag, "<a ") ) {
             fprintf(file, "%s \n", url_find);
         }else if (!strcmp(begin_tag, "<link") || !strcmp(begin_tag,"<script")) {
             fprintf(file, "%s \n", url_find);
-            get_code_in_file(url_find,nb_url);
+            get_code_in_file(url_find,nb_url,begin_tag);
         }
     }
+void process(int begin_tag,int end_tag,char* code_html,char* search_begin_tag,FILE*file,int* nb_url,const char**p,char const*to_search,int pos_href){
+    int find_begin_save=0,counter=0,http,pos=0;
 
+    char*url_find=malloc(sizeof(char)*500);
+    for(int i=0;i<end_tag-begin_tag;i++){
+        pos=i+begin_tag;// erreur ici i doit etre egale a 0 <end-begin
+       // printf("%d\n ",pos);
+        if(find_begin_save==1){
+            if(code_html[pos]=='\"'||code_html[pos]=='\''){
+                url_find[counter]='\0';
+                treatment(url_find,search_begin_tag,file,*nb_url);
+                *p+=strlen(to_search);
+                break;
+            }else{
+                url_find[counter]=code_html[pos];
+                counter++;
+            }
+        }else{
+            http=check_begin(begin_tag,end_tag,code_html,pos,pos_href);
+            //printf("%d",http);
+            if(http!=-1){
+                i=http-1-begin_tag;
+                *nb_url=*nb_url+1;
+                find_begin_save=1;
+            }
+        }
+    }
+}
     void extract_href(char *code_html, FILE *file, char *search_begin_tag, char *typeHrefOrSrc) {
-        int begin_tag, end_tag, find_begin_save, i, http, counter = 0, nb_url = 0,pos_href,pos_rel;
+        int begin_tag, end_tag,nb_url = 0,pos_href,pos_rel;
         const char *to_search = search_begin_tag, *p = code_html;
-        char *url_find;
         while ((p = strstr(p, to_search)) != NULL) {
             begin_tag = p - code_html;
             //printf("\n %c \n",code_html[begin_tag]);
-            find_begin_save = 0;
-            counter = 0;
-            url_find = malloc(sizeof(char) * 200);
             end_tag = position_of_symbole(begin_tag, code_html, '>');
+
             if (end_tag == -1) {
                 p += strlen(to_search);
                 continue;
             }
             pos_href = position_of_attribut(begin_tag, end_tag, code_html, typeHrefOrSrc);
-            for (i = begin_tag; i < end_tag; ++i) {
-                if (find_begin_save == 1) {
-                    if (code_html[i] == '\"' || code_html[i] == '\'' || code_html[i]=='>') {
-                        url_find[counter] = '\0';
-                       // printf("%s\n",url_find);
-                        treatment(url_find, search_begin_tag, file, nb_url);
-                        p += strlen(to_search);
-                        break;
-                    } else {
-                        url_find[counter] = code_html[i];
-                        counter++;
-                    }
-                } else {
-                    http = check_begin(begin_tag, end_tag, code_html, typeHrefOrSrc, i,pos_href);
-                    if (http != -1) {
-                        i = http - 1;
-                        nb_url++;
-                        find_begin_save = 1;
-                    }
-                }
+            if(pos_href!=-1){
+                process(begin_tag,end_tag,code_html,search_begin_tag,file,&nb_url,&p,to_search,pos_href);
             }
+
             p += strlen(to_search);
         }
     }
-    int check_begin(int begin_tag, int end_tag, char *code_html, char *typeHrefOrSrc, int i,int pos_href) {
+
+
+int check_begin(int begin_tag, int end_tag, char *code_html, int i,int pos_href) {
         int http;
+
         if (pos_href != -1) {
-            if (code_html[i + (begin_tag - pos_href)] == '\'' || code_html[i + (begin_tag - pos_href)] == '"') {
+            if (code_html[i + (begin_tag- pos_href)] == '\'' || code_html[i + (begin_tag - pos_href)] == '"') {
                 http = position_of_attribut(i + (begin_tag - pos_href), end_tag, code_html, "http");
                 if (http != -1) {
                     return http;
@@ -257,6 +286,7 @@ void treatment(char * url_find ,char * begin_tag,FILE* file,    int nb_url ) {
             }
 
         }
+
         return -1;
     }
 

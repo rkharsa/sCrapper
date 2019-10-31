@@ -7,10 +7,10 @@ int main(int argc, char *argv[])
             printf("%s",extractAll[i][2]);
             extract_all("https://stackoverflow.com/questions/39956310/junit-assertthat-check-that-object-equals-string", extractAll[i][2],extractAll[i][0],extractAll[i][1]);
         }*/
-   extract_all("https://github.com/rkharsa", extractAll[1][2],extractAll[1][0],extractAll[1][1]);
+
+ extract_all("https://github.com/rkharsa/sCrapper", extractAll[0][2],extractAll[0][0],extractAll[0][1]);
 
 
-
-
+//printf("%s",filename_dynamic("<link",1));
     return 0;
 }
