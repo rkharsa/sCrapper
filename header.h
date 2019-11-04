@@ -25,7 +25,10 @@ typedef struct Action {
 
 typedef struct  Link{
 char *url;
-char* type;
+char* tag;
+int  posBeginTag;
+int posEndTag;
+char* codeHtml;
 int passage;
 }Link;
 typedef struct LinkLibrary{
@@ -34,21 +37,35 @@ typedef struct LinkLibrary{
     int *nombrePic;
     int *nombreVid;
 }LinkLibrary;
-char* filename_dynamic(char * type,int i );
-char* filename_dynamic_container(char * type,int i,char* ext );
-void get_code_in_file(char* url,int i,char* begin_tag );
-void treatment(char * url_find ,char * begin_tag,FILE* file,    int nb_url );
-char * get_extension(char * url );
-int is_exist_in_file(FILE * file ,char * url);
-//char *filename_dynamic(char * type,int i );
-void saveImg(char* url,int i,char * begin_tag );
-void extract_all(char *url,char* filename,char* begin_tag,char * src_or_href) ;
-int check_begin(int begin_tag,int end_tag,char*  code_html,int i,int pos_href);
-void initString(StringRes *s);
+char* filenameDynamicContainer(char * type,int i,char* ext );
+char* filenameDynamicTxt(char * type,int i );
+char* hrefOrSrcRouter(char * tag);
+char* getHostUrl(char* url);
+void getCodeInFile(char* url,int i ,char* beginTag);
+void execute(char**tabaction);
+
+void extractAll(char *url,char* tag) ;
+void extractContentBetweenTag(char *  codeHtml,int number,char* beginTag,char * endTag);
+void extractLink(char * codeHtml,FILE* file,char* searchBeginTag,char * typeHrefOrSrc);
+void treatment(char * urlFind ,char * beginTag,FILE* file,    int nbUrl );
+void process(int beginTag,int endTag,char* codeHtml,char* searchBeginTag,FILE*file,int* nbUrl,const char**p,char const*toSearch,int posHref);
+int checkBegin(int beginTag,int endTag,char*  codeHtml,int i,int posHref);
+int positionOfSymbole(int begin ,char *codeHtml,char charToFind);
+int positionOfAttribut(int begin,int end,char* codeHtml, char *  attrToFind);
+
 size_t writefunc(void *ptr, size_t size, size_t nmemb, StringRes *s);
 char *getHtmlCode(char* url);
-void extract_first_title(char *  code_html,FILE* file,char * title_level);
-int position_of_symbole(int begin ,char *code_html,char char_to_find);
-int position_of_attribut(int begin,int end,char* code_html, char *  attr_to_find);
-void extract_href(char * code_html,FILE* file,char* search_begin_tag,char * typeHrefOrSrc);
+void getCodeInFile(char* url,int i,char* beginTag );
+char * getExtension(char * url );
+void saveMedia(char* url,int i,char * beginTag );
+
+
+
+
+
+
+
+
+
+
 #endif // HEADER_H_INCLUDED
