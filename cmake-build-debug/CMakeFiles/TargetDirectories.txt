@@ -1,3 +1,0 @@
-C:/Users/Rkhar/CLionProjects/sCrapper/cmake-build-debug/CMakeFiles/sCrapper.dir
-C:/Users/Rkhar/CLionProjects/sCrapper/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/Rkhar/CLionProjects/sCrapper/cmake-build-debug/CMakeFiles/rebuild_cache.dir

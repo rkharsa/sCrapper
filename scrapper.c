@@ -4,7 +4,7 @@ void execute(char** tabaction){
     for(int i=0;i<4;++i){
         printf("###############%s#####################\n",tabaction[i]);
         //essayer de mettre en place une barre de progression du style [#########]
-        extractAll("https://www.marmiton.org/recettes/recette_pizza-aux-3-fromages_31450.aspx", tabaction[i]);
+        extractAll("https://www.developpez.net/forums/d8335/c-cpp/c/equivalent-fonction-trim/", tabaction[i]);
     }
 }
 /**
@@ -14,7 +14,7 @@ void execute(char** tabaction){
  */
 void extractAll(char *url,char* tag) {
     char *codeHtml = getHtmlCode(url);
-    char *srcOrHref=malloc(sizeof(char)*50);
+    char *srcOrHref=malloc(sizeof(char)*6);
     strcpy(srcOrHref,hrefOrSrcRouter(tag));
     char *beginTag = malloc(sizeof(char)*strlen(tag)+10);
     sprintf(beginTag,"<%s\0",tag);
