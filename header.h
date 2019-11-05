@@ -42,7 +42,7 @@ char* filenameDynamicTxt(char * type,int i );
 char* hrefOrSrcRouter(char * tag);
 char* getHostUrl(char* url);
 void getCodeInFile(char* url,int i ,char* beginTag);
-void execute(char**tabaction);
+void execute(char**tabaction,char * url );
 
 void extractAll(char *url,char* tag) ;
 void extractContentBetweenTag(char *  codeHtml,int number,char* beginTag,char * endTag);

@@ -1,10 +1,16 @@
 #include "header.h"
 
-void execute(char** tabaction){
+void actionTodo(){
+//lister les actiones demander pour une  url
+
+}
+void execute(char** tabaction,char*url){
     for(int i=0;i<4;++i){
-        printf("###############%s#####################\n",tabaction[i]);
+        printf("%s\n","--------------------------------------------------------------");
+        printf("                                %s  \n",tabaction[i]);
+        printf("%s\n","--------------------------------------------------------------");
         //essayer de mettre en place une barre de progression du style [#########]
-        extractAll("https://www.developpez.net/forums/d8335/c-cpp/c/equivalent-fonction-trim/", tabaction[i]);
+        extractAll(url, tabaction[i]);
     }
 }
 /**
@@ -167,6 +173,7 @@ void treatment(char * urlFind ,char * beginTag,FILE* file,    int nbUrl ) {
         fprintf(file, "%s \n", urlFind);
         saveMedia(urlFind,nbUrl,beginTag);
     } else if (!strcmp(beginTag, "<a") ) {
+        printf("%s\n","Download successful");
         fprintf(file, "%s \n", urlFind);
     }else if (!strcmp(beginTag, "<link") || !strcmp(beginTag,"<script")) {
         fprintf(file, "%s \n", urlFind);
@@ -215,7 +222,7 @@ int checkBegin(int beginTag, int endTag, char *codeHtml, int i,int posHref) {
         const char *p = str;
     //    printf("\n%s\n",str);
         p = strstr(p, attrToFind);
-        position = p - str + begin;//essayer - counter
+        position = p - str + begin;
         if (p != NULL)
             return position;
         return -1;
