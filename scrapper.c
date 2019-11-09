@@ -5,7 +5,7 @@ void actionTodo(){
 
 }
 void execute(char** tabaction,char*url){
-    for(int i=0;i<4;++i){
+    for(int i=0;i<5;++i){
         printf("%s\n","--------------------------------------------------------------");
         printf("                                %s  \n",tabaction[i]);
         printf("%s\n","--------------------------------------------------------------");
@@ -195,7 +195,9 @@ int checkBegin(int beginTag, int endTag, char *codeHtml, int i,int posHref) {
             if (codeHtml[i + (beginTag- posHref)] == '\'' || codeHtml[i + (beginTag - posHref)] == '"') {
                 http = positionOfAttribut(i + (beginTag - posHref), endTag, codeHtml, "http");
                 if (http != -1) {
-                    return http;
+                    if(codeHtml[http+5]!='&'){
+                        return http;
+                    }
                 }
         }
         return -1;

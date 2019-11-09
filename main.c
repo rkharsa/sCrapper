@@ -10,8 +10,8 @@ printf("%s","  _________                                 .__                \n"
             "/_______  /\\___  >__|  (____  /   __/|   __/|__|___|  /\\___  / \n"
             "        \\/     \\/           \\/|__|   |__|           \\//_____/  ");
     printf("\n%s\n","--------------------------------------------------------------");
-  char *extractAlltag[10]={"a","img","script","source","link"};
-  execute(extractAlltag,"https://openclassrooms.com/forum/sujet/barre-de-progression-en-c");
+  char *extractAlltag[10]={"a","img","source","link","script"};
+  execute(extractAlltag,"https://www.marmiton.org/recettes/index/categorie/pizza");
 
  return 0;
 }
