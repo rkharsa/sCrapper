@@ -10,15 +10,15 @@ char* filenameDynamicTxt(char * type,int i ){
     char *str=malloc(sizeof(char)*50);
 
     if(!strcmp("a",type)){
-        sprintf(str, "download/link/link%d.txt", i);
+        sprintf(str, "download/linkOfAllTag/link%d.txt", i);
     }else if (!strcmp("img",type)){
-        sprintf(str, "download/link/img%d.txt", i);
+        sprintf(str, "download/linkOfAllTag/img%d.txt", i);
     }else if(!strcmp("link",type)){
-        sprintf(str, "download/link/css%d.txt", i);
+        sprintf(str, "download/linkOfAllTag/css%d.txt", i);
     }else if(!strcmp("script",type)){
-        sprintf(str, "download/link/js%d.txt", i);
+        sprintf(str, "download/linkOfAllTag/js%d.txt", i);
     }else if(!strcmp("source",type)){
-        sprintf(str, "download/link/video%d.txt", i);
+        sprintf(str, "download/linkOfAllTag/video%d.txt", i);
     }
     return str;
 }
@@ -35,17 +35,21 @@ char* filenameDynamicContainer(char * type,int i,char* ext ){
 
     if (!strcmp("<img",type)){
         if(!strcmp(ext," ")) {
-            sprintf(str,"download/picture/image%i",i);
+            sprintf(str,"download/imgTag/image%i",i);
         }else{
-            sprintf(str,"download/picture/image%i.%s",i,ext);
+            sprintf(str,"download/imgTag/image%i.%s",i,ext);
         }
     }else if(!strcmp("<source",type)){
-        sprintf(str, "download/video/video%d.%s", i,ext);
+        sprintf(str, "download/sourceTag/video%d.%s", i,ext);
     }
     else if(!strcmp("<link",type)){
-        sprintf(str, "download/css/css%d.css", i);
+        if(!strcmp(ext," ")) {
+            sprintf(str, "download/linkTag/link%d.txt", i);
+        }else{
+            sprintf(str, "download/linkTag/link%d.%s", i,ext);
+        }
     }else if(!strcmp("<script",type)){
-        sprintf(str, "download/js/js%d.js", i);
+        sprintf(str, "download/scriptTag/js%d.js", i);
     }
 
     return str;

@@ -58,8 +58,6 @@ char *getHtmlCode(char* url){
         CURLcode res = curl_easy_perform(curl);//execute all  the setop
         if(res!=CURLE_OK){
             fprintf(stderr, "curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
-        }else{
-            printf("Download successful\n");
         }
         //clean and close session curl
         curl_easy_cleanup(curl);
@@ -79,14 +77,15 @@ char *getHtmlCode(char* url){
 void getCodeInFile(char* url,int i ,char* beginTag){
     char filename[200];
     int result;
-
-    strcpy(filename,filenameDynamicContainer(beginTag,i,"rien"));
+    char *urlCpy=malloc(sizeof(char)*200);
+    strcpy(urlCpy,url);
+    strcpy(filename,filenameDynamicContainer(beginTag,i,getExtension(url)));
     FILE* fp = fopen(filename,"w");
     //open session curl=
     if(fp!=NULL){
         CURL *curl =curl_easy_init();
         if(curl){
-            curl_easy_setopt(curl,CURLOPT_URL,url);//work on this url
+            curl_easy_setopt(curl,CURLOPT_URL,urlCpy);//work on this url
             curl_easy_setopt(curl,CURLOPT_WRITEDATA,fp);
             curl_easy_setopt(curl,CURLOPT_FAILONERROR,1L);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER,0);

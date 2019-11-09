@@ -173,8 +173,8 @@ void treatment(char * urlFind ,char * beginTag,FILE* file,    int nbUrl ) {
         fprintf(file, "%s \n", urlFind);
         saveMedia(urlFind,nbUrl,beginTag);
     } else if (!strcmp(beginTag, "<a") ) {
-        printf("%s\n","Download successful");
         fprintf(file, "%s \n", urlFind);
+        printf("%s\n","Download successful");
     }else if (!strcmp(beginTag, "<link") || !strcmp(beginTag,"<script")) {
         char *urlCpy=malloc(sizeof(char)*200);
         strcpy(urlCpy,urlFind);
