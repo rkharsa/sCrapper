@@ -176,8 +176,16 @@ void treatment(char * urlFind ,char * beginTag,FILE* file,    int nbUrl ) {
         printf("%s\n","Download successful");
         fprintf(file, "%s \n", urlFind);
     }else if (!strcmp(beginTag, "<link") || !strcmp(beginTag,"<script")) {
-        fprintf(file, "%s \n", urlFind);
-        getCodeInFile(urlFind,nbUrl,beginTag);
+        char *urlCpy=malloc(sizeof(char)*200);
+        strcpy(urlCpy,urlFind);
+        if(!strcmp(getExtension(urlFind),"png")||  !strcmp(getExtension(urlFind),"ico") || !strcmp(getExtension(urlFind),"svg")){
+            fprintf(file, "%s \n", urlCpy);
+            saveMedia(urlCpy,nbUrl,beginTag);
+        }else{
+            fprintf(file, "%s \n", urlCpy);
+            getCodeInFile(urlCpy,nbUrl,beginTag);
+        }
+
     }
 }
 

@@ -58,6 +58,8 @@ char *getHtmlCode(char* url){
         CURLcode res = curl_easy_perform(curl);//execute all  the setop
         if(res!=CURLE_OK){
             fprintf(stderr, "curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
+        }else{
+            printf("Download successful\n");
         }
         //clean and close session curl
         curl_easy_cleanup(curl);
@@ -81,22 +83,29 @@ void getCodeInFile(char* url,int i ,char* beginTag){
     strcpy(filename,filenameDynamicContainer(beginTag,i,"rien"));
     FILE* fp = fopen(filename,"w");
     //open session curl=
-    CURL *curl =curl_easy_init();
-    if(curl){
-        curl_easy_setopt(curl,CURLOPT_URL,url);//work on this url
-        curl_easy_setopt(curl,CURLOPT_WRITEDATA,fp);
-        curl_easy_setopt(curl,CURLOPT_FAILONERROR,1L);
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER,0);
-        CURLcode  res= curl_easy_perform(curl);//execute all  the setopt
-        if(res!=CURLE_OK){
-            fprintf(stderr, "curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
+    if(fp!=NULL){
+        CURL *curl =curl_easy_init();
+        if(curl){
+            curl_easy_setopt(curl,CURLOPT_URL,url);//work on this url
+            curl_easy_setopt(curl,CURLOPT_WRITEDATA,fp);
+            curl_easy_setopt(curl,CURLOPT_FAILONERROR,1L);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER,0);
+            CURLcode  res= curl_easy_perform(curl);//execute all  the setopt
+            if(res!=CURLE_OK){
+                fprintf(stderr, "curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
+            }else{
+                printf("Download successful\n");
+            }
+            //clean and close session curl
+            curl_easy_cleanup(curl);
+        }else{
+            printf("curl_easy_init() failed");
         }
-        //clean and close session curl
-        curl_easy_cleanup(curl);
+        fclose(fp);
     }else{
-        printf("curl_easy_init() failed");
+        printf("Can't open the file\n");
     }
-    fclose(fp);
+
 }
 /**
  * @author Rani Kharsa
@@ -135,17 +144,22 @@ void saveMedia(char* url,int i,char* beginTag ){//verif type mime
     strcpy(filename,filenameDynamicContainer(beginTag,i,ext ));
   //  printf("url cpy   %s\n filename : %s\n extt: %s",urlCpy,filename,ext);
     FILE* fp=fopen(filename,"wb");
-    curl=curl_easy_init();
-    curl_easy_setopt(curl,CURLOPT_URL,urlCpy);
-    curl_easy_setopt(curl,CURLOPT_WRITEDATA,fp);
-    curl_easy_setopt(curl,CURLOPT_FAILONERROR,1L);
-    curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER,0);
-    result=curl_easy_perform(curl);
-    if(result==CURLE_OK){
-        printf("Download successful\n");
+    if(fp!=NULL){
+        curl=curl_easy_init();
+        curl_easy_setopt(curl,CURLOPT_URL,urlCpy);
+        curl_easy_setopt(curl,CURLOPT_WRITEDATA,fp);
+        curl_easy_setopt(curl,CURLOPT_FAILONERROR,1L);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER,0);
+        result=curl_easy_perform(curl);
+        if(result==CURLE_OK){
+            printf("Download successful\n");
+        }else{
+            printf("ERROR: %s\n",curl_easy_strerror(result));
+        }
+        fclose(fp);
+        curl_easy_cleanup(curl);
     }else{
-        printf("ERROR: %s\n",curl_easy_strerror(result));
+        printf("Can't open  the file\n");
     }
-    fclose(fp);
-    curl_easy_cleanup(curl);
+
 }

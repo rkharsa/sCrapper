@@ -11,7 +11,7 @@ printf("%s","  _________                                 .__                \n"
             "        \\/     \\/           \\/|__|   |__|           \\//_____/  ");
     printf("\n%s\n","--------------------------------------------------------------");
   char *extractAlltag[10]={"a","img","source","link","script"};
-  execute(extractAlltag,"https://www.marmiton.org/recettes/index/categorie/pizza");
+  execute(extractAlltag,"https://stackoverflow.com/questions/43777913/the-difference-in-file-access-mode-w-and-wb");
 
  return 0;
 }
