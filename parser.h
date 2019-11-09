@@ -5,13 +5,14 @@
 #ifndef SCRAPER_PARSER_H
 #define SCRAPER_PARSER_H
 #define LINE_FILE_MAX 1000
+#include <stdio.h>
 
 typedef struct Action {
     char *name;
     char *url;
     int length;
-    char **keys;
-    char **values;
+    char **keys;// option1 option2 versionning
+    char **values;// value1 value2 valueversionning
 } Action;
 
 typedef struct Task {
