@@ -24,7 +24,6 @@ void task(Task *task) {
     int j = 1;
     long fromtime = getCurrentTime();
     while (j == 1) {
-        _sleep(900);
         for (int i = 0; i < 2; ++i) {
             long newTime = getCurrentTime();
             long destime = 0;
