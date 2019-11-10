@@ -17,26 +17,17 @@ typedef struct Option {
     char *value;
 } Option;
 
-typedef struct Action {
-    char *name; // nom action
-    char *url; // url du site
-    Option *options; // liste des options et de leur valeurs
-} Action;
+typedef  struct  CounterFile{
+int nbImg;
+int nbVideo;
+int nbLinkTag;
+int nbLink;
+int nbJs;
+int nbContent;
 
-typedef struct  Link{
-char *url;
-char* tag;
-int  posBeginTag;
-int posEndTag;
-char* codeHtml;
-int passage;
-}Link;
-typedef struct LinkLibrary{
-    Link* links;
-    int nombreLink;
-    int *nombrePic;
-    int *nombreVid;
-}LinkLibrary;
+}CounterFile;
+int deleteRepositorie(char* repositorieName);
+int createRepositorie(char* repositorieName);
 char* filenameDynamicContainer(char * type,int i,char* ext );
 char* filenameDynamicTxt(char * type,int i );
 char* hrefOrSrcRouter(char * tag);

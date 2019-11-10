@@ -28,7 +28,7 @@ void extractAll(char *url,char* tag) {
     strcpy(filename,filenameDynamicTxt(tag,1));
     char *endTag = malloc(sizeof(char)*strlen(tag)+10);
     sprintf(endTag,"</%s>",tag);
-    printf(" begin tag %s and endTag :%s", beginTag, endTag);
+
     if(!strcmp(tag,"img") || !strcmp(tag,"source")|| !strcmp(tag,"a")|| !strcmp(tag,"script")|| !strcmp(tag,"link")) {
         FILE * file = fopen(filename,"w+");
         if (file != NULL) {

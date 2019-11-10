@@ -92,7 +92,16 @@ char* getHostUrl(char* url){
     curl_url_cleanup(h); /* free url handle */
 return host;
 }
-
-void createRepositorie(){
-   // system(md parseur)
+int deleteRepositorie(char* repositorieName){
+    system("rmdir /Q  /S download");
+}
+int createRepositorie( char* repositorieName){
+    system("mkdir download");
+    system("cd download && mkdir content");
+    system("cd download && mkdir imgTag");
+    system("cd download && mkdir scriptTag");
+    system("cd download && mkdir linkOfAllTag");
+    system("cd download && mkdir linkTag");
+    system("cd download && mkdir sourceTag");
+return 0;
 }
