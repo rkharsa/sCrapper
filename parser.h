@@ -10,7 +10,7 @@
 typedef struct Action {
     char *name;
     char *url;
-    int length;
+    int optionsLength;
     char **keys;// option1 option2 versionning
     char **values;// value1 value2 valueversionning
 } Action;
@@ -20,26 +20,37 @@ typedef struct Task {
     int seconds;
     int minutes;
     int hours;
-    int actionLength;
+    int actionsLength;
     Action *actions;
 } Task;
 
+
+char **getUrls(char *line, int *urlsLength);
+char *getStrUntilChrs(char *str, int *position, char *chrs);
+char *getKey(char *line, char *first, char *delimiter);
+void setActionOption(Action *action, char *line, char *first, char *delimiter, char *last);
+char *getValue(char *line, char *delimiter, char *last);
+void linkTaskActions(Task *task, char **urls, int urlsLength, Action *actions, int actionsLength);
+void setActionAttribute(Action *action, char *key, char *value);
+void setTaskAttribute(Task *task, char *key, char *value);
+void setKeyValue(Action *action, char *key, char *value);
+int checkLineEnds(char *line, char *first, char *last);
+char *fgetsWithCheck(FILE *file, int size);
 int checkFileExtension(char *filePath, char *extension);
 int checkFileExists(char *filePath);
 char *getFilePath();
 long getMaxLineSize(FILE *file);
 void printActions(Action *actions, int length);
 void printTasks(Task *tasks, int length);
-char *removeSpaces(char *str);
-int checkTaskFormat(char *optionStr, char *first, char *last);
-int checkOptionFormat(char *optionStr, char *first, char *middle, char *last);
-int isOptionFinished(char *line);
-void setOptions(Action *action, FILE *file, int position);
-void setTaskActions(Task *task, Action *actions, int actionLength, char *urls);
-void setTasksOptions(Task *task, FILE *file, int position, Action *actions, int actionLength);
+char *removeStrSpaces(char *str);
+int checkLineFormat(char *optionStr, char *first, char *middle, char *last);
+int isActionFinished(char *line);
+int isTaskFinished(char *line);
+void setAllActionOptions(Action *action, FILE *file, int position);
+void setAllTaskOptions(Task *task, FILE *file, int position, Action *actions, int actionLength);
 long getLinePosAfterChar(char charToFind, FILE *file, int iteration);
 long getLinePosAfterStr(char *strToFind, FILE *file, int iteration);
-Action *parseActions(FILE *fileToParse, int *actionLength);
-Task *parseTasks(FILE *fileToParse, int *length, Action *actions, int actionLength);
+Action *getActions(FILE *fileToParse, int *actionLength);
+Task *getTasks(FILE *fileToParse, int *length, Action *actions, int actionLength);
 
 #endif //SCRAPER_PARSER_H

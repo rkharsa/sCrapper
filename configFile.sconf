@@ -13,10 +13,9 @@
 {option1 -> value1}
 {option2 -> value2}
 
-
 ==
 {name -> Ma première super tâche}
-{second -> 10}  # Lance les deux req ttes les 10 secondes
+{hour -> 10}  # Lance les deux req ttes les 10 secondes
 +
 (facebook.com, youtube.com)
 
