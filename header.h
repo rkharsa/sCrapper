@@ -12,17 +12,6 @@ typedef struct StringRes {
     size_t len;
 } StringRes;
 
-typedef struct Option {
-    char *name;
-    char *value;
-} Option;
-
-typedef struct Action {
-    char *name; // nom action
-    char *url; // url du site
-    Option *options; // liste des options et de leur valeurs
-} Action;
-
 typedef struct  Link{
 char *url;
 char* tag;

@@ -1,4 +1,5 @@
 #include "header.h"
+#include "parser.h"
 
 int main(int argc, char *argv[])
 {
@@ -13,7 +14,6 @@ printf("%s","  _________                                 .__                \n"
   char *extractAlltag[10]={"a","img","script","source","link"};
   execute(extractAlltag,"https://openclassrooms.com/forum/sujet/barre-de-progression-en-c");*/
 
-    //TEST GETFILEPATH
 
  return 0;
 }

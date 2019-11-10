@@ -7,6 +7,7 @@
 #include "parser.h"
 
 int checkFileExtension(char *filePath, char *extension) {
+
     if(strrchr(filePath, '.') != NULL && strcmp(extension, strrchr(filePath, '.') + 1) != 0) {
         printf("L\'extension du fichier n\'est pas %s, veuillez entrer un nouveau chemin\n", extension);
         return 0;
@@ -16,6 +17,7 @@ int checkFileExtension(char *filePath, char *extension) {
 }
 
 int checkFileExists(char *filePath) {
+
     FILE *file = NULL;
 
     file = fopen(filePath, "r");
@@ -42,11 +44,7 @@ char *getFilePath() {
             filePath[strlen(filePath) - 1] = '\0';
         }
 
-        if(checkFileExtension(filePath, "sconf") == 0) {
-            continue;
-        }
-
-    } while(checkFileExists(filePath) == 0);
+    } while(checkFileExists(filePath) == 0 || checkFileExtension(filePath, "sconf") == 0);
 
     printf("Fichier de configuration trouvé\n\nLecture du fichier en cours...\n");
 
@@ -57,10 +55,6 @@ long getMaxLineSize(FILE *file) {
     char currentChar;
     long count = 0;
     long max = 0;
-    if(file == NULL) {
-        printf("Error with get max size of line");
-        return 0;
-    }
 
     currentChar = fgetc(file);
     while(currentChar != EOF) {
@@ -232,8 +226,6 @@ void setOptions(Action *action, FILE *file, int position) {
                     action->keys = tempKeys;
                     action->values = tempValues;
                 }
-
-
 
                 action->keys[action->length] = malloc(sizeof(char) * strlen(removeSpaces(newKey)) + 1);
                 action->values[action->length] = malloc(sizeof(char) * strlen(removeSpaces(newValue)) + 1);
