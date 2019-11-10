@@ -5,7 +5,7 @@ void actionTodo(){
 
 }
 void execute(char** tabaction,char*url){
-    for(int i=0;i<5;++i){
+    for(int i=0;i<8;i++){
         printf("%s\n","--------------------------------------------------------------");
         printf("                                %s  \n",tabaction[i]);
         printf("%s\n","--------------------------------------------------------------");
@@ -23,14 +23,21 @@ void extractAll(char *url,char* tag) {
     char *srcOrHref=malloc(sizeof(char)*6);
     strcpy(srcOrHref,hrefOrSrcRouter(tag));
     char *beginTag = malloc(sizeof(char)*strlen(tag)+10);
-    sprintf(beginTag,"<%s\0",tag);
+    sprintf(beginTag,"<%s",tag);
     char* filename=malloc(sizeof(char)*40);
     strcpy(filename,filenameDynamicTxt(tag,1));
-
+    char *endTag = malloc(sizeof(char)*strlen(tag)+10);
+    sprintf(endTag,"</%s>",tag);
     FILE * file = fopen(filename,"w+");
     if(file!=NULL) {
-      // extractContentBetweenTag(codeHtml,0,"<header","</header>");
-      extractLink(codeHtml,file,beginTag,srcOrHref);
+printf(" begin tag %s and endTag :%s",beginTag,endTag);
+       if(!strcmp(tag,"img") || !strcmp(tag,"source")|| !strcmp(tag,"a")|| !strcmp(tag,"script")|| !strcmp(tag,"link")){
+           extractLink(codeHtml,file,beginTag,srcOrHref);
+       }else{
+
+           //extractContentBetweenTag(codeHtml,0,beginTag,endTag);
+       }
+
         fclose(file);
     }
 }
@@ -55,6 +62,25 @@ char* trim_space(char *str,int taille ) {
     return newStr;
 
 }
+void counterSpaceFunc(int * counterSpace,char value){
+    if(value==' ' ){
+        *counterSpace+=1;
+    }else{
+        if(value!='\n'){
+            *counterSpace=0;
+        }
+
+    }
+}
+void counterReturnLineFunc(int * counterReturnLine,char value){
+    if(value=='\n' ){
+        *counterReturnLine+=1;
+    }else {
+        if (value != ' ') {
+            *counterReturnLine = 0;
+        }
+    }
+}
 /**
  * @author Rani Kharsa
  * @param code_html
@@ -62,8 +88,9 @@ char* trim_space(char *str,int taille ) {
  * @param title_level
  * @brief extract all between a tag
  */
+ /* si il a plus de 6 espace il arrete d'enregistrer et reprends quand il rencontre des lettres*/
  void extractContentBetweenTag(char *  codeHtml,int number,char* beginTag,char * endTag){
-     int i,end,begin,findBeginSave;
+     int i,end,begin,findBeginSave,counterSpace=0,counterReturnLine=0;
      char *searchBeginTag =beginTag,*tagOpen = codeHtml;
     char *searchEndTag =endTag,*tagEnd = codeHtml;
     FILE* file = fopen("download/content.txt","w");
@@ -74,11 +101,18 @@ char* trim_space(char *str,int taille ) {
             findBeginSave=0;
             for(i=begin;i<end;i++){
                 if(findBeginSave==1) {
-                    if (codeHtml[i] == '<'){
+                    if (codeHtml[i] == '<' ){
                         findBeginSave=0;
                         continue;
                     }
-                    fputc(codeHtml[i], file);
+                    counterSpaceFunc(&counterSpace,codeHtml[i]);
+                    counterReturnLineFunc(&counterReturnLine,codeHtml[i]);
+                    //|| !strcmp(tag,"img")
+                    if(counterReturnLine<3 && counterSpace <4){
+                        fputc(codeHtml[i], file);
+
+                    }
+
                 }else{
                     if (codeHtml[i] == '>') {
                         findBeginSave = 1;
@@ -90,6 +124,7 @@ char* trim_space(char *str,int taille ) {
             tagEnd+=strlen(searchEndTag);
         }
         fclose(file);
+        printf("%s\n","Download successful");
     }
 
  }
@@ -168,7 +203,7 @@ void process(int beginTag,int endTag,char* codeHtml,char* searchBeginTag,FILE*fi
      */
 void treatment(char * urlFind ,char * beginTag,FILE* file,    int nbUrl ) {
     //traitement des ext ici
-    printf("%s\n",urlFind);
+    printf("%s \n",urlFind);
     if (!strcmp(beginTag, "<img") || !strcmp(beginTag,"<source")) {
         fprintf(file, "%s \n", urlFind);
         saveMedia(urlFind,nbUrl,beginTag);

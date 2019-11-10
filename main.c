@@ -10,7 +10,7 @@ printf("%s","  _________                                 .__                \n"
             "/_______  /\\___  >__|  (____  /   __/|   __/|__|___|  /\\___  / \n"
             "        \\/     \\/           \\/|__|   |__|           \\//_____/  ");
     printf("\n%s\n","--------------------------------------------------------------");
-  char *extractAlltag[10]={"a","img","source","link","script"};
+  char *extractAlltag[9]={"a","img","source","link","script","p","header","strong"};
   execute(extractAlltag,"https://openclassrooms.com/fr/courses/19980-apprenez-a-programmer-en-c/16421-lire-et-ecrire-dans-des-fichiers");
 
  return 0;
