@@ -60,12 +60,13 @@ char *getHtmlCode(char* url){
             fprintf(stderr, "curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
         }
         //clean and close session curl
-        curl_easy_cleanup(curl);
+
         return s.ptr;
     }else{
         printf("curl_easy_init() failed");
         return NULL;
     }
+    curl_easy_cleanup(curl);
 }
 /**
  * @author Rani Kharsa
@@ -96,10 +97,11 @@ void getCodeInFile(char* url,int i ,char* beginTag){
                 printf("Download successful\n");
             }
             //clean and close session curl
-            curl_easy_cleanup(curl);
+
         }else{
             printf("curl_easy_init() failed");
         }
+        curl_easy_cleanup(curl);
         fclose(fp);
     }else{
         printf("Can't open the file\n");
@@ -135,6 +137,7 @@ char * getExtension(char * url ){
  */
 void saveMedia(char* url,int i,char* beginTag ){//verif type mime
     CURL *curl ;
+    curl=curl_easy_init();
     char *urlCpy=malloc(sizeof(char)*200);
     strcpy(urlCpy,url);
     char* ext=getExtension(url);
@@ -144,7 +147,7 @@ void saveMedia(char* url,int i,char* beginTag ){//verif type mime
   //  printf("url cpy   %s\n filename : %s\n extt: %s",urlCpy,filename,ext);
     FILE* fp=fopen(filename,"wb");
     if(fp!=NULL){
-        curl=curl_easy_init();
+
         curl_easy_setopt(curl,CURLOPT_URL,urlCpy);
         curl_easy_setopt(curl,CURLOPT_WRITEDATA,fp);
         curl_easy_setopt(curl,CURLOPT_FAILONERROR,1L);
@@ -156,9 +159,9 @@ void saveMedia(char* url,int i,char* beginTag ){//verif type mime
             printf("ERROR: %s\n",curl_easy_strerror(result));
         }
         fclose(fp);
-        curl_easy_cleanup(curl);
+
     }else{
         printf("Can't open  the file\n");
     }
-
+    curl_easy_cleanup(curl);
 }

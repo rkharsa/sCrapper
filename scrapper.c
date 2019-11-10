@@ -33,39 +33,17 @@ void extractAll(char *url,char* tag) {
         FILE * file = fopen(filename,"w+");
         if (file != NULL) {
 
-            extractLink(codeHtml, file, beginTag, srcOrHref);
+           extractLink(codeHtml, file, beginTag, srcOrHref);
             fclose(file);
         }else{
             printf("Can't open the file");
         }
     }else{
-       // extractContentBetweenTag(codeHtml,0,beginTag,endTag);
+        extractContentBetweenTag(codeHtml,0,beginTag,endTag);
        }
 
-
     }
 
-char* trim_space(char *str,int taille ) {
-    int beginSave=0,counter=0;
-    char* newStr= malloc(sizeof(char)*taille);
-    for (int i = 0; i <strlen(str) ; i++) {
-        if(str[i]!=' ' || beginSave==1){
-            beginSave=1;
-            newStr[counter]=str[i];
-            counter++;
-        }
-    }
-
-    for ( int j= strlen(newStr) ; 0<j ; j--) {
-        if(newStr[j]!=32 && newStr[j]!=0){
-            break;
-        }
-
-    }
- printf("%s strlen %d",newStr,strlen(newStr));
-    return newStr;
-
-}
 void counterSpaceFunc(int * counterSpace,char value){
     if(value==' ' ){
         *counterSpace+=1;
