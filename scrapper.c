@@ -32,7 +32,6 @@ void extractAll(char *url,char* tag) {
     if(!strcmp(tag,"img") || !strcmp(tag,"source")|| !strcmp(tag,"a")|| !strcmp(tag,"script")|| !strcmp(tag,"link")) {
         FILE * file = fopen(filename,"w+");
         if (file != NULL) {
-
            extractLink(codeHtml, file, beginTag, srcOrHref);
             fclose(file);
         }else{
@@ -75,8 +74,9 @@ void counterReturnLineFunc(int * counterReturnLine,char value){
      int i,end,begin,findBeginSave,counterSpace=0,counterReturnLine=0;
      char *searchBeginTag =beginTag,*tagOpen = codeHtml;
     char *searchEndTag =endTag,*tagEnd = codeHtml;
-    FILE* file = fopen("download/content.txt","w");
-    if(file!=NULL){
+
+    FILE* file = fopen(filenameDynamicContainer(strstr(beginTag,"<")+1,0,"txt"),"w+");
+        if(file!=NULL){
         while ((tagOpen=strstr(tagOpen,searchBeginTag))!= NULL && (tagEnd=strstr(tagEnd,searchEndTag))!=NULL){
             begin=tagOpen-codeHtml;
             end=tagEnd-codeHtml;
