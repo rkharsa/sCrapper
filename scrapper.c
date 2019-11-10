@@ -4,8 +4,8 @@ void actionTodo(){
 //lister les actiones demander pour une  url
 
 }
-void execute(char** tabaction,char*url){
-    for(int i=0;i<8;i++){
+void execute(char** tabaction,char*url,int taille){
+    for(int i=0;i<taille;i++){
         printf("%s\n","--------------------------------------------------------------");
         printf("                                %s  \n",tabaction[i]);
         printf("%s\n","--------------------------------------------------------------");
@@ -28,19 +28,23 @@ void extractAll(char *url,char* tag) {
     strcpy(filename,filenameDynamicTxt(tag,1));
     char *endTag = malloc(sizeof(char)*strlen(tag)+10);
     sprintf(endTag,"</%s>",tag);
-    FILE * file = fopen(filename,"w+");
-    if(file!=NULL) {
-printf(" begin tag %s and endTag :%s",beginTag,endTag);
-       if(!strcmp(tag,"img") || !strcmp(tag,"source")|| !strcmp(tag,"a")|| !strcmp(tag,"script")|| !strcmp(tag,"link")){
-           extractLink(codeHtml,file,beginTag,srcOrHref);
-       }else{
+    printf(" begin tag %s and endTag :%s", beginTag, endTag);
+    if(!strcmp(tag,"img") || !strcmp(tag,"source")|| !strcmp(tag,"a")|| !strcmp(tag,"script")|| !strcmp(tag,"link")) {
+        FILE * file = fopen(filename,"w+");
+        if (file != NULL) {
 
-           //extractContentBetweenTag(codeHtml,0,beginTag,endTag);
+            extractLink(codeHtml, file, beginTag, srcOrHref);
+            fclose(file);
+        }else{
+            printf("Can't open the file");
+        }
+    }else{
+       // extractContentBetweenTag(codeHtml,0,beginTag,endTag);
        }
 
-        fclose(file);
+
     }
-}
+
 char* trim_space(char *str,int taille ) {
     int beginSave=0,counter=0;
     char* newStr= malloc(sizeof(char)*taille);

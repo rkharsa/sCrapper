@@ -50,6 +50,8 @@ char* filenameDynamicContainer(char * type,int i,char* ext ){
         }
     }else if(!strcmp("<script",type)){
         sprintf(str, "download/scriptTag/js%d.js", i);
+    }else{
+        sprintf(str, "download/content/%s.txt",type);
     }
 
     return str;
