@@ -6,32 +6,49 @@
 #include <stdlib.h>
 #include "parser.h"
 
+int checkFileExtension(char *filePath, char *extension) {
+    if(strrchr(filePath, '.') != NULL && strcmp(extension, strrchr(filePath, '.') + 1) != 0) {
+        printf("L\'extension du fichier n\'est pas %s, veuillez entrer un nouveau chemin\n", extension);
+        return 0;
+    }
+
+    return 1;
+}
+
+int checkFileExists(char *filePath) {
+    FILE *file = NULL;
+
+    file = fopen(filePath, "r");
+
+    if(file == NULL) {
+        printf("Nous ne trouvons pas de fichier de configuration à cet endroit là, veuillez entrer un nouveau chemin\n");
+        return 0;
+    }
+
+    fclose(file);
+    return 1;
+}
+
 char *getFilePath() {
 
-    FILE *configFile = NULL;
     char *filePath = malloc(sizeof(char) * LINE_FILE_MAX + 1);
 
     printf("Veuillez entrer le chemin de votre fichier de configuration\n");
 
-    while(configFile == NULL) {
+    do {
         fgets(filePath, LINE_FILE_MAX, stdin);
 
         if(filePath[strlen(filePath) - 1] == '\n') {
             filePath[strlen(filePath) - 1] = '\0';
         }
 
-        if(strrchr(filePath, '.') != NULL && strcmp("sconf", strrchr(filePath, '.') + 1) != 0) {
-            printf("L\'extension du fichier n\'est pas sconf, veuillez entrer un nouveau chemin\n");
+        if(checkFileExtension(filePath, "sconf") == 0) {
             continue;
         }
 
-        configFile = fopen(filePath, "r");
-        if(configFile == NULL) {
-            printf("Nous ne trouvons pas de fichier de configuration à cet endroit là, veuillez entrer un nouveau chemin\n");
-        }
-    }
+    } while(checkFileExists(filePath) == 0);
+
     printf("Fichier de configuration trouvé\n\nLecture du fichier en cours...\n");
-    fclose(configFile);
 
     return filePath;
 }

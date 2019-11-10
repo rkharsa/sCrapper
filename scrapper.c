@@ -51,7 +51,7 @@ char* trim_space(char *str,int taille ) {
         }
 
     }
- printf("%s strlen %d",newStr,strlen(newStr));
+ printf("%s strlen %lu",newStr,strlen(newStr));
     return newStr;
 
 }

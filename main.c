@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[])
 {
-    printf("%s\n","--------------------------------------------------------------");
+    /*printf("%s\n","--------------------------------------------------------------");
 printf("%s","  _________                                 .__                \n"
             " /   _____/ ________________  ______ ______ |__| ____    ____  \n"
             " \\_____  \\_/ ___\\_  __ \\__  \\ \\____ \\\\____ \\|  |/    \\  / ___\\ \n"
@@ -11,7 +11,9 @@ printf("%s","  _________                                 .__                \n"
             "        \\/     \\/           \\/|__|   |__|           \\//_____/  ");
     printf("\n%s\n","--------------------------------------------------------------");
   char *extractAlltag[10]={"a","img","script","source","link"};
-  execute(extractAlltag,"https://openclassrooms.com/forum/sujet/barre-de-progression-en-c");
+  execute(extractAlltag,"https://openclassrooms.com/forum/sujet/barre-de-progression-en-c");*/
+
+    //TEST GETFILEPATH
 
  return 0;
 }

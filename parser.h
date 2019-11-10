@@ -24,7 +24,8 @@ typedef struct Task {
     Action *actions;
 } Task;
 
-
+int checkFileExtension(char *filePath, char *extension);
+int checkFileExists(char *filePath);
 char *getFilePath();
 long getMaxLineSize(FILE *file);
 void printActions(Action *actions, int length);
