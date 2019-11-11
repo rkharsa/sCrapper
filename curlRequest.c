@@ -78,7 +78,7 @@ char *getHtmlCode(char* url){
 void getCodeInFile(char* url,int i ,char* beginTag){
     char filename[200];
     int result;
-    char *urlCpy=malloc(sizeof(char)*200);
+    char *urlCpy=malloc(sizeof(char)*strlen(url)+10);
     strcpy(urlCpy,url);
     strcpy(filename,filenameDynamicContainer(beginTag,i,getExtension(url)));
     FILE* fp = fopen(filename,"w");
@@ -138,7 +138,7 @@ char * getExtension(char * url ){
 void saveMedia(char* url,int i,char* beginTag ){//verif type mime
     CURL *curl ;
     curl=curl_easy_init();
-    char *urlCpy=malloc(sizeof(char)*200);
+    char *urlCpy=malloc(sizeof(char)*strlen(url)+10);
     strcpy(urlCpy,url);
     char* ext=getExtension(url);
     char filename[200];

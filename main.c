@@ -17,7 +17,7 @@ printf("%s","  _________                                 .__                \n"
 
 
   char *extractAlltag[8]={"a","img","source","link","script","p","header","strong"};
-  execute(extractAlltag,"https://openclassrooms.com/fr/courses/19980-apprenez-a-programmer-en-c/16421-lire-et-ecrire-dans-des-fichiers",8);
+  execute(extractAlltag,"https://www.marmiton.org/recettes/recette_pizza-aux-3-fromages_31450.aspx",8);
 
 
  return 0;

@@ -151,7 +151,7 @@ void counterReturnLineFunc(int * counterReturnLine,char value){
 */
 void process(int beginTag,int endTag,char* codeHtml,char* searchBeginTag,FILE*file,int* nbUrl,const char**p,char const*toSearch,int posHref){
     int findBeginSave=0,counter=0,http,pos=0;
-    char*url_find=malloc(sizeof(char)*500);
+    char*url_find=malloc(sizeof(char)*400);
     for(int i=posHref-beginTag;i<endTag-beginTag;i++){
         pos=i+beginTag;
         // printf("%d\n ",pos);
@@ -193,7 +193,7 @@ void treatment(char * urlFind ,char * beginTag,FILE* file,    int nbUrl ) {
         fprintf(file, "%s \n", urlFind);
         printf("%s\n","Download successful");
     }else if (!strcmp(beginTag, "<link") || !strcmp(beginTag,"<script")) {
-        char *urlCpy=malloc(sizeof(char)*200);
+        char *urlCpy=malloc(sizeof(char)*strlen(urlFind)+10);
         strcpy(urlCpy,urlFind);
         if(!strcmp(getExtension(urlFind),"png")||  !strcmp(getExtension(urlFind),"ico") || !strcmp(getExtension(urlFind),"svg")){
             fprintf(file, "%s \n", urlCpy);
