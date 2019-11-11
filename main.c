@@ -17,7 +17,6 @@ int main(int argc, char *argv[])
     char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
     execute(extractAlltag,"https://www.marmiton.org/recettes/recette_pizza-aux-3-fromages_31450.aspx",8);
 
-
   /*  char *filePath = "../configFile.sconf";// à remplacer par getFilePath() mais là on gagne du temps pour les tests
 
     FILE *file = fopen(filePath, "r");

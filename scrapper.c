@@ -50,10 +50,10 @@ counterIncrem(counterFile," ");
     }
 
 void counterSpaceFunc(int * counterSpace,char value){
-    if(value==' ' ){
+    if(value==' ' || value==9 ){
         *counterSpace+=1;
     }else{
-        if(value!='\n'){
+        if(value!='\n' ){
             *counterSpace=0;
         }
 
@@ -64,7 +64,7 @@ void counterReturnLineFunc(int * counterReturnLine,char value){
     if(value=='\n' ){
         *counterReturnLine+=1;
     }else {
-        if (value != ' ') {
+        if (value != ' ' && value!=9  && value!=13) {
             *counterReturnLine = 0;
         }
     }
@@ -97,9 +97,9 @@ void counterReturnLineFunc(int * counterReturnLine,char value){
                     counterSpaceFunc(&counterSpace,codeHtml[i]);
                     counterReturnLineFunc(&counterReturnLine,codeHtml[i]);
                     //|| !strcmp(tag,"img")
-                    if(counterReturnLine<3 && counterSpace <4){
-                        fputc(codeHtml[i], file);
 
+                    if(counterReturnLine<1 && counterSpace <2){
+                            fputc(codeHtml[i], file);
                     }
 
                 }else{

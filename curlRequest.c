@@ -80,6 +80,7 @@ void getCodeInFile(char* url,int i ,char* beginTag){
     int result;
     char *urlCpy=malloc(sizeof(char)*strlen(url)+10);
     strcpy(urlCpy,url);
+
     strcpy(filename,filenameDynamicContainer(beginTag,i,getExtension(url)));
     FILE* fp = fopen(filename,"w");
     //open session curl=
@@ -104,7 +105,8 @@ void getCodeInFile(char* url,int i ,char* beginTag){
         curl_easy_cleanup(curl);
         fclose(fp);
     }else{
-        printf("Can't open the file\n");
+
+        printf("Can't open the file file :%s \n",filename);
     }
 
 }
@@ -123,7 +125,7 @@ char * getExtension(char * url ){
         ext=ptr;
         ptr = strtok(NULL, delim);
     }
-    if(strlen(ext)>5)
+    if(strlen(ext)>=4 || strstr(ext,"com")!=NULL)
         return " ";
     //printf("%s\n",ext);
     return ext;
