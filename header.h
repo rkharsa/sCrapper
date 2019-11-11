@@ -12,10 +12,6 @@ typedef struct StringRes {
     size_t len;
 } StringRes;
 
-typedef struct Option {
-    char *name;
-    char *value;
-} Option;
 
 typedef  struct  CounterFile{
 int nbImg;
@@ -27,9 +23,11 @@ int nbContent;
 
 
 }CounterFile;
+
 int * routerCounter(CounterFile*  counterFile,char * beginTag);
 void counterIncrem(CounterFile * counterFile,char*beginTag);
 CounterFile initCounterFile();
+
 int deleteRepositorie(char* repositorieName);
 int createRepositorie(char* repositorieName);
 
@@ -53,13 +51,6 @@ size_t writefunc(void *ptr, size_t size, size_t nmemb, StringRes *s);
 char *getHtmlCode(char* url);
 char * getExtension(char * url );
 void saveMedia(char* url,int i,char * beginTag );
-
-
-
-
-
-
-
 
 
 

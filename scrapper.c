@@ -59,6 +59,7 @@ void counterSpaceFunc(int * counterSpace,char value){
 
     }
 }
+
 void counterReturnLineFunc(int * counterReturnLine,char value){
     if(value=='\n' ){
         *counterReturnLine+=1;

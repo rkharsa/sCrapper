@@ -6,46 +6,57 @@
 #include <stdlib.h>
 #include "parser.h"
 
+int checkFileExtension(char *filePath, char *extension) {
+
+    if(strrchr(filePath, '.') != NULL && strcmp(extension, strrchr(filePath, '.') + 1) != 0) {
+        printf("L\'extension du fichier n\'est pas %s, veuillez entrer un nouveau chemin\n", extension);
+        return 0;
+    }
+
+    return 1;
+}
+
+int checkFileExists(char *filePath) {
+
+    FILE *file = NULL;
+
+    file = fopen(filePath, "r");
+
+    if(file == NULL) {
+        printf("Nous ne trouvons pas de fichier de configuration à cet endroit là, veuillez entrer un nouveau chemin\n");
+        return 0;
+    }
+
+    fclose(file);
+    return 1;
+}
+
 char *getFilePath() {
 
-    FILE *configFile = NULL;
     char *filePath = malloc(sizeof(char) * LINE_FILE_MAX + 1);
 
     printf("Veuillez entrer le chemin de votre fichier de configuration\n");
 
-    while(configFile == NULL) {
+    do {
         fgets(filePath, LINE_FILE_MAX, stdin);
 
         if(filePath[strlen(filePath) - 1] == '\n') {
             filePath[strlen(filePath) - 1] = '\0';
         }
 
-        if(strrchr(filePath, '.') != NULL && strcmp("sconf", strrchr(filePath, '.') + 1) != 0) {
-            printf("L\'extension du fichier n\'est pas sconf, veuillez entrer un nouveau chemin\n");
-            continue;
-        }
+    } while(checkFileExists(filePath) == 0 || checkFileExtension(filePath, "sconf") == 0);
 
-        configFile = fopen(filePath, "r");
-        if(configFile == NULL) {
-            printf("Nous ne trouvons pas de fichier de configuration à cet endroit là, veuillez entrer un nouveau chemin\n");
-        }
-    }
     printf("Fichier de configuration trouvé\n\nLecture du fichier en cours...\n");
-    fclose(configFile);
 
     return filePath;
 }
 
 long getMaxLineSize(FILE *file) {
-    char currentChar;
+
     long count = 0;
     long max = 0;
-    if(file == NULL) {
-        printf("Error with get max size of line");
-        return 0;
-    }
+    char currentChar = fgetc(file);
 
-    currentChar = fgetc(file);
     while(currentChar != EOF) {
         if(currentChar == '\n') {
             currentChar = fgetc(file);
@@ -69,7 +80,7 @@ void printActions(Action *actions, int length) {
     for (int i = 0; i < length; i++) {
         printf("name : *%s*\nurl : *%s*\n", actions[i].name, actions[i].url);
 
-        for (int j = 0; j < actions[i].length; j++) {
+        for (int j = 0; j < actions[i].optionsLength; j++) {
 
             printf("Action %d\nOption %d\nKey : *%s*\nValue : *%s*\n",
                    i, j, actions[i].keys[j], actions[i].values[j]);
@@ -83,15 +94,14 @@ void printTasks(Task *tasks, int length) {
     for (int i = 0; i < length; i++) {
         printf("name : *%s*\nhour : *%d*\nminutes : *%d*\nsecondes : *%d*\n", tasks[i].name, tasks[i].hours,
                tasks[i].minutes, tasks[i].seconds);
-        for (int j = 0; j < tasks[i].actionLength; ++j) {
+
+        for (int j = 0; j < tasks[i].actionsLength; ++j) {
             printf("action : *%s*\n", tasks[i].actions[j].name);
         }
-
     }
-
 }
 
-char *removeSpaces(char *str)
+char *removeStrSpaces(char *str)
 {
     int i = 0;
     int j = 0;
@@ -111,36 +121,51 @@ char *removeSpaces(char *str)
     return newStr;
 }
 
-int checkTaskFormat(char *optionStr, char *first, char *last) {
-    if(strstr(optionStr, first) == NULL
-       || strstr(optionStr, last) == NULL) {
+int checkLineEnds(char *line, char *first, char *last) {
+    if(strstr(line, first) == NULL
+       || strstr(line, last) == NULL) {
         return 0;
     }
 
-    if(strstr(optionStr, first) > strstr(optionStr, last)) {
-        return 0;
-    }
-
-    return 1;
-}
-
-int checkOptionFormat(char *optionStr, char *first, char *middle, char *last) {
-    if(strstr(optionStr, first) == NULL
-       || strstr(optionStr, last) == NULL
-       || strstr(optionStr, middle) == NULL) {
-        return 0;
-    }
-
-    if(strstr(optionStr, first) > strstr(optionStr, last)
-       || strstr(optionStr, first) > strstr(optionStr, middle)
-       || strstr(optionStr, middle) > strstr(optionStr, last)) {
+    if(strstr(line, first) > strstr(line, last)) {
         return 0;
     }
 
     return 1;
 }
 
-int isOptionFinished(char *line) {
+int checkLineFormat(char *line, char *first, char *middle, char *last) {
+
+    if(strstr(line, first) == NULL
+       || strstr(line, last) == NULL
+       || strstr(line, middle) == NULL) {
+        return 0;
+    }
+
+    if(strstr(line, first) > strstr(line, last)
+       || strstr(line, first) > strstr(line, middle)
+       || strstr(line, middle) > strstr(line, last)) {
+        return 0;
+    }
+
+    return 1;
+}
+
+int isActionFinished(char *line) {
+    int i;
+    for(i = 0; i < strlen(line); i++) {
+        switch(line[i]) {
+            case '=' : return 1;
+            case '{' : return 0;
+            case '(' : return 1;
+            case EOF : return 1;
+            default:   continue;
+        }
+    }
+    return 0;
+}
+
+int isTaskFinished(char *line) {
     int i;
     for(i = 0; i < strlen(line); i++) {
         switch(line[i]) {
@@ -154,196 +179,216 @@ int isOptionFinished(char *line) {
     return 0;
 }
 
+char *fgetsWithCheck(FILE *file, int size) {
 
-void setOptions(Action *action, FILE *file, int position) {
-    long lineSize = getMaxLineSize(file);
-    char *lineFile = malloc(sizeof(char) * lineSize + 1); // +1 pour le 0
-    char *newKey = malloc(sizeof(char) * lineSize + 1);
-    char *newValue = malloc(sizeof(char) * lineSize + 1);
-    int keyLength;
-    int valueLength;
-    char **tempKeys;
-    char **tempValues;
+    char *line = malloc(sizeof(char) * (size + 1));
+
+    if(fgets(line, size, file) == NULL) {
+        return NULL;
+    }
+
+    if (line[strlen(line) - 1] == '\n') {
+        line[strlen(line) - 1] = '\0';
+    }
+
+    return line;
+}
+
+void setKeyValue(Action *action, char *key, char *value) {
+
+    if(action->optionsLength > 0) {
+        char **tempKeys = realloc(action->keys, sizeof(char*) * (action->optionsLength + 1));
+        char **tempValues = realloc(action->values, sizeof(char*) * (action->optionsLength + 1));
+
+        action->keys = tempKeys;
+        action->values = tempValues;
+    }
+
+    action->keys[action->optionsLength] = malloc(sizeof(char) * strlen(key) + 1);
+    action->values[action->optionsLength] = malloc(sizeof(char) * strlen(value) + 1);
+
+    strcpy(action->keys[action->optionsLength], key);
+    strcpy(action->values[action->optionsLength], value);
+
+    action->optionsLength++;
+}
+
+void setActionAttribute(Action *action, char *key, char *value) {
+
+    if(strcmp(key, "name") == 0) {
+
+        action->name = malloc(sizeof(char) * strlen(value) + 1);
+        action->name = value;
+
+    } else if(strcmp(key, "url") == 0) {
+
+        action->url = malloc(sizeof(char) * strlen(value) + 1);
+        action->url = value;
+
+    } else {
+        setKeyValue(action, key, value);
+    }
+
+}
+
+void setTaskAttribute(Task *task, char *key, char *value) {
+
+    if(strcmp(key, "name") == 0) {
+
+        task->name = malloc(sizeof(char) * strlen(value) + 1);
+        task->name = value;
+
+    } else if(strcmp(key, "second") == 0) {
+        task->seconds = atoi(value);
+
+    } else if(strcmp(key, "minute") == 0) {
+        task->minutes = atoi(value);
+
+    } else if(strcmp(key, "hour") == 0) {
+        task->hours = atoi(value);
+    }
+}
+
+char *getKey(char *line, char *first, char *delimiter) {
+
+    char *key = malloc(sizeof(char) * strlen(line) + 1);
+    int length = strstr(line, delimiter) - line - strlen(delimiter);
+
+    strncpy(key, strstr(line, first) + strlen(first), length);
+    key[length] = '\0';
+
+    return removeStrSpaces(key);
+}
+
+char *getValue(char *line, char *delimiter, char *last) {
+
+    char *value = malloc(sizeof(char) * strlen(line) + 1);
+    int length = strstr(line, last) - strstr(line, delimiter) - strlen(delimiter);
+
+    strncpy(value, strstr(line, delimiter) + strlen(delimiter), length);
+    value[length] = '\0';
+
+    return removeStrSpaces(value);
+}
+
+void setActionOption(Action *action, char *line, char *first, char *delimiter, char *last) {
+
+    if(checkLineFormat(line, first, delimiter, last) == 0) {
+        return;
+    }
+
+    char *key = getKey(line, first, delimiter);
+    char *value = getValue(line, delimiter, last);
+
+    setActionAttribute(action, key, value);
+}
+
+char *getStrUntilChrs(char *str, int *position, char *chrs) {
+
+    char *newStr = malloc(sizeof(char) * strlen(str) + 1);
+    int i;
+
+    for (i = 0; i < strlen(str); i++) {
+        for (int j = 0; j < strlen(chrs); ++j) {
+            if(str[i] == chrs[j]) {
+                i += 1;
+                break;
+            }
+        }
+        newStr[i] = str[i];
+    }
+
+    *position += i - 1;
+    newStr[i] = '\0';
+
+    return newStr;
+}
+
+char **getUrls(char *line, int *urlsLength) {
+
+    char **urls = malloc(sizeof(char*));
+    char **reallocUrls;
+    int position = 0;
+
+    while(position < strlen(line)) {
+        reallocUrls = realloc(urls, sizeof(char*) * (*urlsLength + 1));
+        urls = reallocUrls;
+
+        char *newUrl = getStrUntilChrs(line, &position, ",)");
+
+        urls[*urlsLength] = malloc(sizeof(char) * (sizeof(newUrl) + 1));
+        strcpy(urls[*urlsLength], removeStrSpaces(newUrl));
+        *urlsLength += 1;
+        position++;
+    }
+
+    return urls;
+}
+
+void linkTaskActions(Task *task, char **urls, int urlsLength, Action *actions, int actionsLength) {
+
+    Action *tempActions;
+    task->actionsLength = 0;
+    task->actions = malloc(sizeof(Action));
+
+    for (int i = 0; i < urlsLength; ++i) {
+        for(int j = 0; j < actionsLength; j++) {
+
+            if(strcmp(actions[j].url, urls[i]) == 0) {
+
+                tempActions = realloc(task->actions, sizeof(Action) * (task->actionsLength + 1));
+                task->actions = tempActions;
+
+                task->actions[task->actionsLength] = actions[j];
+                task->actionsLength++;
+            }
+        }
+    }
+}
+
+void setAllActionOptions(Action *action, FILE *file, int position) {
+
+    long maxLineSize = getMaxLineSize(file);
+    char *fileLine;
 
     fseek(file, position, SEEK_SET);
 
     action->keys = malloc(sizeof(char*));
     action->values = malloc(sizeof(char*));
-    action->length = 0;
+    action->optionsLength = 0;
 
-    while(fgets(lineFile, (int)lineSize, file) != NULL) {
-
-        if(lineFile[strlen(lineFile) - 1] == '\n') {
-            lineFile[strlen(lineFile) - 1] = '\0';
-        }
-
-        if(isOptionFinished(lineFile) == 1) {
-            break;
-        }
-
-        if(checkOptionFormat(lineFile, "{", "->", "}") == 1) { // si il ya bien { -> }
-
-            keyLength = strstr(lineFile, "->") - lineFile - 2;
-            valueLength = strchr(lineFile, '}') - strstr(lineFile, "->") - 3;
-
-            strncpy(newKey, strchr(lineFile, '{') + 1, keyLength);
-            newKey[keyLength] = '\0';
-
-            strncpy(newValue, strstr(lineFile, "->") + 3, valueLength);
-            newValue[valueLength] = '\0';
-
-            if(strcmp(removeSpaces(newKey), "name") == 0) {
-
-                action->name = malloc(sizeof(char) * strlen(removeSpaces(newValue)) + 1);
-                strcpy(action->name, removeSpaces(newValue));
-
-            } else if (strcmp(removeSpaces(newKey), "url") == 0) {
-
-                action->url = malloc(sizeof(char) * strlen(removeSpaces(newValue)) + 1);
-                strcpy(action->url, removeSpaces(newValue));
-
-            } else {
-
-                if(action->length > 0) {
-
-                    tempKeys = realloc(action->keys
-                            , sizeof(char*) * (action->length + 1));
-
-                    tempValues = realloc(action->values
-                            , sizeof(char*) * (action->length + 1));
-
-                    action->keys = tempKeys;
-                    action->values = tempValues;
-                }
-
-
-
-                action->keys[action->length] = malloc(sizeof(char) * strlen(removeSpaces(newKey)) + 1);
-                action->values[action->length] = malloc(sizeof(char) * strlen(removeSpaces(newValue)) + 1);
-
-                strcpy(action->keys[action->length], removeSpaces(newKey));
-                strcpy(action->values[action->length], removeSpaces(newValue));
-
-                action->length += 1;
-            }
-        }
-    }
-}
-
-
-
-void setTaskActions(Task *task, Action *actions, int actionLength, char *urls) {
-
-    char *temp = malloc(sizeof(char) * strlen(urls));
-    int index = 0;
-    int arrayLength = 0;
-    char **stringArray = malloc(sizeof(char*));
-    char **newStringArray;
-    Action *newAction;
-
-    task->actionLength = 0;
-
-    for (int i = 0; i < strlen(urls); ++i) {
-
-        if(urls[i] == ',' || urls[i] == ')') {
-
-            newStringArray = realloc(stringArray, sizeof(char*) * (arrayLength + 1));
-            stringArray = newStringArray;
-
-            stringArray[arrayLength] = malloc(sizeof(char) * strlen(temp) + 1);
-            strcpy(stringArray[arrayLength], removeSpaces(temp));
-            memset(temp, 0, strlen(temp));
-
-            arrayLength++;
-            index = 0;
-        } else if(urls[i] != '('){
-            temp[index] = urls[i];
-            index++;
-        }
-    }
-
-    for (int j = 0; j < arrayLength; ++j) {
-        for(int k = 0; k < actionLength; k++) {
-            if(strcmp(actions[k].url, stringArray[j]) == 0) {
-                //malloc actions etc etc mon poto
-                if(task->actionLength > 0) {
-                    newAction = realloc(task->actions, sizeof(Action) * (task->actionLength + 1));
-                    task->actions = newAction;
-                } else {
-                    task->actions = malloc(sizeof(Action));
-                }
-
-                task->actions[task->actionLength] = actions[k];
-                task->actionLength++;
-            }
-        }
+    while( (fileLine = fgetsWithCheck(file, (int)maxLineSize)) != NULL && isActionFinished(fileLine) == 0) {
+        setActionOption(action, fileLine, "{", "->", "}");
     }
 
 }
 
+void setAllTaskOptions(Task *task, FILE *file, int position, Action *actions, int actionsLength) {
 
-void setTasksOptions(Task *task, FILE *file, int position, Action *actions, int actionLength) {
-    long lineSize = getMaxLineSize(file);
-    char *lineFile = malloc(sizeof(char) * lineSize + 1); // +1 pour le 0
-    char *newKey = malloc(sizeof(char) * lineSize + 1);
-    char *newValue = malloc(sizeof(char) * lineSize + 1);
-    int keyLength;
-    int valueLength;
+    long maxLineSize = getMaxLineSize(file);
+    char *fileLine;
 
     fseek(file, position, SEEK_SET);
 
-    while(fgets(lineFile, (int)lineSize, file) != NULL) {
+    while( (fileLine = fgetsWithCheck(file, (int)maxLineSize)) != NULL && isTaskFinished(fileLine) == 0) {
 
-        if(lineFile[strlen(lineFile) - 1] == '\n') {
-            lineFile[strlen(lineFile) - 1] = '\0';
-        }
+        if(checkLineFormat(fileLine, "{", "->", "}") == 1) {
 
-        if(isOptionFinished(lineFile) == 1) {
-            break;
-        }
+            setTaskAttribute(task, getKey(fileLine, "{", "->"), getValue(fileLine, "->", "}"));
 
-        if(checkOptionFormat(lineFile, "{", "->", "}") == 1) { // si il ya bien { -> }
+        } else if(checkLineEnds(fileLine, "(", ")") == 1) {
 
-            // a refacto
-            keyLength = strstr(lineFile, "->") - lineFile - 2;
-            valueLength = strchr(lineFile, '}') - strstr(lineFile, "->") - 3;
-
-            strncpy(newKey, strchr(lineFile, '{') + 1, keyLength);
-            newKey[keyLength] = '\0';
-
-            strncpy(newValue, strstr(lineFile, "->") + 3, valueLength);
-            newValue[valueLength] = '\0';
-
-            // a refacto ptete mdr
-            if(strcmp(removeSpaces(newKey), "name") == 0) {
-
-                task->name = malloc(sizeof(char) * strlen(removeSpaces(newValue)) + 1);
-                strcpy(task->name, removeSpaces(newValue));
-
-            } else if (strcmp(removeSpaces(newKey), "minute") == 0) {
-
-                task->minutes = atoi(newValue);
-
-            } else if (strcmp(removeSpaces(newKey), "second") == 0) {
-
-                task->seconds = atoi(newValue);
-
-            } else if (strcmp(removeSpaces(newKey), "hour") == 0) {
-
-                task->hours = atoi(newValue);
-
-            }
-
-        } else if(checkTaskFormat(lineFile, "(",")") == 1) {
-
-            setTaskActions(task, actions, actionLength, lineFile);
-
+            int urlsLength = 0;
+            char **urls = getUrls(strchr(fileLine, '(') + 1, &urlsLength);
+            linkTaskActions(task, urls, urlsLength, actions, actionsLength);
         }
     }
+
 }
 
 long getLinePosAfterChar(char charToFind, FILE *file, int iteration) {
-    rewind(file);//revenir au debut du fichier
+
+    rewind(file);
     char c;
     int count = 0;
 
@@ -367,17 +412,18 @@ long getLinePosAfterChar(char charToFind, FILE *file, int iteration) {
 }
 
 long getLinePosAfterStr(char *strToFind, FILE *file, int iteration) {
+
     rewind(file);//revenir au debut du fichier
     int strCount = 0;
     long lineSize = getMaxLineSize(file);
-    char *lineFile = malloc(sizeof(char) * lineSize + 1); // +1 pour le 0
+    char *fileLine = malloc(sizeof(char) * lineSize + 1); // +1 pour le 0
 
-    while(fgets(lineFile, (int)lineSize, file) != NULL) {
-        if(lineFile[strlen(lineFile) - 1] == '\n') {
-            lineFile[strlen(lineFile) - 1] = '\0';
+    while(fgets(fileLine, (int)lineSize, file) != NULL) {
+        if(fileLine[strlen(fileLine) - 1] == '\n') {
+            fileLine[strlen(fileLine) - 1] = '\0';
         }
 
-        if(strstr(lineFile, strToFind) != NULL) {// chaîne trouvée
+        if(strstr(fileLine, strToFind) != NULL) {// chaîne trouvée
             strCount += 1;
             if(strCount == iteration) { // si on veut aller à la deuxième action par ex
                 return ftell(file);
@@ -389,54 +435,46 @@ long getLinePosAfterStr(char *strToFind, FILE *file, int iteration) {
     return -1;
 }
 
-//juste faudra check que le name et url existent bien a laide dune fct de verif
+Action *getActions(FILE *file, int *actionsLength) {
 
-
-
-
-//fct principale enffft
-Action *parseActions(FILE *fileToParse, int *actionLength) {
-    rewind(fileToParse);
+    rewind(file);
     int position;
-    Action *action = malloc(sizeof(Action));
-    Action *newAction;
+    Action *actions = malloc(sizeof(Action));
+    Action *tempActions;
 
-    while((position = (int)getLinePosAfterChar('=', fileToParse, *actionLength + 1)) != -1) {
+    while((position = (int)getLinePosAfterChar('=', file, *actionsLength + 1)) != -1) {
 
-        if(*actionLength > 0) {
-            newAction = realloc(action, sizeof(Action) * (*actionLength + 1));
-
-            if(newAction == NULL) {
-                fprintf(stderr, "ouch");
-            } else {
-                action = newAction;
-            }
+        if(*actionsLength > 0) {
+            tempActions = realloc(actions, sizeof(Action) * (*actionsLength + 1));
+            actions = tempActions;
         }
 
-        setOptions(&action[*actionLength], fileToParse, position);
-
-        *actionLength += 1;
+        setAllActionOptions(&actions[*actionsLength], file, position);
+        *actionsLength += 1;
     }
-    return action;
+
+    return actions;
 }
 
 
-Task *parseTasks(FILE *fileToParse, int *length, Action *actions, int actionLength) {
-    rewind(fileToParse);
+Task *getTasks(FILE *file, int *tasksLength, Action *actions, int actionsLength) {
+
+    rewind(file);
     int position;
-    Task *task = malloc(sizeof(Task));
-    Task *newTask;
+    Task *tasks = malloc(sizeof(Task));
+    Task *tempTasks;
 
-    while((position = (int)getLinePosAfterStr("==", fileToParse, *length + 1)) != -1) {
+    while((position = (int)getLinePosAfterStr("==", file, *tasksLength + 1)) != -1) {
 
-        if(*length > 0) {
-            newTask = realloc(task, sizeof(Task) * (*length + 1));
-            task = newTask;
+        if(*tasksLength > 0) {
+            tempTasks = realloc(tasks, sizeof(Task) * (*tasksLength + 1));
+            tasks = tempTasks;
         }
 
-        setTasksOptions(&task[*length], fileToParse, position, actions, actionLength);
-        *length += 1;
+        setAllTaskOptions(&tasks[*tasksLength], file, position, actions, actionsLength);
+        *tasksLength += 1;
     }
-    return task;
+
+    return tasks;
 }
 
