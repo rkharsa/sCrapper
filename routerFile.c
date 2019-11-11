@@ -94,15 +94,21 @@ char* getHostUrl(char* url){
 return host;
 }
 int deleteRepositorie(char* repositorieName){
-    system("rmdir /Q  /S download");
+    char* command=malloc(sizeof(char)*200);
+    sprintf(command, "rmdir /Q  /S %s",repositorieName);
+    system(command);
 }
 int createRepositorie( char* repositorieName){
-    system("mkdir download");
-    system("cd download && mkdir content");
-    system("cd download && mkdir imgTag");
-    system("cd download && mkdir scriptTag");
-    system("cd download && mkdir linkOfAllTag");
-    system("cd download && mkdir linkTag");
-    system("cd download && mkdir sourceTag");
+
+    char* command=malloc(sizeof(char)*200);
+    sprintf(command, "mkdir %s && "
+                     "cd %s && mkdir content && mkdir imgTag "
+                     "&& mkdir scriptTag "
+                     "&& mkdir linkofAllTag "
+                     "&& mkdir linkTag "
+                     "&& mkdir sourceTag ",repositorieName,repositorieName);
+    system(command);
+
+
 return 0;
 }

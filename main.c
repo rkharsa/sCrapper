@@ -14,10 +14,8 @@ int main(int argc, char *argv[])
             "        \\/     \\/           \\/|__|   |__|           \\//_____/  ");
     printf("\n%s\n","--------------------------------------------------------------");
 
-    char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
-    execute(extractAlltag,"https://www.marmiton.org/recettes/recette_pizza-aux-3-fromages_31450.aspx",8);
 
-  /*  char *filePath = "../configFile.sconf";// à remplacer par getFilePath() mais là on gagne du temps pour les tests
+   /* char *filePath = "../configFile.sconf";// à remplacer par getFilePath() mais là on gagne du temps pour les tests
 
     FILE *file = fopen(filePath, "r");
     if(file == NULL) {
@@ -28,8 +26,10 @@ int main(int argc, char *argv[])
     int tasksLength = 0;
 
     Action *actions = getActions(file, &actionsLength);
-    Task *tasks = getTasks(file, &tasksLength, actions, actionsLength);
 
+    Task *tasks = getTasks(file, &tasksLength, actions, actionsLength);
+    char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
+    execute(extractAlltag,actions->url,8);
     printActions(actions, actionsLength);
     printTasks(tasks, tasksLength);
 

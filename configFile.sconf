@@ -1,14 +1,14 @@
 =
-{name -> Récupérer données Facebook} # Correspond au nom de l'action
-{ url -> facebook.com} # Correspond à l'url du site
+{name -> Marmiton} # Correspond au nom de l'action
+{ url -> https://www.marmiton.org/recettes/index/categorie/pizza} # Correspond à l'url du site
 +
 {option1 -> value1}
 {option2 -> value2}
 {option3 -> value3}
 
 =
-{name -> Récupérer données Youtube} # Deuxieme action
-{url -> youtube.com} # Correspond à l'url du site
+{name -> gitHub} # Deuxieme action
+{url -> https://github.com/rkharsa} # Correspond à l'url du site
 +
 {option1 -> value1}
 {option2 -> value2}
