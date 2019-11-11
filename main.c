@@ -33,9 +33,9 @@ printf("%s","  _________                                 .__                \n"
     fclose(file);*/
 
    char *test = "     \n    shampoing\n\n aux \n oeufs doux    ";
-   char *withoutSpaces = chekOneCharMore(test, ' ');
+   char *withoutSpaces = removeConsecutiveChars(test, ' ');
 
-   printf("\n*%s*\n", chekOneCharMore(withoutSpaces, '\n'));
+   printf("\n*%s*\n", removeConsecutiveChars(withoutSpaces, '\n'));
 
     return 0;
 }
