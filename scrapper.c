@@ -17,6 +17,16 @@ void execute(char** tabaction,char*url,int taille){
         extractAll(url, tabaction[i],&counterFile);
     }
 }
+char *  getBeginTag(char* tag){
+    char *beginTag = malloc(sizeof(char)*strlen(tag)+10);
+    sprintf(beginTag,"<%s",tag);
+    return beginTag;
+}
+char *  getEndTag(char* tag){
+    char *beginTag = malloc(sizeof(char)*strlen(tag)+10);
+    sprintf(beginTag,"</%s>",tag);
+    return beginTag;
+}
 /**
  * @author Rani Kharsa
  * @param url
@@ -24,26 +34,17 @@ void execute(char** tabaction,char*url,int taille){
  */
 void extractAll(char *url,char* tag,CounterFile* counterFile) {
     char *codeHtml = getHtmlCode(url);
-    char *srcOrHref=malloc(sizeof(char)*6);
-    strcpy(srcOrHref,hrefOrSrcRouter(tag));
-    char *beginTag = malloc(sizeof(char)*strlen(tag)+10);
-    sprintf(beginTag,"<%s",tag);
-    char* filename=malloc(sizeof(char)*40);
-    strcpy(filename,filenameDynamicTxt(tag,*routerCounter(counterFile," ")));
-    char *endTag = malloc(sizeof(char)*strlen(tag)+10);
-    sprintf(endTag,"</%s>",tag);
 counterIncrem(counterFile," ");
-
     if(!strcmp(tag,"img") || !strcmp(tag,"source")|| !strcmp(tag,"a")|| !strcmp(tag,"script")|| !strcmp(tag,"link")) {
-        FILE * file = fopen(filename,"w+");
+        FILE * file = fopen(filenameDynamicTxt(tag,*routerCounter(counterFile," ")),"w+");
         if (file != NULL) {
-           extractLink(codeHtml, file, beginTag, srcOrHref,counterFile);
+           extractLink(codeHtml, file, tag,counterFile);
             fclose(file);
         }else{
             printf("Can't open the file");
         }
     }else{
-        extractContentBetweenTag(codeHtml,counterFile->nbContent,beginTag,endTag);
+        extractContentBetweenTag(codeHtml,counterFile->nbContent,tag);
         counterIncrem(counterFile,"<content");
        }
 
@@ -69,6 +70,28 @@ void counterReturnLineFunc(int * counterReturnLine,char value){
         }
     }
 }
+void saveContent(int posBeginTag,int posEndTag,char* codeHtml,FILE* file){
+    int counterSpace=0,counterReturnLine=0;
+    int findBeginSave=0;
+    for(int i=posBeginTag;i<posEndTag;i++){
+        if(findBeginSave==1) {
+            if (codeHtml[i] == '<' ){
+                findBeginSave=0;
+                continue;
+            }
+            counterSpaceFunc(&counterSpace,codeHtml[i]);
+            counterReturnLineFunc(&counterReturnLine,codeHtml[i]);
+            if(counterReturnLine<2 && counterSpace <2){
+                fputc(codeHtml[i], file);
+            }
+        }else{
+            if (codeHtml[i] == '>') {
+                findBeginSave = 1;
+            }
+        }
+    }
+    fputc('\n', file);
+}
 /**
  * @author Rani Kharsa
  * @param code_html
@@ -77,38 +100,17 @@ void counterReturnLineFunc(int * counterReturnLine,char value){
  * @brief extract all between a tag
  */
  /* si il a plus de 6 espace il arrete d'enregistrer et reprends quand il rencontre des lettres*/
- void extractContentBetweenTag(char *  codeHtml,int number,char* beginTag,char * endTag){
-     int i,end,begin,findBeginSave,counterSpace=0,counterReturnLine=0;
-     char *searchBeginTag =beginTag,*tagOpen = codeHtml;
-    char *searchEndTag =endTag,*tagEnd = codeHtml;
+ void extractContentBetweenTag(char *  codeHtml,int number,char *tag){
+     int end,begin;
+     char *searchBeginTag =getBeginTag(tag),*tagOpen = codeHtml;
+    char *searchEndTag =getEndTag(tag),*tagEnd = codeHtml;
 
-    FILE* file = fopen(filenameDynamicContainer(strstr(beginTag,"<")+1,number,"txt"),"w+");
+    FILE* file = fopen(filenameDynamicContainer(tag,number,"txt"),"w+");
         if(file!=NULL){
         while ((tagOpen=strstr(tagOpen,searchBeginTag))!= NULL && (tagEnd=strstr(tagEnd,searchEndTag))!=NULL){
             begin=tagOpen-codeHtml;
             end=tagEnd-codeHtml;
-            findBeginSave=0;
-            for(i=begin;i<end;i++){
-                if(findBeginSave==1) {
-                    if (codeHtml[i] == '<' ){
-                        findBeginSave=0;
-                        continue;
-                    }
-                    counterSpaceFunc(&counterSpace,codeHtml[i]);
-                    counterReturnLineFunc(&counterReturnLine,codeHtml[i]);
-                    //|| !strcmp(tag,"img")
-
-                    if(counterReturnLine<1 && counterSpace <2){
-                            fputc(codeHtml[i], file);
-                    }
-
-                }else{
-                    if (codeHtml[i] == '>') {
-                        findBeginSave = 1;
-                    }
-                }
-            }
-            fputc('\n', file);
+            saveContent(begin,end,codeHtml,file);
             tagOpen+= strlen(searchBeginTag);
             tagEnd+=strlen(searchEndTag);
         }
@@ -125,9 +127,9 @@ void counterReturnLineFunc(int * counterReturnLine,char value){
   * @param typeHrefOrSrc
   * @brief extract all link
   */
-    void extractLink(char *codeHtml, FILE *file, char *searchBeginTag, char *typeHrefOrSrc,CounterFile* counterFile) {
+    void extractLink(char *codeHtml, FILE *file, char *tag,CounterFile* counterFile) {
         int beginTag, endTag,posHref;
-        const char *toSearch = searchBeginTag, *p = codeHtml;
+        const char *toSearch = getBeginTag(tag), *p = codeHtml;
         while ((p = strstr(p, toSearch)) != NULL) {
             beginTag = p - codeHtml;
             endTag = positionOfSymbole(beginTag, codeHtml, '>');
@@ -135,9 +137,9 @@ void counterReturnLineFunc(int * counterReturnLine,char value){
                 p += strlen(toSearch);
                 continue;
             }
-            posHref= positionOfAttribut(beginTag,endTag,codeHtml, typeHrefOrSrc);
+            posHref= positionOfAttribut(beginTag,endTag,codeHtml, hrefOrSrcRouter(tag));
             if(posHref!=-1){
-                process(beginTag,endTag,codeHtml,searchBeginTag,file,&p,toSearch,posHref,counterFile);
+                process(beginTag,endTag,codeHtml,tag,file,&p,toSearch,posHref,counterFile);
             }
 
             p += strlen(toSearch);
@@ -156,7 +158,7 @@ void counterReturnLineFunc(int * counterReturnLine,char value){
 * @param to_search
 * @param pos_href
 */
-void process(int beginTag,int endTag,char* codeHtml,char* searchBeginTag,FILE*file,const char**p,char const*toSearch,int posHref,CounterFile* counterFile){
+void process(int beginTag,int endTag,char* codeHtml,char* tag,FILE*file,const char**p,char const*toSearch,int posHref,CounterFile* counterFile){
     int findBeginSave=0,counter=0,http,pos=0;
     char*url_find=malloc(sizeof(char)*400);
     for(int i=posHref-beginTag;i<endTag-beginTag;i++){
@@ -165,7 +167,7 @@ void process(int beginTag,int endTag,char* codeHtml,char* searchBeginTag,FILE*fi
         if(findBeginSave==1){
             if(codeHtml[pos]=='\"'||codeHtml[pos]=='\''){
                 url_find[counter]='\0';
-                treatment(url_find,searchBeginTag,file,counterFile);
+                treatment(url_find,tag,file,counterFile);
                 *p+=strlen(toSearch);
                 break;
             }else{
@@ -182,6 +184,7 @@ void process(int beginTag,int endTag,char* codeHtml,char* searchBeginTag,FILE*fi
     }
     free(url_find);
 }
+
         /**
       * @author Rani kharsa
       * @param url_find
@@ -189,29 +192,27 @@ void process(int beginTag,int endTag,char* codeHtml,char* searchBeginTag,FILE*fi
      * @param file
      * @param nb_url
      */
-void treatment(char * urlFind ,char * beginTag,FILE* file,CounterFile* counterFile ) {
-    //traitement des ext ici
+void treatment(char * urlFind ,char * tag,FILE* file,CounterFile* counterFile ) {
     printf("%s \n",urlFind);
-    int * counter=routerCounter(counterFile,beginTag);
-    if (!strcmp(beginTag, "<img") || !strcmp(beginTag,"<source")) {
+    int * counter=routerCounter(counterFile,tag);
+    if (!strcmp(tag, "img") || !strcmp(tag,"source")) {
         fprintf(file, "%s \n", urlFind);
-        saveMedia(urlFind,*counter,beginTag);
-        counterIncrem(counterFile,beginTag);
-    } else if (!strcmp(beginTag, "<a") ) {
+        saveMedia(urlFind,*counter,tag);
+        counterIncrem(counterFile,tag);
+    } else if (!strcmp(tag, "a") ) {
         fprintf(file, "%s \n", urlFind);
         printf("%s\n","Download successful");
-    }else if (!strcmp(beginTag, "<link") || !strcmp(beginTag,"<script")) {
+    }else if (!strcmp(tag, "link") || !strcmp(tag,"script")) {
         char *urlCpy=malloc(sizeof(char)*strlen(urlFind)+10);
         strcpy(urlCpy,urlFind);
         if(!strcmp(getExtension(urlFind),"png")||  !strcmp(getExtension(urlFind),"ico") || !strcmp(getExtension(urlFind),"svg")){
             fprintf(file, "%s \n", urlCpy);
-            saveMedia(urlCpy,*counter,beginTag);
-
+            saveMedia(urlCpy,*counter,tag);
         }else{
             fprintf(file, "%s \n", urlCpy);
-            getCodeInFile(urlCpy,*counter,beginTag);
+            getCodeInFile(urlCpy,*counter,tag);
         }
-        counterIncrem(counterFile,beginTag);
+        counterIncrem(counterFile,getBeginTag(tag));
     }
 }
 
@@ -256,7 +257,6 @@ int checkBegin(int beginTag, int endTag, char *codeHtml, int i,int posHref) {
             counter++;
         }
         const char *p = str;
-    //    printf("\n%s\n",str);
         p = strstr(p, attrToFind);
         position = p - str + begin;
         if (p != NULL)

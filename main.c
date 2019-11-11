@@ -3,8 +3,7 @@
 
 int main(int argc, char *argv[])
 {
-    deleteRepositorie("download");
-    createRepositorie("download");
+
     printf("%s\n","--------------------------------------------------------------");
     printf("%s","  _________                                 .__                \n"
             " /   _____/ ________________  ______ ______ |__| ____    ____  \n"
@@ -15,7 +14,7 @@ int main(int argc, char *argv[])
     printf("\n%s\n","--------------------------------------------------------------");
 
 
-   /* char *filePath = "../configFile.sconf";// à remplacer par getFilePath() mais là on gagne du temps pour les tests
+    char *filePath = "../configFile.sconf";// à remplacer par getFilePath() mais là on gagne du temps pour les tests
 
     FILE *file = fopen(filePath, "r");
     if(file == NULL) {
@@ -26,13 +25,23 @@ int main(int argc, char *argv[])
     int tasksLength = 0;
 
     Action *actions = getActions(file, &actionsLength);
-
     Task *tasks = getTasks(file, &tasksLength, actions, actionsLength);
-    char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
-    execute(extractAlltag,actions->url,8);
-    printActions(actions, actionsLength);
-    printTasks(tasks, tasksLength);
+    for (int i = 0; i < actionsLength; i++) {
+        deleteRepositorie(actions[i].name);
+        createRepositorie(actions[i].name);//je vais devoir adapter le noms des filename en fonction de sa
+        //faire une fonction qui fait la liste des options
+        char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
+        execute(extractAlltag,actions[i].url,8);
+    }
 
-    fclose(file);*/
+   // printActions(actions, actionsLength);
+    //printTasks(tasks, tasksLength);
+
+    fclose(file);
+   /* deleteRepositorie("download");
+    createRepositorie("download");//je vais devoir adapter le noms des filename en fonction de sa
+    //faire une fonction qui fait la liste des options
+    char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
+    execute(extractAlltag,"https://www.marmiton.org/recettes/index/categorie/pizza",8);*/
     return 0;
 }
