@@ -5,35 +5,7 @@ void actionTodo(){
 
 }
 
-CounterFile initCounterFile(){
-    CounterFile counterFile;
-    counterFile.nbLink=0;
-    counterFile.nbJs=0;
-    counterFile.nbVideo=0;
-    counterFile.nbContent=0;
-    counterFile.nbLinkTag=0;
-    counterFile.nbImg=0;
-    return counterFile;
 
-}
-int * routerCounter(CounterFile*  counterFile,char * beginTag){
-    if(!strcmp(beginTag,"<img")){
-        return &counterFile->nbImg;
-    }else if(!strcmp(beginTag,"<source")){
-        return &counterFile->nbVideo;
-    }else if(!strcmp(beginTag,"<link")){
-        return &counterFile->nbLinkTag;
-    }else if(!strcmp(beginTag,"<script")){
-        return &counterFile->nbJs;
-    }else if(!strcmp(beginTag,"<content")){
-        return &counterFile->nbContent;
-    }else {
-        return  &counterFile->nbLink;
-    }
-}
-void counterIncrem(CounterFile * counterFile,char*beginTag){
-    *routerCounter(counterFile,beginTag)+=1;
-}
 
 void execute(char** tabaction,char*url,int taille){
     CounterFile counterFile=initCounterFile();
@@ -153,7 +125,7 @@ void counterReturnLineFunc(int * counterReturnLine,char value){
   * @brief extract all link
   */
     void extractLink(char *codeHtml, FILE *file, char *searchBeginTag, char *typeHrefOrSrc,CounterFile* counterFile) {
-        int beginTag, endTag,nbUrl=0,posHref;
+        int beginTag, endTag,posHref;
         const char *toSearch = searchBeginTag, *p = codeHtml;
         while ((p = strstr(p, toSearch)) != NULL) {
             beginTag = p - codeHtml;
@@ -164,7 +136,7 @@ void counterReturnLineFunc(int * counterReturnLine,char value){
             }
             posHref= positionOfAttribut(beginTag,endTag,codeHtml, typeHrefOrSrc);
             if(posHref!=-1){
-                process(beginTag,endTag,codeHtml,searchBeginTag,file,&nbUrl,&p,toSearch,posHref,counterFile);
+                process(beginTag,endTag,codeHtml,searchBeginTag,file,&p,toSearch,posHref,counterFile);
             }
 
             p += strlen(toSearch);
@@ -183,7 +155,7 @@ void counterReturnLineFunc(int * counterReturnLine,char value){
 * @param to_search
 * @param pos_href
 */
-void process(int beginTag,int endTag,char* codeHtml,char* searchBeginTag,FILE*file,int* nbUrl,const char**p,char const*toSearch,int posHref,CounterFile* counterFile){
+void process(int beginTag,int endTag,char* codeHtml,char* searchBeginTag,FILE*file,const char**p,char const*toSearch,int posHref,CounterFile* counterFile){
     int findBeginSave=0,counter=0,http,pos=0;
     char*url_find=malloc(sizeof(char)*400);
     for(int i=posHref-beginTag;i<endTag-beginTag;i++){
@@ -192,7 +164,7 @@ void process(int beginTag,int endTag,char* codeHtml,char* searchBeginTag,FILE*fi
         if(findBeginSave==1){
             if(codeHtml[pos]=='\"'||codeHtml[pos]=='\''){
                 url_find[counter]='\0';
-                treatment(url_find,searchBeginTag,file,*nbUrl,counterFile);
+                treatment(url_find,searchBeginTag,file,counterFile);
                 *p+=strlen(toSearch);
                 break;
             }else{
@@ -203,7 +175,6 @@ void process(int beginTag,int endTag,char* codeHtml,char* searchBeginTag,FILE*fi
             http=checkBegin(beginTag,endTag,codeHtml,pos,posHref);
             if(http!=-1){
                 i=http-1-beginTag;
-                *nbUrl=*nbUrl+1;
                 findBeginSave=1;
             }
         }
@@ -217,7 +188,7 @@ void process(int beginTag,int endTag,char* codeHtml,char* searchBeginTag,FILE*fi
      * @param file
      * @param nb_url
      */
-void treatment(char * urlFind ,char * beginTag,FILE* file,    int nbUrl,CounterFile* counterFile ) {
+void treatment(char * urlFind ,char * beginTag,FILE* file,CounterFile* counterFile ) {
     //traitement des ext ici
     printf("%s \n",urlFind);
     int * counter=routerCounter(counterFile,beginTag);

@@ -16,7 +16,7 @@ printf("%s","  _________                                 .__                \n"
     printf("\n%s\n","--------------------------------------------------------------");
 
 
-  char *extractAlltag[8]={"a","img","source","link","script","p","header","strong"};
+  char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
   execute(extractAlltag,"https://www.marmiton.org/recettes/recette_pizza-aux-3-fromages_31450.aspx",8);
 
 
