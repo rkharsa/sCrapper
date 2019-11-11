@@ -6,6 +6,29 @@
 #include <stdlib.h>
 #include "parser.h"
 
+char *removeConsecutiveChars(char *str, char banned)
+{
+    char *newStr = malloc(sizeof(char) * strlen(str) + 1);
+    int newIndex = 0;
+
+    if(str[0] != banned) {
+        newStr[0] = str[0];
+    }
+
+    for (int i = 1; i < strlen(str); i++) {
+        if(str[i] != banned) {
+            newStr[newIndex] = str[i];
+            newIndex++;
+        } else if(str[i] == banned && str[i - 1] != banned) {
+            newStr[newIndex] = str[i];
+            newIndex++;
+        }
+    }
+
+    newStr[newIndex] = '\0';
+    return newStr;
+}
+
 int checkFileExtension(char *filePath, char *extension) {
 
     if(strrchr(filePath, '.') != NULL && strcmp(extension, strrchr(filePath, '.') + 1) != 0) {

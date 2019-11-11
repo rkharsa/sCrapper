@@ -14,7 +14,7 @@ printf("%s","  _________                                 .__                \n"
   char *extractAlltag[10]={"a","img","script","source","link"};
   execute(extractAlltag,"https://openclassrooms.com/forum/sujet/barre-de-progression-en-c");*/
 
-    char *filePath = "../configFile.sconf";// à remplacer par getFilePath() mais là on gagne du temps pour les tests
+   /* char *filePath = "../configFile.sconf";// à remplacer par getFilePath() mais là on gagne du temps pour les tests
 
     FILE *file = fopen(filePath, "r");
     if(file == NULL) {
@@ -30,6 +30,12 @@ printf("%s","  _________                                 .__                \n"
     printActions(actions, actionsLength);
     printTasks(tasks, tasksLength);
 
-    fclose(file);
+    fclose(file);*/
+
+   char *test = "     \n    shampoing\n\n aux \n oeufs doux    ";
+   char *withoutSpaces = chekOneCharMore(test, ' ');
+
+   printf("\n*%s*\n", chekOneCharMore(withoutSpaces, '\n'));
+
     return 0;
 }
