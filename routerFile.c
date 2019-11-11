@@ -6,6 +6,7 @@
  * @return path
  * @brief permit to redirect toward the path
  */
+
 char* filenameDynamicTxt(char * type,int i ){
     char *str=malloc(sizeof(char)*50);
 
@@ -51,7 +52,7 @@ char* filenameDynamicContainer(char * type,int i,char* ext ){
     }else if(!strcmp("<script",type)){
         sprintf(str, "download/scriptTag/js%d.js", i);
     }else{
-        sprintf(str, "download/content/%s.txt",type);
+        sprintf(str, "download/content/%s%i.txt",type,i);
     }
 
     return str;
