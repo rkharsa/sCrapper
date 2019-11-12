@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <dir.h>
 #include "curl.h"
 
 #ifndef HEADER_H_INCLUDED
