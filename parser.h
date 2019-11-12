@@ -22,6 +22,7 @@ typedef struct Task {
     int hours;
     int actionsLength;
     Action *actions;
+    long nextOccurence;
 } Task;
 
 
@@ -52,5 +53,6 @@ long getLinePosAfterChar(char charToFind, FILE *file, int iteration);
 long getLinePosAfterStr(char *strToFind, FILE *file, int iteration);
 Action *getActions(FILE *fileToParse, int *actionLength);
 Task *getTasks(FILE *fileToParse, int *length, Action *actions, int actionLength);
+void taskExec(Task *task, int taskLenght );
 
 #endif //SCRAPER_PARSER_H
