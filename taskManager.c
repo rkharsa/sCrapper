@@ -20,7 +20,7 @@ long incrementTime(long currentTime, int hours, int minutes, int seconds) {
 
 }
 
-int writeInFile(char *taskname, char *actionName) {
+void writeInFile(char *taskname, char *actionName) {
     time_t now;
     time(&now);
     char *time = ctime(&now);
