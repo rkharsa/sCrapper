@@ -30,26 +30,25 @@ int writeInFile(char *taskname, char *actionName) {
     strcat(message, " Nom de la tâche: ");
     strcat(message, taskname);
     strcat(message, " Date: ");
-    FILE *f = fopen("history.txt", "a+");
+    char *fn = malloc(sizeof(char) * 100);
+    sprintf(fn, "%s.txt", actionName);
+    printf("%s\n", fn);
+    FILE *f = fopen(fn, "a+");
     if (f != NULL) {
         fputs(message, f);
         fputs(time, f);
         fclose(f);
     }
-    // free(time);
+    free(fn);
 }
 
-void versionning(char *taskname, Action *actions, int actionlen) {
-    printf(actions[0].url);
-    for (int k = 0; k < actionlen; k++) {
-        for (int j = 0; j < actions[k].optionsLength; j++) {
-            if (strcmp(actions[k].keys[j], "versionning") == 0) {
-                if (strcmp(actions[k].values[j], "on") == 0) {
-                    writeInFile(taskname, actions[k].name);
-                }
-            }
+char *findValueBykey(char *key, Action action) {
+    for (int j = 0; j < action.optionsLength; j++) {
+        if (strcmp(action.keys[j], key) == 0) {
+            return action.values[j];
         }
     }
+    return NULL;
 }
 
 void taskExec(Task *task, int taskLenght) {
@@ -67,7 +66,12 @@ void taskExec(Task *task, int taskLenght) {
             }
             destime = task[i].nextOccurence;
             if (destime == newTime) {
-                versionning(task[i].name, task[i].actions, task[i].actionsLength);
+                for (int j = 0; j < task[i].actionsLength; j++) {
+                    char *value = findValueBykey("versionning", task[i].actions[j]);
+                    if (strcmp(value, "on") == 0) {
+                        writeInFile(task[i].name, task[i].actions[j].name);
+                    }
+                }
                 task[i].nextOccurence = incrementTime(newTime, hours, minutes, seconds);
             }
         }
