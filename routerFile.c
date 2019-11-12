@@ -7,19 +7,19 @@
  * @brief permit to redirect toward the path
  */
 
-char* filenameDynamicTxt(char * tag,int i ){
+char* filenameDynamicTxt(char*  repositorie,char * tag,int i ){
     char *str=malloc(sizeof(char)*50);
 
     if(!strcmp("a",tag)){
-        sprintf(str, "download/linkOfAllTag/link%d.txt", i);
+        sprintf(str, "%s/linkOfAllTag/link%d.txt",repositorie, i);
     }else if (!strcmp("img",tag)){
-        sprintf(str, "download/linkOfAllTag/img%d.txt", i);
+        sprintf(str, "%s/linkOfAllTag/img%d.txt",repositorie, i);
     }else if(!strcmp("link",tag)){
-        sprintf(str, "download/linkOfAllTag/css%d.txt", i);
+        sprintf(str, "%s/linkOfAllTag/css%d.txt",repositorie, i);
     }else if(!strcmp("script",tag)){
-        sprintf(str, "download/linkOfAllTag/js%d.txt", i);
+        sprintf(str, "%s/linkOfAllTag/js%d.txt",repositorie, i);
     }else if(!strcmp("source",tag)){
-        sprintf(str, "download/linkOfAllTag/video%d.txt", i);
+        sprintf(str, "%s/linkOfAllTag/video%d.txt",repositorie, i);
     }
     return str;
 }
@@ -31,28 +31,28 @@ char* filenameDynamicTxt(char * tag,int i ){
  * @return path
  * @brief permit to redirect toward the path
  */
-char* filenameDynamicContainer(char * tag,int i,char* ext ){
+char* filenameDynamicContainer(char *  repositorie,char * tag,int i,char* ext ){
     char *str=malloc(sizeof(char)*50);
 
     if (!strcmp("img",tag)){
         if(!strcmp(ext," ")) {
-            sprintf(str,"download/imgTag/image%i",i);
+            sprintf(str,"%s/imgTag/image%i",repositorie,i);
         }else{
-            sprintf(str,"download/imgTag/image%i.%s",i,ext);
+            sprintf(str,"%s/imgTag/image%i.%s",repositorie,i,ext);
         }
     }else if(!strcmp("source",tag)){
-        sprintf(str, "download/sourceTag/video%d.%s", i,ext);
+        sprintf(str, "%s/sourceTag/video%d.%s",repositorie, i,ext);
     }
     else if(!strcmp("link",tag)){
         if(!strcmp(ext," ")) {
-            sprintf(str, "download/linkTag/link%d.txt", i);
+            sprintf(str, "%s/linkTag/link%d.txt",repositorie, i);
         }else{
-            sprintf(str, "download/linkTag/link%d.%s", i,ext);
+            sprintf(str, "%s/linkTag/link%d.%s", repositorie,i,ext);
         }
     }else if(!strcmp("script",tag)){
-        sprintf(str, "download/scriptTag/js%d.js", i);
+        sprintf(str, "%s/scriptTag/js%d.js",repositorie, i);
     }else{
-        sprintf(str, "download/content/%s%i.txt",tag,i);
+        sprintf(str, "%s/content/%s%i.txt",repositorie,tag,i);
     }
 
     return str;
@@ -75,12 +75,12 @@ char* hrefOrSrcRouter(char * tag){
 }
 
 
-int deleteRepositorie(char* repositorieName){
+void deleteRepositorie(char* repositorieName){
     char* command=malloc(sizeof(char)*200);
     sprintf(command, "rmdir /Q  /S %s",repositorieName);
     system(command);
 }
-int createRepositorie( char* repositorieName){
+void createRepositorie( char* repositorieName){
 
      char* command=malloc(sizeof(char)*200);
     sprintf(command, "mkdir %s && "
@@ -91,6 +91,4 @@ int createRepositorie( char* repositorieName){
                      "&& mkdir sourceTag ",repositorieName,repositorieName);
     system(command);
 
-
-    return 0;
 }

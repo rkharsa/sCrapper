@@ -23,25 +23,40 @@ int main(int argc, char *argv[])
 
     int actionsLength = 0;
     int tasksLength = 0;
-
+    //char repositorie[200];
     Action *actions = getActions(file, &actionsLength);
-    Task *tasks = getTasks(file, &tasksLength, actions, actionsLength);
+   /* Task *tasks = getTasks(file, &tasksLength, actions, actionsLength);
     for (int i = 0; i < actionsLength; i++) {
-        deleteRepositorie(actions[i].name);
-        createRepositorie(actions[i].name);//je vais devoir adapter le noms des filename en fonction de sa
-        //faire une fonction qui fait la liste des options
+        sprintf(repositorie,"%s%d",actions[i].name,i);
+        printf("%s",repositorie);
+        deleteRepositorie(repositorie);
+        createRepositorie(repositorie);
         char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
-        execute(extractAlltag,actions[i].url,8);
+        execute(extractAlltag, actions[i].url,8,repositorie);
     }
 
    // printActions(actions, actionsLength);
     //printTasks(tasks, tasksLength);
 
     fclose(file);
-   /* deleteRepositorie("download");
+  deleteRepositorie("download");
     createRepositorie("download");//je vais devoir adapter le noms des filename en fonction de sa
     //faire une fonction qui fait la liste des options
     char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
     execute(extractAlltag,"https://www.marmiton.org/recettes/index/categorie/pizza",8);*/
+   /*char repositorie[200];
+   sprintf(repositorie,"%s%d","name",0);
+   printf("%s",repositorie);
+    deleteRepositorie(repositorie);
+    createRepositorie(repositorie);
+    char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
+    execute(extractAlltag, "https://www.marmiton.org/recettes/index/categorie/pizza",8,repositorie);*/
+   /*fistWawe("https://qtmsheep.com/");
+    int max_deph=2;
+    for (int i = 0; i < max_deph ; i++) {
+        printf("\nPROFONDEUR :%d \n",i);
+        nextWave(i);
+    }*/
+
     return 0;
 }
