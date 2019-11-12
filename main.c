@@ -36,5 +36,6 @@ int main(int argc, char *argv[])
 //    printTasks(tasks, tasksLength);
 
     fclose(file);
+
     return 0;
 }

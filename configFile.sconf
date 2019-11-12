@@ -20,7 +20,7 @@
 {name -> Ma première super tâche}
 {second -> 3} # Lance les deux req ttes les 10 secondes
 +
-(facebook.com)
+(facebook.com, youtube.com)
 
 ==
 {name -> Ma deuxieme super tâche}

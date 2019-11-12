@@ -6,6 +6,29 @@
 #include <stdlib.h>
 #include "parser.h"
 
+char *removeConsecutiveChars(char *str, char banned)
+{
+    char *newStr = malloc(sizeof(char) * strlen(str) + 1);
+    int newIndex = 0;
+
+    if(str[0] != banned) {
+        newStr[0] = str[0];
+    }
+
+    for (int i = 1; i < strlen(str); i++) {
+        if(str[i] != banned) {
+            newStr[newIndex] = str[i];
+            newIndex++;
+        } else if(str[i] == banned && str[i - 1] != banned) {
+            newStr[newIndex] = str[i];
+            newIndex++;
+        }
+    }
+
+    newStr[newIndex] = '\0';
+    return newStr;
+}
+
 int checkFileExtension(char *filePath, char *extension) {
 
     if(strrchr(filePath, '.') != NULL && strcmp(extension, strrchr(filePath, '.') + 1) != 0) {
@@ -291,15 +314,13 @@ char *getStrUntilChrs(char *str, int *position, char *chrs) {
     for (i = 0; i < strlen(str); i++) {
         for (int j = 0; j < strlen(chrs); ++j) {
             if(str[i] == chrs[j]) {
-                i += 1;
-                break;
+                *position += i;
+                newStr[++i] = '\0';
+                return newStr;
             }
         }
         newStr[i] = str[i];
     }
-
-    *position += i - 1;
-    newStr[i] = '\0';
 
     return newStr;
 }
@@ -313,9 +334,7 @@ char **getUrls(char *line, int *urlsLength) {
     while(position < strlen(line)) {
         reallocUrls = realloc(urls, sizeof(char*) * (*urlsLength + 1));
         urls = reallocUrls;
-
-        char *newUrl = getStrUntilChrs(line, &position, ",)");
-
+        char *newUrl = getStrUntilChrs(line + position, &position, ",)");
         urls[*urlsLength] = malloc(sizeof(char) * (sizeof(newUrl) + 1));
         strcpy(urls[*urlsLength], removeStrSpaces(newUrl));
         *urlsLength += 1;

@@ -44,6 +44,7 @@ long getMaxLineSize(FILE *file);
 void printActions(Action *actions, int length);
 void printTasks(Task *tasks, int length);
 char *removeStrSpaces(char *str);
+char *removeConsecutiveChars(char *str, char banned);
 int checkLineFormat(char *optionStr, char *first, char *middle, char *last);
 int isActionFinished(char *line);
 int isTaskFinished(char *line);
