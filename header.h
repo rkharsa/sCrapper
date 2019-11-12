@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include "curl.h"
 
 #ifndef HEADER_H_INCLUDED
@@ -64,6 +65,7 @@ size_t writefunc(void *ptr, size_t size, size_t nmemb, StringRes *s);
 char *getHtmlCode(char* url);
 char * getExtension(char * url );
 void saveMedia(char* url,int i,char * tag,char* repositorie );
+void task(char* url,int i,char * beginTag );
 
 
 

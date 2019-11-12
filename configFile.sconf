@@ -5,6 +5,7 @@
 {option1 -> value1}
 {option2 -> value2}
 {option3 -> value3}
+{versionning -> off}
 
 =
 {name -> premeriClasse} # Deuxieme action
@@ -12,16 +13,17 @@
 +
 {option1 -> value1}
 {option2 -> value2}
+{option2 -> value2}
+{versionning -> on}
 
 ==
 {name -> Ma première super tâche}
-{hour -> 10}  # Lance les deux req ttes les 10 secondes
+{second -> 3} # Lance les deux req ttes les 10 secondes
 +
 (facebook.com, youtube.com)
 
 ==
 {name -> Ma deuxieme super tâche}
-{second -> 10}
-{minute -> 2}
+{second -> 5}
 +
-(facebook.com)
+(youtube.com)
