@@ -55,6 +55,8 @@ char *getHtmlCode(char* url){
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER,0);
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION,1L);
+
         CURLcode res = curl_easy_perform(curl);//execute all  the setop
         if(res!=CURLE_OK){
             fprintf(stderr, "curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
@@ -91,6 +93,7 @@ void getCodeInFile(char* url,int i ,char* tag,char* repositorie){
             curl_easy_setopt(curl,CURLOPT_WRITEDATA,fp);
             curl_easy_setopt(curl,CURLOPT_FAILONERROR,1L);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER,0);
+            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION,1L);
             CURLcode  res= curl_easy_perform(curl);//execute all  the setopt
             if(res!=CURLE_OK){
                 fprintf(stderr, "curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
@@ -154,6 +157,7 @@ void saveMedia(char* url,int i,char* tag,char* repositorie ){//verif type mime
         curl_easy_setopt(curl,CURLOPT_WRITEDATA,fp);
         curl_easy_setopt(curl,CURLOPT_FAILONERROR,1L);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER,0);
+        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION,1L);
         result=curl_easy_perform(curl);
         if(result==CURLE_OK){
             printf("Download successful\n");

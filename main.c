@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     printf("\n%s\n","--------------------------------------------------------------");
 
 
-    char *filePath = "../configFile.sconf";// à remplacer par getFilePath() mais là on gagne du temps pour les tests
+    /*char *filePath = "../configFile.sconf";// à remplacer par getFilePath() mais là on gagne du temps pour les tests
 
     FILE *file = fopen(filePath, "r");
     if(file == NULL) {
@@ -23,9 +23,9 @@ int main(int argc, char *argv[])
 
     int actionsLength = 0;
     int tasksLength = 0;
-    //char repositorie[200];
+    char repositorie[200];
     Action *actions = getActions(file, &actionsLength);
-   /* Task *tasks = getTasks(file, &tasksLength, actions, actionsLength);
+    Task *tasks = getTasks(file, &tasksLength, actions, actionsLength);
     for (int i = 0; i < actionsLength; i++) {
         sprintf(repositorie,"%s%d",actions[i].name,i);
         printf("%s",repositorie);
@@ -38,8 +38,8 @@ int main(int argc, char *argv[])
    // printActions(actions, actionsLength);
     //printTasks(tasks, tasksLength);
 
-    fclose(file);
-  deleteRepositorie("download");
+    fclose(file);*/
+  /*deleteRepositorie("download");
     createRepositorie("download");//je vais devoir adapter le noms des filename en fonction de sa
     //faire une fonction qui fait la liste des options
     char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
@@ -51,8 +51,8 @@ int main(int argc, char *argv[])
     createRepositorie(repositorie);
     char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
     execute(extractAlltag, "https://www.marmiton.org/recettes/index/categorie/pizza",8,repositorie);*/
-   /*fistWawe("https://qtmsheep.com/");
-    int max_deph=2;
+   /*fistWawe("https://curl.haxx.se/libcurl/");
+    int max_deph=3;
     for (int i = 0; i < max_deph ; i++) {
         printf("\nPROFONDEUR :%d \n",i);
         nextWave(i);
