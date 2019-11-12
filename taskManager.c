@@ -20,20 +20,20 @@ long incrementTime(long currentTime, int hours, int minutes, int seconds) {
 
 }
 
-void writeInFile(char *taskname, char *actionName) {
+void writeInFile(char* taskname, char* actionName) {
     time_t now;
     time(&now);
-    char *time = ctime(&now);
+    char* time = ctime(&now);
     char message[100];
     strcpy(message, "Nom de l'action: ");
     strcat(message, actionName);
     strcat(message, " Nom de la tâche: ");
     strcat(message, taskname);
     strcat(message, " Date: ");
-    char *fn = malloc(sizeof(char) * 100);
+    char* fn = malloc(sizeof(char) * 100);
     sprintf(fn, "%s.txt", actionName);
     printf("%s\n", fn);
-    FILE *f = fopen(fn, "a+");
+    FILE* f = fopen(fn, "a+");
     if (f != NULL) {
         fputs(message, f);
         fputs(time, f);
@@ -42,7 +42,7 @@ void writeInFile(char *taskname, char *actionName) {
     free(fn);
 }
 
-char *findValueBykey(char *key, Action action) {
+char* findValueBykey(char* key, Action action) {
     for (int j = 0; j < action.optionsLength; j++) {
         if (strcmp(action.keys[j], key) == 0) {
             return action.values[j];
@@ -51,7 +51,7 @@ char *findValueBykey(char *key, Action action) {
     return NULL;
 }
 
-void taskExec(Task *task, int taskLenght) {
+void taskExec(Task* task, int taskLenght) {
     int j = 1;
     long fromtime = getCurrentTime();
     while (j == 1) {
@@ -67,7 +67,7 @@ void taskExec(Task *task, int taskLenght) {
             destime = task[i].nextOccurence;
             if (destime == newTime) {
                 for (int j = 0; j < task[i].actionsLength; j++) {
-                    char *value = findValueBykey("versionning", task[i].actions[j]);
+                    char* value = findValueBykey("versionning", task[i].actions[j]);
                     if (strcmp(value, "on") == 0) {
                         writeInFile(task[i].name, task[i].actions[j].name);
                     }

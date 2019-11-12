@@ -1,6 +1,6 @@
 =
-{name -> Github} # Correspond au nom de l'action
-{ url -> https://github.com/} # Correspond à l'url du site
+{name -> Facebook} # Correspond au nom de l'action
+{ url -> facebook.com} # Correspond à l'url du site
 +
 {option1 -> value1}
 {option2 -> value2}
@@ -8,8 +8,8 @@
 {versionning -> off}
 
 =
-{name -> premeriClasse} # Deuxieme action
-{url -> https://qtmsheep.com/} # Correspond à l'url du site
+{name -> Youtube} # Deuxieme action
+{url -> youtube.com} # Correspond à l'url du site
 +
 {option1 -> value1}
 {option2 -> value2}

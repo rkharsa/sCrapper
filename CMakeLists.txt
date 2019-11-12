@@ -3,7 +3,7 @@ project(sCrapper C)
 
 set(CMAKE_C_STANDARD 99)
 
-add_executable(sCrapper curlRequest.c scrapper.c routerFile.c main.c configuration.c  deph.c  parser.c counterFile.c taskManager.c)
+add_executable(sCrapper curlRequest.c scrapper.c routerFile.c main.c deph.c  parser.c counterFile.c taskManager.c)
 
 include_directories(include/curl)
 
