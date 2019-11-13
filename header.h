@@ -47,30 +47,30 @@ void counterIncrem(CounterFile* counterFile, char* tag);
 
 CounterFile initCounterFile();
 
-void deleteRepositorie(char* repositorieName);
+void deleteFolder(char* folderName);
 
-void createRepositorie(char* repositorieName);
+void createFolder(char* folderName);
 
-char* filenameDynamicContainer(char* repositorie, char* type, int i, char* ext);
+char* filenameDynamicContainer(char* folder, char* type, int i, char* ext);
 
-char* filenameDynamicTxt(char* repositorie, char* tag, int i);
+char* filenameDynamicTxt(char* folder, char* tag, int i);
 
 char* hrefOrSrcRouter(char* tag);
 
-void getCodeInFile(char* url, int i, char* tag, char* repositorie);
+void getCodeInFile(char* url, int i, char* tag, char* folder);
 
-void execute(char** tabaction, char* url, int taille, char* repositorie);
+void execute(char** tabaction, char* url, int taille, char* folder);
 
-void extractAll(char* url, char* tag, CounterFile* counterFile, char* repositorie);
+void extractAll(char* url, char* tag, CounterFile* counterFile, char* folder);
 
-void extractContentBetweenTag(char* codeHtml, int number, char* tag, char* repositorie);
+void extractContentBetweenTag(char* codeHtml, int number, char* tag, char* folder);
 
-void extractLink(char* codeHtml, FILE* file, char* tag, CounterFile* counterFile, char* repositorie);
+void extractLink(char* codeHtml, FILE* file, char* tag, CounterFile* counterFile, char* folder);
 
-void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, char* repositorie);
+void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, char* folder);
 
 void process(int beginTag, int endTag, char* codeHtml, char* tag, FILE* file, const char** p, char const* toSearch,
-             int posHref, CounterFile* counterFile, char* repositorie);
+             int posHref, CounterFile* counterFile, char* folder);
 
 int checkBegin(int beginTag, int endTag, char* codeHtml, int i, int posHref);
 
@@ -84,7 +84,7 @@ char* getHtmlCode(char* url);
 
 char* getExtension(char* url);
 
-void saveMedia(char* url, int i, char* tag, char* repositorie);
+void saveMedia(char* url, int i, char* tag, char* folder);
 
 void task(char* url, int i, char* beginTag);
 

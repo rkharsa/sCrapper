@@ -6,14 +6,14 @@ void actionTodo() {
 }
 
 
-void execute(char** tabaction, char* url, int taille, char* repositorie) {
+void execute(char** tabaction, char* url, int taille, char* folder) {
     CounterFile counterFile = initCounterFile();
     for (int i = 0; i < taille; i++) {
         printf("%s\n", "--------------------------------------------------------------");
         printf("                                %s  \n", tabaction[i]);
         printf("%s\n", "--------------------------------------------------------------");
         //essayer de mettre en place une barre de progression du style [#########]
-        extractAll(url, tabaction[i], &counterFile, repositorie);
+        extractAll(url, tabaction[i], &counterFile, folder);
     }
 }
 
@@ -34,20 +34,20 @@ char* getEndTag(char* tag) {
  * @param url
  * @brief extract all what  we need
  */
-void extractAll(char* url, char* tag, CounterFile* counterFile, char* repositorie) {
+void extractAll(char* url, char* tag, CounterFile* counterFile, char* folder) {
     char* codeHtml = getHtmlCode(url);
     counterIncrem(counterFile, " ");
     if (!strcmp(tag, "img") || !strcmp(tag, "source") || !strcmp(tag, "a") || !strcmp(tag, "script") ||
         !strcmp(tag, "link")) {
-        FILE* file = fopen(filenameDynamicTxt(repositorie, tag, *routerCounter(counterFile, " ")), "w+");
+        FILE* file = fopen(filenameDynamicTxt(folder, tag, *routerCounter(counterFile, " ")), "w+");
         if (file != NULL) {
-            extractLink(codeHtml, file, tag, counterFile, repositorie);
+            extractLink(codeHtml, file, tag, counterFile, folder);
             fclose(file);
         } else {
             printf("Can't open the file");
         }
     } else {
-        extractContentBetweenTag(codeHtml, counterFile->nbContent, tag, repositorie);
+        extractContentBetweenTag(codeHtml, counterFile->nbContent, tag, folder);
         counterIncrem(counterFile, "<content");
     }
 
@@ -104,12 +104,12 @@ void saveContent(int posBeginTag, int posEndTag, char* codeHtml, FILE* file) {
  * @brief extract all between a tag
  */
 /* si il a plus de 6 espace il arrete d'enregistrer et reprends quand il rencontre des lettres*/
-void extractContentBetweenTag(char* codeHtml, int number, char* tag, char* repositorie) {
+void extractContentBetweenTag(char* codeHtml, int number, char* tag, char* folder) {
     int end, begin;
     char* searchBeginTag = getBeginTag(tag), * tagOpen = codeHtml;
     char* searchEndTag = getEndTag(tag), * tagEnd = codeHtml;
 
-    FILE* file = fopen(filenameDynamicContainer(repositorie, tag, number, "txt"), "w+");
+    FILE* file = fopen(filenameDynamicContainer(folder, tag, number, "txt"), "w+");
     if (file != NULL) {
         while ((tagOpen = strstr(tagOpen, searchBeginTag)) != NULL && (tagEnd = strstr(tagEnd, searchEndTag)) != NULL) {
             begin = tagOpen - codeHtml;
@@ -132,7 +132,7 @@ void extractContentBetweenTag(char* codeHtml, int number, char* tag, char* repos
  * @param typeHrefOrSrc
  * @brief extract all link
  */
-void extractLink(char* codeHtml, FILE* file, char* tag, CounterFile* counterFile, char* repositorie) {
+void extractLink(char* codeHtml, FILE* file, char* tag, CounterFile* counterFile, char* folder) {
     int beginTag, endTag, posHref;
     const char* toSearch = getBeginTag(tag), * p = codeHtml;
     while ((p = strstr(p, toSearch)) != NULL) {
@@ -144,7 +144,7 @@ void extractLink(char* codeHtml, FILE* file, char* tag, CounterFile* counterFile
         }
         posHref = positionOfAttribut(beginTag, endTag, codeHtml, hrefOrSrcRouter(tag));
         if (posHref != -1) {
-            process(beginTag, endTag, codeHtml, tag, file, &p, toSearch, posHref, counterFile, repositorie);
+            process(beginTag, endTag, codeHtml, tag, file, &p, toSearch, posHref, counterFile, folder);
         }
 
         p += strlen(toSearch);
@@ -164,7 +164,7 @@ void extractLink(char* codeHtml, FILE* file, char* tag, CounterFile* counterFile
 * @param pos_href
 */
 void process(int beginTag, int endTag, char* codeHtml, char* tag, FILE* file, const char** p,
-             char const* toSearch, int posHref, CounterFile* counterFile, char* repositorie) {
+             char const* toSearch, int posHref, CounterFile* counterFile, char* folder) {
     int findBeginSave = 0, counter = 0, http, pos = 0;
     char* url_find = malloc(sizeof(char) * 400);
     for (int i = posHref - beginTag; i < endTag - beginTag; i++) {
@@ -173,7 +173,7 @@ void process(int beginTag, int endTag, char* codeHtml, char* tag, FILE* file, co
         if (findBeginSave == 1) {
             if (codeHtml[pos] == '\"' || codeHtml[pos] == '\'') {
                 url_find[counter] = '\0';
-                treatment(url_find, tag, file, counterFile, repositorie);
+                treatment(url_find, tag, file, counterFile, folder);
                 *p += strlen(toSearch);
                 break;
             } else {
@@ -198,12 +198,12 @@ void process(int beginTag, int endTag, char* codeHtml, char* tag, FILE* file, co
 * @param file
 * @param nb_url
 */
-void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, char* repositorie) {
+void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, char* folder) {
     printf("%s \n", urlFind);
     int* counter = routerCounter(counterFile, tag);
     if (!strcmp(tag, "img") || !strcmp(tag, "source")) {
         fprintf(file, "%s \n", urlFind);
-        saveMedia(urlFind, *counter, tag, repositorie);
+        saveMedia(urlFind, *counter, tag, folder);
         counterIncrem(counterFile, tag);
     } else if (!strcmp(tag, "a")) {
         fprintf(file, "%s \n", urlFind);
@@ -214,10 +214,10 @@ void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, c
         if (!strcmp(getExtension(urlFind), "png") || !strcmp(getExtension(urlFind), "ico") ||
             !strcmp(getExtension(urlFind), "svg")) {
             fprintf(file, "%s \n", urlCpy);
-            saveMedia(urlCpy, *counter, tag, repositorie);
+            saveMedia(urlCpy, *counter, tag, folder);
         } else {
             fprintf(file, "%s \n", urlCpy);
-            getCodeInFile(urlCpy, *counter, tag, repositorie);
+            getCodeInFile(urlCpy, *counter, tag, folder);
         }
         counterIncrem(counterFile, getBeginTag(tag));
     }

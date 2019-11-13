@@ -8,19 +8,19 @@
  * @brief permit to redirect toward the path
  */
 
-char* filenameDynamicTxt(char* repositorie, char* tag, int i) {
+char* filenameDynamicTxt(char* folder, char* tag, int i) {
     char* str = malloc(sizeof(char) * 50);
 
     if (!strcmp("a", tag)) {
-        sprintf(str, "%s/linkOfAllTag/link%d.txt", repositorie, i);
+        sprintf(str, "%s/linkOfAllTag/link%d.txt", folder, i);
     } else if (!strcmp("img", tag)) {
-        sprintf(str, "%s/linkOfAllTag/img%d.txt", repositorie, i);
+        sprintf(str, "%s/linkOfAllTag/img%d.txt", folder, i);
     } else if (!strcmp("link", tag)) {
-        sprintf(str, "%s/linkOfAllTag/css%d.txt", repositorie, i);
+        sprintf(str, "%s/linkOfAllTag/css%d.txt", folder, i);
     } else if (!strcmp("script", tag)) {
-        sprintf(str, "%s/linkOfAllTag/js%d.txt", repositorie, i);
+        sprintf(str, "%s/linkOfAllTag/js%d.txt", folder, i);
     } else if (!strcmp("source", tag)) {
-        sprintf(str, "%s/linkOfAllTag/video%d.txt", repositorie, i);
+        sprintf(str, "%s/linkOfAllTag/video%d.txt", folder, i);
     }
     return str;
 }
@@ -33,27 +33,27 @@ char* filenameDynamicTxt(char* repositorie, char* tag, int i) {
  * @return path
  * @brief permit to redirect toward the path
  */
-char* filenameDynamicContainer(char* repositorie, char* tag, int i, char* ext) {
+char* filenameDynamicContainer(char* folder, char* tag, int i, char* ext) {
     char* str = malloc(sizeof(char) * 50);
 
     if (!strcmp("img", tag)) {
         if (!strcmp(ext, " ")) {
-            sprintf(str, "%s/imgTag/image%i", repositorie, i);
+            sprintf(str, "%s/imgTag/image%i", folder, i);
         } else {
-            sprintf(str, "%s/imgTag/image%i.%s", repositorie, i, ext);
+            sprintf(str, "%s/imgTag/image%i.%s", folder, i, ext);
         }
     } else if (!strcmp("source", tag)) {
-        sprintf(str, "%s/sourceTag/video%d.%s", repositorie, i, ext);
+        sprintf(str, "%s/sourceTag/video%d.%s", folder, i, ext);
     } else if (!strcmp("link", tag)) {
         if (!strcmp(ext, " ")) {
-            sprintf(str, "%s/linkTag/link%d.txt", repositorie, i);
+            sprintf(str, "%s/linkTag/link%d.txt", folder, i);
         } else {
-            sprintf(str, "%s/linkTag/link%d.%s", repositorie, i, ext);
+            sprintf(str, "%s/linkTag/link%d.%s", folder, i, ext);
         }
     } else if (!strcmp("script", tag)) {
-        sprintf(str, "%s/scriptTag/js%d.js", repositorie, i);
+        sprintf(str, "%s/scriptTag/js%d.js", folder, i);
     } else {
-        sprintf(str, "%s/content/%s%i.txt", repositorie, tag, i);
+        sprintf(str, "%s/content/%s%i.txt", folder, tag, i);
     }
 
     return str;
@@ -76,13 +76,13 @@ char* hrefOrSrcRouter(char* tag) {
 }
 
 
-void deleteRepositorie(char* repositorieName) {
+void deleteFolder(char* folderName) {
     char* command = malloc(sizeof(char) * 200);
-    sprintf(command, "rmdir /Q  /S %s", repositorieName);
+    sprintf(command, "rmdir /Q  /S %s", folderName);
     system(command);
 }
 
-void createRepositorie(char* repositorieName) {
+void createFolder(char* folderName) {
 
     char* command = malloc(sizeof(char) * 200);
     sprintf(command, "mkdir %s && "
@@ -90,7 +90,7 @@ void createRepositorie(char* repositorieName) {
                      "&& mkdir scriptTag "
                      "&& mkdir linkofAllTag "
                      "&& mkdir linkTag "
-                     "&& mkdir sourceTag ", repositorieName, repositorieName);
+                     "&& mkdir sourceTag ", folderName, folderName);
     system(command);
 
 }

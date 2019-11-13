@@ -333,23 +333,24 @@ char* getStrUntilChrs(char* str, int* position, char* chrs) {
     return newStr;
 }
 
-char** getUrls(char* line, int* urlsLength) {
+char** strToArrayStr(char* line, int* length, char* delimiters) {// ex : (bjr, bye) -> [0] -> "bjr" [1] -> "bye"
 
-    char** urls = malloc(sizeof(char*));
-    char** reallocUrls;
+    char** list = malloc(sizeof(char*));
+    char** reallocList;
     int position = 0;
 
     while (position < strlen(line)) {
-        reallocUrls = realloc(urls, sizeof(char*) * (*urlsLength + 1));
-        urls = reallocUrls;
-        char* newUrl = getStrUntilChrs(line + position, &position, ",)");
-        urls[*urlsLength] = malloc(sizeof(char) * (sizeof(newUrl) + 1));
-        strcpy(urls[*urlsLength], removeStrSpaces(newUrl));
-        *urlsLength += 1;
+        reallocList = realloc(list, sizeof(char*) * (*length + 1));
+        list = reallocList;
+
+        char* newUrl = getStrUntilChrs(line + position, &position, delimiters);
+        list[*length] = malloc(sizeof(char) * (sizeof(newUrl) + 1));
+        strcpy(list[*length], removeStrSpaces(newUrl));
+        *length += 1;
         position++;
     }
 
-    return urls;
+    return list;
 }
 
 void linkTaskActions(Task* task, char** urls, int urlsLength, Action* actions, int actionsLength) {
@@ -406,7 +407,7 @@ void setAllTaskOptions(Task* task, FILE* file, int position, Action* actions, in
         } else if (checkLineEnds(fileLine, "(", ")") == 1) {
 
             int urlsLength = 0;
-            char** urls = getUrls(strchr(fileLine, '(') + 1, &urlsLength);
+            char** urls = strToArrayStr(strchr(fileLine, '(') + 1, &urlsLength, ",)");
             linkTaskActions(task, urls, urlsLength, actions, actionsLength);
         }
     }

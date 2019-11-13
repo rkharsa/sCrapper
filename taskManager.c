@@ -3,6 +3,7 @@
 //
 #include "parser.h"
 #include "header.h"
+#include "manager.h"
 
 long getCurrentTime() {
     time_t current_time;
@@ -42,13 +43,47 @@ void writeInFile(char* taskname, char* actionName) {
     free(fn);
 }
 
-char* findValueBykey(char* key, Action action) {
+char* findValueByKey(char* key, Action action) {
     for (int j = 0; j < action.optionsLength; j++) {
         if (strcmp(action.keys[j], key) == 0) {
             return action.values[j];
         }
     }
     return NULL;
+}
+
+int findIntValueByKey(Action action, char* key) {
+
+    for (int i = 0; i < action.optionsLength; ++i) {
+        if(strcmp(action.keys[i], key) == 0) {
+            return atoi(action.values[i]);
+        }
+    }
+
+    return 0;
+}
+
+void executeTags(Action action, char* tags, int maxDepth) {
+    int tagsLength = 0;
+    char** tagsList = strToArrayStr(tags, &tagsLength, ",)");
+
+    //executeAll(here);
+    // à test demain
+}
+
+void executeAction(Action action) { // parcourir chaque option
+    for (int i = 0; i < action.optionsLength; ++i) {
+        //d'abord check si ya un max-depth ? OUI
+        //getMaxDepth
+        if (strcmp(action.keys[i], "type") == 0) {
+            // à implémenter
+        } else if (strcmp(action.keys[i], "tags") == 0) {
+            // à implémenter mais déjà fait
+            //convertir en tableau puis exécuter la fonction de Rani
+            executeTags(action, action.values[i], findIntValueByKey(action, "max-depth"));
+        }
+
+    }
 }
 
 void taskExec(Task* task, int taskLenght) {
@@ -67,10 +102,11 @@ void taskExec(Task* task, int taskLenght) {
             destime = task[i].nextOccurence;
             if (destime == newTime) {
                 for (int j = 0; j < task[i].actionsLength; j++) {
-                    char* value = findValueBykey("versionning", task[i].actions[j]);
+                    char* value = findValueByKey("versionning", task[i].actions[j]);
                     if (strcmp(value, "on") == 0) {
                         writeInFile(task[i].name, task[i].actions[j].name);
                     }
+                    executeAction(task[i].actions[j]);
                 }
                 task[i].nextOccurence = incrementTime(newTime, hours, minutes, seconds);
             }

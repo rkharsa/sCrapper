@@ -26,8 +26,7 @@ typedef struct Task {
     long nextOccurence;
 } Task;
 
-
-char** getUrls(char* line, int* urlsLength);
+char** strToArrayStr(char* line, int* length, char* delimiters);
 
 char* getStrUntilChrs(char* str, int* position, char* chrs);
 

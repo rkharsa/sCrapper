@@ -2,9 +2,9 @@
 {name -> Facebook} # Correspond au nom de l'action
 { url -> facebook.com} # Correspond à l'url du site
 +
-{option1 -> value1}
+{tags -> (a, img, p, strong)}
 {option2 -> value2}
-{option3 -> value3}
+{max-depth -> 4}
 {versionning -> off}
 
 =

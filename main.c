@@ -21,41 +21,38 @@ int main(int argc, char* argv[]) {
 
     int actionsLength = 0;
     int tasksLength = 0;
-    //char repositorie[200];
+    //char folder[200];
     Action* actions = getActions(file, &actionsLength);
     Task* tasks = getTasks(file, &tasksLength, actions, actionsLength);
 
+    printActions(actions, actionsLength);
+    printTasks(tasks, tasksLength);
 
     fclose(file);
     return EXIT_SUCCESS;
 
 
     /*for (int i = 0; i < actionsLength; i++) {
-        sprintf(repositorie,"%s%d",actions[i].name,i);
-        printf("%s",repositorie);
-        deleteRepositorie(repositorie);
-        createRepositorie(repositorie);
+        sprintf(folder,"%s%d",actions[i].name,i);
+        printf("%s",folder);
+        deleteFolder(folder);
+        createFolder(folder);
         char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
-        execute(extractAlltag, actions[i].url,8,repositorie);
+        execute(extractAlltag, actions[i].url,8,folder);
     }
-
-   // printActions(actions, actionsLength);
-    //printTasks(tasks, tasksLength);
-
-    fclose(file);*/
-    /*deleteRepositorie("download");
-      createRepositorie("download");//je vais devoir adapter le noms des filename en fonction de sa
+    deleteFolder("download");
+      createFolder("download");//je vais devoir adapter le noms des filename en fonction de sa
       //faire une fonction qui fait la liste des options
       char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
-      execute(extractAlltag,"https://www.marmiton.org/recettes/index/categorie/pizza",8);*/
-    /*char repositorie[200];
-    sprintf(repositorie,"%s%d","name",0);
-    printf("%s",repositorie);
-     deleteRepositorie(repositorie);
-     createRepositorie(repositorie);
+      execute(extractAlltag,"https://www.marmiton.org/recettes/index/categorie/pizza",8);
+    char folder[200];
+    sprintf(folder,"%s%d","name",0);
+    printf("%s",folder);
+     deleteFolder(folder);
+     createFolder(folder);
      char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
-     execute(extractAlltag, "https://www.marmiton.org/recettes/index/categorie/pizza",8,repositorie);*/
-    /*fistWawe("https://curl.haxx.se/libcurl/");
+     execute(extractAlltag, "https://www.marmiton.org/recettes/index/categorie/pizza",8,folder);
+    fistWawe("https://curl.haxx.se/libcurl/");
      int max_deph=3;
      for (int i = 0; i < max_deph ; i++) {
          printf("\nPROFONDEUR :%d \n",i);

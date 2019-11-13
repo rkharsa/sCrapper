@@ -79,13 +79,13 @@ char* getHtmlCode(char* url) {
  * @param begin_tag
  * @brief permit to save the result of the request in file
  */
-void getCodeInFile(char* url, int i, char* tag, char* repositorie) {
+void getCodeInFile(char* url, int i, char* tag, char* folder) {
     char filename[200];
     int result;
     char* urlCpy = malloc(sizeof(char) * strlen(url) + 10);
     strcpy(urlCpy, url);
 
-    strcpy(filename, filenameDynamicContainer(repositorie, tag, i, getExtension(url)));
+    strcpy(filename, filenameDynamicContainer(folder, tag, i, getExtension(url)));
     FILE* fp = fopen(filename, "w");
     //open session curl=
     if (fp != NULL) {
@@ -143,7 +143,7 @@ char* getExtension(char* url) {
  * @param begin_tag
  * @brief save media in local
  */
-void saveMedia(char* url, int i, char* tag, char* repositorie) {//verif type mime
+void saveMedia(char* url, int i, char* tag, char* folder) {//verif type mime
     CURL* curl;
     curl = curl_easy_init();
     char* urlCpy = malloc(sizeof(char) * strlen(url) + 10);
@@ -151,7 +151,7 @@ void saveMedia(char* url, int i, char* tag, char* repositorie) {//verif type mim
     char* ext = getExtension(url);
     char filename[200];
     int result;
-    strcpy(filename, filenameDynamicContainer(repositorie, tag, i, ext));
+    strcpy(filename, filenameDynamicContainer(folder, tag, i, ext));
     //  printf("url cpy   %s\n filename : %s\n extt: %s",urlCpy,filename,ext);
     FILE* fp = fopen(filename, "wb");
     if (fp != NULL) {
