@@ -1,5 +1,20 @@
 #include "header.h"
 
+void commandInFile(char* command, char* file) {
+
+    char* cmd = malloc(sizeof(char) * (strlen(command) + strlen(file)) + 20);
+    sprintf(cmd, "%s %s > temp.txt", command, file);
+    system(cmd);
+
+    sprintf(cmd, "rm %s", file);
+    system(cmd);
+
+    sprintf(cmd, "mv temp.txt %s", file);
+    system(cmd);
+}
+
+
+
 void firstWave(char* url) {
     char* codeHtml = getHtmlCode(url);
     system("rmdir /Q  /S  tmp");
@@ -10,8 +25,12 @@ void firstWave(char* url) {
         extractLink(codeHtml, fp, "a", &counterFile, "tmp");
         fclose(fp);
     }
-    system("sort -u vague0.txt > vague0.txt");
+
+    commandInFile("egrep -v \".png|.jpeg|.svg\"", "tmp/vague0.txt");
+    commandInFile("sort -u", "tmp/vague0.txt");
 }
+
+
 
 void nextWave(int waveDeph) {
     char filename1[200], filename2[200];
@@ -44,6 +63,8 @@ void nextWave(int waveDeph) {
             fclose(file);
         }
         fclose(fp);
+        commandInFile("egrep -v \".png|.jpeg|.svg|.gif\"", filename2);
+        commandInFile("sort -u", filename2);
     }
 }
 

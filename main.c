@@ -35,6 +35,10 @@ int main(int argc, char* argv[]) {
     fclose(file);
     return EXIT_SUCCESS;
 
+    //commandInFile("sort -u", "../testg.txt");
+    // commandInFile("egrep -v \".png|.jpeg|.svg\"", "../testg.txt");
+    //return 0;
+
 
     /*for (int i = 0; i < actionsLength; i++) {
         sprintf(folder,"%s%d",actions[i].name,i);

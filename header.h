@@ -33,6 +33,8 @@ typedef struct Param {
     char* codeHtml;
 } Param;
 
+void commandInFile(char* command, char* file);
+
 void firstWave(char* url);
 
 void nextWave(int waveDeph);

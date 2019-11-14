@@ -81,6 +81,8 @@ void executeTags(Action action, char* tags, int maxDepth) {
             nextWave(i);//faire un sort puis uniq puis merge puis resort et uniq <3
         }
     }
+
+    execute(tagsList, action.url, tagsLength, action.name);
 }
 
 void executeAction(Action action) { // parcourir chaque option
