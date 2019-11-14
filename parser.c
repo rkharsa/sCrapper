@@ -118,7 +118,7 @@ void printTasks(Task* tasks, int length) {
                tasks[i].minutes, tasks[i].seconds);
 
         for (int j = 0; j < tasks[i].actionsLength; ++j) {
-            printf("action : *%s*\n", tasks[i].actions[j].name);
+            printf("action name : *%s*\naction url : *%s*\n", tasks[i].actions[j].name, tasks[i].actions[j].url);
         }
     }
 }
@@ -344,7 +344,7 @@ char** strToArrayStr(char* line, int* length, char* delimiters) {// ex : (bjr, b
         list = reallocList;
 
         char* newUrl = getStrUntilChrs(line + position, &position, delimiters);
-        list[*length] = malloc(sizeof(char) * (sizeof(newUrl) + 1));
+        list[*length] = malloc(sizeof(char) * (strlen(newUrl) + 1));
         strcpy(list[*length], removeStrSpaces(newUrl));
         *length += 1;
         position++;
@@ -500,6 +500,7 @@ Task* getTasks(FILE* file, int* tasksLength, Action* actions, int actionsLength)
         }
 
         setAllTaskOptions(&tasks[*tasksLength], file, position, actions, actionsLength);
+
         *tasksLength += 1;
     }
 

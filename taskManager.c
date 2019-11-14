@@ -67,22 +67,35 @@ void executeTags(Action action, char* tags, int maxDepth) {
     int tagsLength = 0;
     char** tagsList = strToArrayStr(tags, &tagsLength, ",)");
 
-    //executeAll(here);
-    // à test demain
+    deleteFolder(action.name);
+    createFolder(action.name);
+
+    if(maxDepth <= 0) {
+        execute(tagsList, action.url, tagsLength, action.name);
+        return;
+    }
+
+    firstWave(action.url);
+    if(maxDepth > 1) {
+        for (int i = 0; i < maxDepth; ++i) {
+            nextWave(i);//faire un sort puis uniq puis merge puis resort et uniq <3
+        }
+    }
 }
 
 void executeAction(Action action) { // parcourir chaque option
+
     for (int i = 0; i < action.optionsLength; ++i) {
-        //d'abord check si ya un max-depth ? OUI
+        //d'abord check si ya un max-depth ? OUI ok je parle tout seul
         //getMaxDepth
+        printf("%s\n",action.keys[i]);
         if (strcmp(action.keys[i], "type") == 0) {
             // à implémenter
         } else if (strcmp(action.keys[i], "tags") == 0) {
-            // à implémenter mais déjà fait
-            //convertir en tableau puis exécuter la fonction de Rani
-            executeTags(action, action.values[i], findIntValueByKey(action, "max-depth"));
-        }
 
+            executeTags(action, action.values[i], findIntValueByKey(action,
+                    "max-depth"));
+        }
     }
 }
 

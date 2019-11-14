@@ -1,6 +1,6 @@
 #include "header.h"
 
-void fistWawe(char* url) {
+void firstWave(char* url) {
     char* codeHtml = getHtmlCode(url);
     system("rmdir /Q  /S  tmp");
     system("mkdir tmp");
@@ -45,6 +45,5 @@ void nextWave(int waveDeph) {
         }
         fclose(fp);
     }
-
 }
 

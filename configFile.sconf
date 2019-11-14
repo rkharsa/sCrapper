@@ -1,6 +1,6 @@
 =
 {name -> Facebook} # Correspond au nom de l'action
-{ url -> facebook.com} # Correspond à l'url du site
+{ url -> https://www.facebook.com} # Correspond à l'url du site
 +
 {tags -> (a, img, p, strong)}
 {option2 -> value2}
@@ -20,7 +20,7 @@
 {name -> Ma première super tâche}
 {second -> 3} # Lance les deux req ttes les 10 secondes
 +
-(facebook.com, youtube.com)
+(https://www.facebook.com, youtube.com)
 
 ==
 {name -> Ma deuxieme super tâche}

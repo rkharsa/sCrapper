@@ -33,7 +33,7 @@ typedef struct Param {
     char* codeHtml;
 } Param;
 
-void fistWawe(char* url);
+void firstWave(char* url);
 
 void nextWave(int waveDeph);
 
