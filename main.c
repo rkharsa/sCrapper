@@ -3,7 +3,6 @@
 #include "manager.h"
 
 int main(int argc, char* argv[]) {
-
     printf("%s\n", "--------------------------------------------------------------");
     printf("%s", "  _________                                 .__                \n"
                  " /   _____/ ________________  ______ ______ |__| ____    ____  \n"
@@ -33,5 +32,5 @@ int main(int argc, char* argv[]) {
     }
 
     fclose(file);
-    return EXIT_SUCCESS;
+   return EXIT_SUCCESS;
 }
