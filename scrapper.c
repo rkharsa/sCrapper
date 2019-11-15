@@ -1,11 +1,5 @@
 #include "header.h"
 
-void actionTodo(){
-//lister les actiones demander pour une  url
-
-}
-
-
 
 void execute(char** tabaction,char*url,int taille,char *  repositorie){
     CounterFile counterFile=initCounterFile();
@@ -34,18 +28,18 @@ char *  getEndTag(char* tag){
  */
 void extractAll(char *url,char* tag,CounterFile* counterFile,char *  repositorie) {
     char *codeHtml = getHtmlCode(url);
-counterIncrem(counterFile," ");
+counterIncrem(counterFile,"  ");
     if(!strcmp(tag,"img") || !strcmp(tag,"source")|| !strcmp(tag,"a")|| !strcmp(tag,"script")|| !strcmp(tag,"link")) {
         FILE * file = fopen(filenameDynamicTxt(repositorie,tag,*routerCounter(counterFile," ")),"w+");
         if (file != NULL) {
-           extractLink(codeHtml, file, tag,counterFile,repositorie);
+           extractLink(codeHtml, file, tag,counterFile,repositorie,url);
             fclose(file);
         }else{
             printf("Can't open the file");
         }
     }else{
         extractContentBetweenTag(codeHtml,counterFile->nbContent,tag, repositorie);
-        counterIncrem(counterFile,"<content");
+        counterIncrem(counterFile,"content");
        }
 
     }
@@ -92,6 +86,7 @@ void saveContent(int posBeginTag,int posEndTag,char* codeHtml,FILE* file){
     }
     fputc('\n', file);
 }
+
 /**
  * @author Rani Kharsa
  * @param code_html
@@ -119,6 +114,42 @@ void saveContent(int posBeginTag,int posEndTag,char* codeHtml,FILE* file){
     }
 
  }
+void checkBeginL(int* i,int posEndTag ,char**urlFind,char* url,char* codeHtml,int* counter,int *findBeginSave){
+    int http;
+    if ((codeHtml[*i] == '"' || codeHtml[*i]=='\'') && codeHtml[*i+1]!='#') {
+        http=positionOfAttribut(*i,posEndTag,codeHtml,"http");
+        if(http!=-1){
+            if(codeHtml[http+5]!='&' && ((codeHtml[http+5]==':' && codeHtml[http+6]=='/') || (codeHtml[http+6]==':' && codeHtml[http+7]=='/'))) {
+                *findBeginSave = 1;
+            }
+            return;
+        } else if(codeHtml[*i+1]=='/' ){
+            strcpy(*urlFind,getBeginUrl(url,0));
+            *counter=(int)strlen(*urlFind);
+            *findBeginSave=1;
+        }
+    }
+}
+void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,char* tag,char*folder,CounterFile* counterFile ){
+    int findBeginSave=0,counter=0;
+    char* urlFind=malloc(sizeof(char)*400);
+    for(int i=posBeginTag;i<posEndTag;i++){
+        if(findBeginSave==1) {
+            if (codeHtml[i] == '"' || codeHtml[i]=='\'' ) {
+                urlFind[counter]='\0';
+                if(strlen(urlFind)!=0){
+                    treatment(urlFind,tag,file,counterFile,folder);
+                }
+                break;
+            }
+            urlFind[counter]=codeHtml[i];
+            counter++;
+        }else{
+            checkBeginL(&i,posEndTag,&urlFind,url,codeHtml,&counter,&findBeginSave);
+        }
+    }
+
+}
 
  /**
   * @author Rani Kharsa
@@ -128,64 +159,26 @@ void saveContent(int posBeginTag,int posEndTag,char* codeHtml,FILE* file){
   * @param typeHrefOrSrc
   * @brief extract all link
   */
-    void extractLink(char *codeHtml, FILE *file, char *tag,CounterFile* counterFile,char* repositorie) {
-        int beginTag, endTag,posHref;
-        const char *toSearch = getBeginTag(tag), *p = codeHtml;
-        while ((p = strstr(p, toSearch)) != NULL) {
-            beginTag = p - codeHtml;
-            endTag = positionOfSymbole(beginTag, codeHtml, '>');
-            if (endTag == -1) {
-                p += strlen(toSearch);
-                continue;
-            }
-            posHref= positionOfAttribut(beginTag,endTag,codeHtml, hrefOrSrcRouter(tag));
-            if(posHref!=-1){
-                process(beginTag,endTag,codeHtml,tag,file,&p,toSearch,posHref,counterFile,repositorie);
-            }
 
-            p += strlen(toSearch);
-        }
-        }
+ void extractLink(char *  codeHtml,FILE*file ,char *tag,CounterFile* counterFile,char * folder,char*url) {
+     int end, begin, posHref;
+     char *searchBeginTag = getBeginTag(tag), *tagOpen = codeHtml;
+     if (file != NULL) {
+         while ((tagOpen = strstr(tagOpen, searchBeginTag)) != NULL) {
+             begin = tagOpen - codeHtml;
+             end = positionOfSymbole(begin, codeHtml, '>');
+             if (end != -1) {
+                 posHref = positionOfAttribut(begin, end, codeHtml, hrefOrSrcRouter(tag));
+                 if (posHref != -1) {
+                     saveLink(posHref, end, codeHtml, file,url,tag,folder,counterFile);
+                 }
+             }
+             tagOpen += strlen(searchBeginTag);
+         }
+     }
+ }
 
-/**
-* @author Rani kharsa
-* @param begin_tag
-* @param end_tag
-* @param code_html
-* @param search_begin_tag
-* @param file
-* @param nb_url
-* @param p
-* @param to_search
-* @param pos_href
-*/
-void process(int beginTag,int endTag,char* codeHtml,char* tag,FILE*file,const char**p,
-        char const*toSearch,int posHref,CounterFile* counterFile,char* repositorie){
-    int findBeginSave=0,counter=0,http,pos=0;
-    char*url_find=malloc(sizeof(char)*400);
-    for(int i=posHref-beginTag;i<endTag-beginTag;i++){
-        pos=i+beginTag;
 
-        if(findBeginSave==1){
-            if(codeHtml[pos]=='\"'||codeHtml[pos]=='\''){
-                url_find[counter]='\0';
-                treatment(url_find,tag,file,counterFile,repositorie);
-                *p+=strlen(toSearch);
-                break;
-            }else{
-                url_find[counter]=codeHtml[pos];
-                counter++;
-            }
-        }else{
-            http=checkBegin(beginTag,endTag,codeHtml,pos,posHref);
-            if(http!=-1){
-                i=http-1-beginTag;
-                findBeginSave=1;
-            }
-        }
-    }
-    free(url_find);
-}
 
         /**
       * @author Rani kharsa
@@ -214,31 +207,10 @@ void treatment(char * urlFind ,char * tag,FILE* file,CounterFile* counterFile,ch
             fprintf(file, "%s \n", urlCpy);
             getCodeInFile(urlCpy,*counter,tag,repositorie);
         }
-        counterIncrem(counterFile,getBeginTag(tag));
+        counterIncrem(counterFile,tag);
     }
 }
 
-/**
- * @author Rani kharsa
- * @param begin_tag
- * @param end_tag
- * @param code_html
- * @param i
- * @param pos_href
- * @return  position of http
- */
-int checkBegin(int beginTag, int endTag, char *codeHtml, int i,int posHref) {
-        int http;
-            if (codeHtml[i + (beginTag- posHref)] == '\'' || codeHtml[i + (beginTag - posHref)] == '"') {
-                http = positionOfAttribut(i + (beginTag - posHref), endTag, codeHtml, "http");
-                if (http != -1) {
-                    if(codeHtml[http+5]!='&'){
-                        return http;
-                    }
-                }
-        }
-        return -1;
- }
 
 
 
@@ -279,7 +251,7 @@ int checkBegin(int beginTag, int endTag, char *codeHtml, int i,int posHref) {
             if (charToFind != '>' && i == 10) {
                 return -1;
             }
-            if (codeHtml[ begin +i] == '>') {
+            if (codeHtml[ begin +i] == charToFind) {
                 return begin + i;
             }
         }

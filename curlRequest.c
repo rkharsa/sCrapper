@@ -55,7 +55,7 @@ char *getHtmlCode(char* url){
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writefunc);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER,0);
-        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION,1L);
+        //curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION,1L);
 
         CURLcode res = curl_easy_perform(curl);//execute all  the setop
         if(res!=CURLE_OK){
@@ -93,7 +93,7 @@ void getCodeInFile(char* url,int i ,char* tag,char* repositorie){
             curl_easy_setopt(curl,CURLOPT_WRITEDATA,fp);
             curl_easy_setopt(curl,CURLOPT_FAILONERROR,1L);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER,0);
-            curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION,1L);
+        //    curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION,1L);
             CURLcode  res= curl_easy_perform(curl);//execute all  the setopt
             if(res!=CURLE_OK){
                 fprintf(stderr, "curl_easy_perform() failed: %s\n",curl_easy_strerror(res));
@@ -157,7 +157,7 @@ void saveMedia(char* url,int i,char* tag,char* repositorie ){//verif type mime
         curl_easy_setopt(curl,CURLOPT_WRITEDATA,fp);
         curl_easy_setopt(curl,CURLOPT_FAILONERROR,1L);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER,0);
-        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION,1L);
+//        curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION,1L);
         result=curl_easy_perform(curl);
         if(result==CURLE_OK){
             printf("Download successful\n");
@@ -170,4 +170,40 @@ void saveMedia(char* url,int i,char* tag,char* repositorie ){//verif type mime
         printf("Can't open  the file\n");
     }
     curl_easy_cleanup(curl);
+}
+
+
+char* getHostName(char* url ){
+    CURLU *h;
+    CURLUcode uc;
+    char *host;
+    char *path;
+
+    h = curl_url(); /* get a handle to work with */
+    if(!h)
+        return "1";
+
+    /* parse a full URL */
+    uc = curl_url_set(h, CURLUPART_URL, url, 0);
+
+    /* extract host name from the parsed URL */
+    uc = curl_url_get(h, CURLUPART_HOST, &host, 0);
+
+    curl_url_cleanup(h);
+    return host;
+
+}
+
+char* getBeginUrl(char *url,int slash){
+    char *beginUrl=malloc (sizeof(char)*strlen(url));
+    char *httpsOrHttp=malloc (sizeof(char)*7);
+    if(strstr(url, "https")!=NULL){
+        httpsOrHttp="https";
+    }else if (strstr(url, "http")!=NULL){
+        httpsOrHttp="http";
+    }
+        sprintf(beginUrl, "%s://%s",httpsOrHttp,getHostName(url) );
+
+
+    return beginUrl;
 }

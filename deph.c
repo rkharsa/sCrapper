@@ -6,10 +6,10 @@ void fistWawe(char* url ){
     CounterFile counterFile=initCounterFile();
     FILE * fp= fopen("tmp/vague0.txt", "w+");
     if(fp!=NULL){
-        extractLink(codeHtml,fp,"a",&counterFile,"tmp") ;
+        extractLink(codeHtml,fp,"a",&counterFile,"tmp",url) ;
         fclose(fp);
     }
-    system("sort -u vague0.txt > vague0.txt");
+   // system("sort -u vague0.txt > vague0.txt");
 }
 void nextWave(int waveDeph) {
     char filename1[200],filename2[200];
@@ -28,12 +28,10 @@ void nextWave(int waveDeph) {
             do
             {
                 caractereActuel = fgetc(fp);
-
                 if(caractereActuel=='\n') {
                     url[counter] = '\0';
-                    printf(" url :%s", url);
                     char *codeHtml = getHtmlCode(url);
-                    extractLink(codeHtml, file, "a", &counterFile, "tmp");
+                    extractLink(codeHtml, file, "a", &counterFile, "tmp",url);
                     counter = 0;
                 }else{
                     url[counter]=caractereActuel;

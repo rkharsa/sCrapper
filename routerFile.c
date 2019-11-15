@@ -52,7 +52,7 @@ char* filenameDynamicContainer(char *  repositorie,char * tag,int i,char* ext ){
     }else if(!strcmp("script",tag)){
         sprintf(str, "%s/scriptTag/js%d.js",repositorie, i);
     }else{
-        sprintf(str, "%s/content/%s%i.txt",repositorie,tag,i);
+        sprintf(str, "%s/content/%s%d.txt",repositorie,tag,i);
     }
 
     return str;

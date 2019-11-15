@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     printf("\n%s\n","--------------------------------------------------------------");
 
 
-    /*char *filePath = "../configFile.sconf";// à remplacer par getFilePath() mais là on gagne du temps pour les tests
+  /*  char *filePath = "../configFile.sconf";// à remplacer par getFilePath() mais là on gagne du temps pour les tests
 
     FILE *file = fopen(filePath, "r");
     if(file == NULL) {
@@ -39,11 +39,11 @@ int main(int argc, char *argv[])
     //printTasks(tasks, tasksLength);
 
     fclose(file);*/
-  /*deleteRepositorie("download");
-    createRepositorie("download");//je vais devoir adapter le noms des filename en fonction de sa
+ /*deleteRepositorie("download");
+   createRepositorie("download");//je vais devoir adapter le noms des filename en fonction de sa
     //faire une fonction qui fait la liste des options
-    char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
-    execute(extractAlltag,"https://www.marmiton.org/recettes/index/categorie/pizza",8);*/
+   char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
+    execute(extractAlltag,"https://curl.haxx.se/libcurl/",1,"download");*/
    /*char repositorie[200];
    sprintf(repositorie,"%s%d","name",0);
    printf("%s",repositorie);
@@ -51,12 +51,13 @@ int main(int argc, char *argv[])
     createRepositorie(repositorie);
     char *extractAlltag[8]={"a","source","strong","img","script","link","p","header"};
     execute(extractAlltag, "https://www.marmiton.org/recettes/index/categorie/pizza",8,repositorie);*/
-   /*fistWawe("https://curl.haxx.se/libcurl/");
-    int max_deph=3;
+    fistWawe("https://curl.haxx.se/libcurl/");
+    int max_deph=2;
     for (int i = 0; i < max_deph ; i++) {
         printf("\nPROFONDEUR :%d \n",i);
         nextWave(i);
-    }*/
+    }
+//printf("%s",getBeginUrl("https://www.marmiton.org/recettes/index/categorie/pizza",1)) ;
 
-    return 0;
+return 0;
 }
