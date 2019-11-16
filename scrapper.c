@@ -1,74 +1,98 @@
 #include "header.h"
 
-void actionTodo(){
-//lister les actiones demander pour une  url
 
-}
-
-
-
-void execute(char** tabaction,char*url,int taille){
-    CounterFile counterFile=initCounterFile();
-    for(int i=0;i<taille;i++){
-        printf("%s\n","--------------------------------------------------------------");
-        printf("                                %s  \n",tabaction[i]);
-        printf("%s\n","--------------------------------------------------------------");
+void execute(char** tabaction, char* url, int taille, char* folder) {
+    CounterFile counterFile = initCounterFile();
+    for (int i = 0; i < taille; i++) {
+        printf("%s\n", "--------------------------------------------------------------");
+        printf("                                %s  \n", tabaction[i]);
+        printf("%s\n", "--------------------------------------------------------------");
         //essayer de mettre en place une barre de progression du style [#########]
-        extractAll(url, tabaction[i],&counterFile);
+        extractAll(url, tabaction[i], &counterFile, folder);
     }
 }
+
+char* getBeginTag(char* tag) {
+    char* beginTag = malloc(sizeof(char) * strlen(tag) + 10);
+    sprintf(beginTag, "<%s", tag);
+    return beginTag;
+}
+
+char* getEndTag(char* tag) {
+    char* beginTag = malloc(sizeof(char) * strlen(tag) + 10);
+    sprintf(beginTag, "</%s>", tag);
+    return beginTag;
+}
+
 /**
  * @author Rani Kharsa
  * @param url
  * @brief extract all what  we need
  */
-void extractAll(char *url,char* tag,CounterFile* counterFile) {
-    char *codeHtml = getHtmlCode(url);
-    char *srcOrHref=malloc(sizeof(char)*6);
-    strcpy(srcOrHref,hrefOrSrcRouter(tag));
-    char *beginTag = malloc(sizeof(char)*strlen(tag)+10);
-    sprintf(beginTag,"<%s",tag);
-    char* filename=malloc(sizeof(char)*40);
-    strcpy(filename,filenameDynamicTxt(tag,*routerCounter(counterFile," ")));
-    char *endTag = malloc(sizeof(char)*strlen(tag)+10);
-    sprintf(endTag,"</%s>",tag);
-counterIncrem(counterFile," ");
 
-    if(!strcmp(tag,"img") || !strcmp(tag,"source")|| !strcmp(tag,"a")|| !strcmp(tag,"script")|| !strcmp(tag,"link")) {
-        FILE * file = fopen(filename,"w+");
+void extractAll(char* url, char* tag, CounterFile* counterFile, char* folder) {
+    char* codeHtml = getHtmlCode(url);
+    counterIncrem(counterFile, " ");
+    if (!strcmp(tag, "img") || !strcmp(tag, "source") || !strcmp(tag, "a") || !strcmp(tag, "script") ||
+        !strcmp(tag, "link")) {
+        FILE* file = fopen(filenameDynamicTxt(folder, tag, *routerCounter(counterFile, " ")), "w+");
         if (file != NULL) {
-           extractLink(codeHtml, file, beginTag, srcOrHref,counterFile);
+            extractLink(codeHtml, file, tag, counterFile, folder,url);
             fclose(file);
-        }else{
+        } else {
             printf("Can't open the file");
         }
-    }else{
-        extractContentBetweenTag(codeHtml,counterFile->nbContent,beginTag,endTag);
-        counterIncrem(counterFile,"<content");
-       }
-
+    } else {
+        extractContentBetweenTag(codeHtml, counterFile->nbContent, tag, folder);
+        counterIncrem(counterFile, "content");
     }
 
-void counterSpaceFunc(int * counterSpace,char value){
-    if(value==' ' || value==9 ){
-        *counterSpace+=1;
-    }else{
-        if(value!='\n' ){
-            *counterSpace=0;
+}
+
+void counterSpaceFunc(int* counterSpace, char value) {
+    if (value == ' ' || value == 9) {
+        *counterSpace += 1;
+    } else {
+        if (value != '\n') {
+            *counterSpace = 0;
         }
 
     }
 }
 
-void counterReturnLineFunc(int * counterReturnLine,char value){
-    if(value=='\n' ){
-        *counterReturnLine+=1;
-    }else {
-        if (value != ' ' && value!=9  && value!=13) {
+void counterReturnLineFunc(int* counterReturnLine, char value) {
+    if (value == '\n') {
+        *counterReturnLine += 1;
+    } else {
+        if (value != ' ' && value != 9 && value != 13) {
             *counterReturnLine = 0;
         }
     }
 }
+
+void saveContent(int posBeginTag, int posEndTag, char* codeHtml, FILE* file) {
+    int counterSpace = 0, counterReturnLine = 0;
+    int findBeginSave = 0;
+    for (int i = posBeginTag; i < posEndTag; i++) {
+        if (findBeginSave == 1) {
+            if (codeHtml[i] == '<') {
+                findBeginSave = 0;
+                continue;
+            }
+            counterSpaceFunc(&counterSpace, codeHtml[i]);
+            counterReturnLineFunc(&counterReturnLine, codeHtml[i]);
+            if (counterReturnLine < 2 && counterSpace < 2) {
+                fputc(codeHtml[i], file);
+            }
+        } else {
+            if (codeHtml[i] == '>') {
+                findBeginSave = 1;
+            }
+        }
+    }
+    fputc('\n', file);
+}
+
 /**
  * @author Rani Kharsa
  * @param code_html
@@ -76,47 +100,62 @@ void counterReturnLineFunc(int * counterReturnLine,char value){
  * @param title_level
  * @brief extract all between a tag
  */
- /* si il a plus de 6 espace il arrete d'enregistrer et reprends quand il rencontre des lettres*/
- void extractContentBetweenTag(char *  codeHtml,int number,char* beginTag,char * endTag){
-     int i,end,begin,findBeginSave,counterSpace=0,counterReturnLine=0;
-     char *searchBeginTag =beginTag,*tagOpen = codeHtml;
-    char *searchEndTag =endTag,*tagEnd = codeHtml;
+/* si il a plus de 6 espace il arrete d'enregistrer et reprends quand il rencontre des lettres*/
+void extractContentBetweenTag(char* codeHtml, int number, char* tag, char* folder) {
+    int end, begin;
+    char* searchBeginTag = getBeginTag(tag), * tagOpen = codeHtml;
+    char* searchEndTag = getEndTag(tag), * tagEnd = codeHtml;
 
-    FILE* file = fopen(filenameDynamicContainer(strstr(beginTag,"<")+1,number,"txt"),"w+");
-        if(file!=NULL){
-        while ((tagOpen=strstr(tagOpen,searchBeginTag))!= NULL && (tagEnd=strstr(tagEnd,searchEndTag))!=NULL){
-            begin=tagOpen-codeHtml;
-            end=tagEnd-codeHtml;
-            findBeginSave=0;
-            for(i=begin;i<end;i++){
-                if(findBeginSave==1) {
-                    if (codeHtml[i] == '<' ){
-                        findBeginSave=0;
-                        continue;
-                    }
-                    counterSpaceFunc(&counterSpace,codeHtml[i]);
-                    counterReturnLineFunc(&counterReturnLine,codeHtml[i]);
-                    //|| !strcmp(tag,"img")
-
-                    if(counterReturnLine<1 && counterSpace <2){
-                            fputc(codeHtml[i], file);
-                    }
-
-                }else{
-                    if (codeHtml[i] == '>') {
-                        findBeginSave = 1;
-                    }
-                }
-            }
-            fputc('\n', file);
-            tagOpen+= strlen(searchBeginTag);
-            tagEnd+=strlen(searchEndTag);
+    FILE* file = fopen(filenameDynamicContainer(folder, tag, number, "txt"), "w+");
+    if (file != NULL) {
+        while ((tagOpen = strstr(tagOpen, searchBeginTag)) != NULL && (tagEnd = strstr(tagEnd, searchEndTag)) != NULL) {
+            begin = tagOpen - codeHtml;
+            end = tagEnd - codeHtml;
+            saveContent(begin, end, codeHtml, file);
+            tagOpen += strlen(searchBeginTag);
+            tagEnd += strlen(searchEndTag);
         }
         fclose(file);
-        printf("%s\n","Download successful");
+        printf("%s\n", "Download successful");
+    }
+ }
+void checkBeginL(int* i,int posEndTag ,char**urlFind,char* url,char* codeHtml,int* counter,int *findBeginSave){
+    int http;
+    if ((codeHtml[*i] == '"' || codeHtml[*i]=='\'') && codeHtml[*i+1]!='#') {
+        http=positionOfAttribut(*i,posEndTag,codeHtml,"http");
+        if(http!=-1){
+            if(codeHtml[http+5]!='&' && ((codeHtml[http+5]==':' && codeHtml[http+6]=='/') || (codeHtml[http+6]==':' && codeHtml[http+7]=='/'))) {
+                *findBeginSave = 1;
+            }
+            return;
+        } else if(codeHtml[*i+1]=='/' ){
+            strcpy(*urlFind,getBeginUrl(url,0));
+            *counter=(int)strlen(*urlFind);
+            *findBeginSave=1;
+        }
+    }
+}
+void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,char* tag,char*folder,CounterFile* counterFile ){
+    int findBeginSave=0,counter=0;
+    char* urlFind=malloc(sizeof(char)*400);
+    for(int i=posBeginTag;i<posEndTag;i++){
+        if(findBeginSave==1) {
+            if (codeHtml[i] == '"' || codeHtml[i]=='\'' ) {
+                urlFind[counter]='\0';
+                if(strlen(urlFind)!=0){
+                    treatment(urlFind,tag,file,counterFile,folder);
+                }
+                break;
+            }
+            urlFind[counter]=codeHtml[i];
+            counter++;
+        }else{
+            checkBeginL(&i,posEndTag,&urlFind,url,codeHtml,&counter,&findBeginSave);
+        }
     }
 
- }
+}
+
  /**
   * @author Rani Kharsa
   * @param code_html
@@ -125,117 +164,56 @@ void counterReturnLineFunc(int * counterReturnLine,char value){
   * @param typeHrefOrSrc
   * @brief extract all link
   */
-    void extractLink(char *codeHtml, FILE *file, char *searchBeginTag, char *typeHrefOrSrc,CounterFile* counterFile) {
-        int beginTag, endTag,posHref;
-        const char *toSearch = searchBeginTag, *p = codeHtml;
-        while ((p = strstr(p, toSearch)) != NULL) {
-            beginTag = p - codeHtml;
-            endTag = positionOfSymbole(beginTag, codeHtml, '>');
-            if (endTag == -1) {
-                p += strlen(toSearch);
-                continue;
-            }
-            posHref= positionOfAttribut(beginTag,endTag,codeHtml, typeHrefOrSrc);
-            if(posHref!=-1){
-                process(beginTag,endTag,codeHtml,searchBeginTag,file,&p,toSearch,posHref,counterFile);
-            }
 
-            p += strlen(toSearch);
-        }
-        }
+ void extractLink(char *  codeHtml,FILE*file ,char *tag,CounterFile* counterFile,char * folder,char*url) {
+     int end, begin, posHref;
+     char *searchBeginTag = getBeginTag(tag), *tagOpen = codeHtml;
+     if (file != NULL) {
+         while ((tagOpen = strstr(tagOpen, searchBeginTag)) != NULL) {
+             begin = tagOpen - codeHtml;
+             end = positionOfSymbole(begin, codeHtml, '>');
+             if (end != -1) {
+                 posHref = positionOfAttribut(begin, end, codeHtml, hrefOrSrcRouter(tag));
+                 if (posHref != -1) {
+                     saveLink(posHref, end, codeHtml, file,url,tag,folder,counterFile);
+                 }
+             }
+             tagOpen += strlen(searchBeginTag);
+         }
+     }
+ }
 
 /**
 * @author Rani kharsa
+* @param url_find
 * @param begin_tag
-* @param end_tag
-* @param code_html
-* @param search_begin_tag
 * @param file
 * @param nb_url
-* @param p
-* @param to_search
-* @param pos_href
 */
-void process(int beginTag,int endTag,char* codeHtml,char* searchBeginTag,FILE*file,const char**p,char const*toSearch,int posHref,CounterFile* counterFile){
-    int findBeginSave=0,counter=0,http,pos=0;
-    char*url_find=malloc(sizeof(char)*400);
-    for(int i=posHref-beginTag;i<endTag-beginTag;i++){
-        pos=i+beginTag;
-        // printf("%d\n ",pos);
-        if(findBeginSave==1){
-            if(codeHtml[pos]=='\"'||codeHtml[pos]=='\''){
-                url_find[counter]='\0';
-                treatment(url_find,searchBeginTag,file,counterFile);
-                *p+=strlen(toSearch);
-                break;
-            }else{
-                url_find[counter]=codeHtml[pos];
-                counter++;
-            }
-        }else{
-            http=checkBegin(beginTag,endTag,codeHtml,pos,posHref);
-            if(http!=-1){
-                i=http-1-beginTag;
-                findBeginSave=1;
-            }
-        }
-    }
-    free(url_find);
-}
-        /**
-      * @author Rani kharsa
-      * @param url_find
-     * @param begin_tag
-     * @param file
-     * @param nb_url
-     */
-void treatment(char * urlFind ,char * beginTag,FILE* file,CounterFile* counterFile ) {
-    //traitement des ext ici
-    printf("%s \n",urlFind);
-    int * counter=routerCounter(counterFile,beginTag);
-    if (!strcmp(beginTag, "<img") || !strcmp(beginTag,"<source")) {
+void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, char* folder) {
+    printf("%s \n", urlFind);
+    int* counter = routerCounter(counterFile, tag);
+    if (!strcmp(tag, "img") || !strcmp(tag, "source")) {
         fprintf(file, "%s \n", urlFind);
-        saveMedia(urlFind,*counter,beginTag);
-        counterIncrem(counterFile,beginTag);
-    } else if (!strcmp(beginTag, "<a") ) {
+        saveMedia(urlFind, *counter, tag, folder);
+        counterIncrem(counterFile, tag);
+    } else if (!strcmp(tag, "a")) {
         fprintf(file, "%s \n", urlFind);
-        printf("%s\n","Download successful");
-    }else if (!strcmp(beginTag, "<link") || !strcmp(beginTag,"<script")) {
-        char *urlCpy=malloc(sizeof(char)*strlen(urlFind)+10);
-        strcpy(urlCpy,urlFind);
-        if(!strcmp(getExtension(urlFind),"png")||  !strcmp(getExtension(urlFind),"ico") || !strcmp(getExtension(urlFind),"svg")){
+        printf("%s\n", "Download successful");
+    } else if (!strcmp(tag, "link") || !strcmp(tag, "script")) {
+        char* urlCpy = malloc(sizeof(char) * strlen(urlFind) + 10);
+        strcpy(urlCpy, urlFind);
+        if (!strcmp(getExtension(urlFind), "png") || !strcmp(getExtension(urlFind), "ico") ||
+            !strcmp(getExtension(urlFind), "svg")) {
             fprintf(file, "%s \n", urlCpy);
-            saveMedia(urlCpy,*counter,beginTag);
-
-        }else{
+            saveMedia(urlCpy, *counter, tag, folder);
+        } else {
             fprintf(file, "%s \n", urlCpy);
-            getCodeInFile(urlCpy,*counter,beginTag);
+            getCodeInFile(urlCpy, *counter, tag, folder);
         }
-        counterIncrem(counterFile,beginTag);
+        counterIncrem(counterFile,tag);
     }
 }
-
-/**
- * @author Rani kharsa
- * @param begin_tag
- * @param end_tag
- * @param code_html
- * @param i
- * @param pos_href
- * @return  position of http
- */
-int checkBegin(int beginTag, int endTag, char *codeHtml, int i,int posHref) {
-        int http;
-            if (codeHtml[i + (beginTag- posHref)] == '\'' || codeHtml[i + (beginTag - posHref)] == '"') {
-                http = positionOfAttribut(i + (beginTag - posHref), endTag, codeHtml, "http");
-                if (http != -1) {
-                    if(codeHtml[http+5]!='&'){
-                        return http;
-                    }
-                }
-        }
-        return -1;
- }
 
 
 
@@ -248,22 +226,22 @@ int checkBegin(int beginTag, int endTag, char *codeHtml, int i,int posHref) {
  * @return position
  * @brief give the position of world in string
  */
-    int positionOfAttribut(int begin, int end, char *codeHtml, char *attrToFind) {
-        char *str = malloc(sizeof(char) * (end - begin));
-        int position, counter = 0;
-        for (int i = begin; i < end; i++) {
-            str[counter] = codeHtml[i];
-            counter++;
-        }
-        const char *p = str;
-    //    printf("\n%s\n",str);
-        p = strstr(p, attrToFind);
-        position = p - str + begin;
-        if (p != NULL)
-            return position;
-        return -1;
-
+int positionOfAttribut(int begin, int end, char* codeHtml, char* attrToFind) {
+    char* str = malloc(sizeof(char) * (end - begin));
+    int position, counter = 0;
+    for (int i = begin; i < end; i++) {
+        str[counter] = codeHtml[i];
+        counter++;
     }
+    const char* p = str;
+    p = strstr(p, attrToFind);
+    position = p - str + begin;
+    if (p != NULL)
+        return position;
+    return -1;
+
+}
+
 /**
  * @author Rani Kharsa
  * @param begin
@@ -272,14 +250,16 @@ int checkBegin(int beginTag, int endTag, char *codeHtml, int i,int posHref) {
  * @return postion
  * @brief give the position of the symbole in the string
  */
-    int positionOfSymbole(int begin, char *codeHtml, char charToFind) {
+ int positionOfSymbole(int begin, char *codeHtml, char charToFind) {
         for (int i = 0; i <500 ; i++) {
             if (charToFind != '>' && i == 10) {
                 return -1;
             }
-            if (codeHtml[ begin +i] == '>') {
+            if (codeHtml[ begin +i] == charToFind) {
                 return begin + i;
             }
         }
         return -1;
-    }
+ }
+
+
