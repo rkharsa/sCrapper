@@ -4,7 +4,7 @@
 +
 {tags -> (a, img, p, strong)}
 {option2 -> value2}
-{max-depth -> 1}
+{max-depth -> 2}
 {versionning -> off}
 
 =

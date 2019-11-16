@@ -10,7 +10,7 @@
 #include "file.h"
 
 void createDirectoryTreeStruct(char *path) {
-    char* tempDirectory;
+    char* tempDirectory = malloc(sizeof(char) * strlen(path) + 20);
     createDirectory(path, 0777);
 
     sprintf(tempDirectory, "%s/content", path);
