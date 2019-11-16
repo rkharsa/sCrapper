@@ -73,22 +73,3 @@ char* hrefOrSrcRouter(char* tag) {
     return str;
 }
 
-
-void deleteFolder(char* folderName) {
-    char* command = malloc(sizeof(char) * 200);
-    sprintf(command, "rmdir /Q  /S %s", folderName);
-    system(command);
-}
-
-void createFolder(char* folderName) {
-
-    char* command = malloc(sizeof(char) * 200);
-    sprintf(command, "mkdir %s && "
-                     "cd %s && mkdir content && mkdir imgTag "
-                     "&& mkdir scriptTag "
-                     "&& mkdir linkofAllTag "
-                     "&& mkdir linkTag "
-                     "&& mkdir sourceTag ", folderName, folderName);
-    system(command);
-
-}

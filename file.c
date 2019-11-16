@@ -9,6 +9,24 @@
 #include "parser.h"
 #include "file.h"
 
+void createDirectoryTreeStruct(char *path) {
+    char* tempDirectory;
+    createDirectory(path, 0777);
+
+    sprintf(tempDirectory, "%s/content", path);
+    createDirectory(tempDirectory, 0777);
+    sprintf(tempDirectory, "%s/imgTag", path);
+    createDirectory(tempDirectory, 0777);
+    sprintf(tempDirectory, "%s/scriptTag", path);
+    createDirectory(tempDirectory, 0777);
+    sprintf(tempDirectory, "%s/linkofAllTag", path);
+    createDirectory(tempDirectory, 0777);
+    sprintf(tempDirectory, "%s/linkTag", path);
+    createDirectory(tempDirectory, 0777);
+    sprintf(tempDirectory, "%s/sourceTag", path);
+    createDirectory(tempDirectory, 0777);
+}
+
 int removeDirectoryFiles(const char *filePath, const struct stat *sb, int flag, struct FTW *ftwbuf) {
     int code = remove(filePath);
 

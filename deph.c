@@ -1,34 +1,24 @@
 #include "header.h"
-
-void commandInFile(char* command, char* file) {
-
-    char* cmd = malloc(sizeof(char) * (strlen(command) + strlen(file)) + 20);
-    sprintf(cmd, "%s %s > temp.txt", command, file);
-    system(cmd);
-
-    sprintf(cmd, "rmdir /Q  /S %s", file);
-    system(cmd);
-
-    sprintf(cmd, "mv temp.txt %s", file);
-    system(cmd);
-}
-
-
+#include "file.h"
+#include "parser.h"
 
 void firstWave(char* url) {
+
     char* codeHtml = getHtmlCode(url);
-    system("rmdir /Q  /S  tmp");
-    system("mkdir tmp");
+    removeDirectory("tmp");
+    createDirectory("tmp", 0777);
 
     CounterFile counterFile = initCounterFile();
     FILE* fp = fopen("tmp/vague0.txt", "w+");
     if (fp != NULL) {
         extractLink(codeHtml, fp, "a", &counterFile, "tmp",url);
-        fclose(fp);
-    }
 
-    commandInFile("egrep -v \".png|.jpeg|.svg\"", "tmp/vague0.txt");
-    commandInFile("sort -u", "tmp/vague0.txt");
+        int filtersLength = 0;
+        char** filters = strToArrayStr(".png,.svg,.jpeg,.gif,.jpg", &filtersLength, ",");
+        filterLinesFile(fp, "tmp/vague0.txt", filters, filtersLength);
+        fp = fopen("tmp/vague0.txt", "r+");
+        removeDuplicateLines(fp, "tmp/vague0.txt");
+    }
 }
 
 
@@ -59,11 +49,15 @@ void nextWave(int waveDeph) {
                     counter++;
                 }
             } while (caractereActuel != EOF);
-            fclose(file);
+
+
+            int filtersLength = 0;
+            char** filters = strToArrayStr(".png,.svg,.jpeg,.gif,.jpg", &filtersLength, ",");
+            filterLinesFile(file, filename2, filters, filtersLength);
+            file = fopen(filename2, "r+");
+            removeDuplicateLines(file, filename2);
         }
         fclose(fp);
-        commandInFile("egrep -v \".png|.jpeg|.svg|.gif\"", filename2);
-        commandInFile("sort -u", filename2);
     }
 }
 

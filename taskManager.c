@@ -4,6 +4,7 @@
 #include "parser.h"
 #include "header.h"
 #include "manager.h"
+#include "file.h"
 
 long getCurrentTime() {
     time_t current_time;
@@ -67,8 +68,8 @@ void executeTags(Action action, char* tags, int maxDepth) {
     int tagsLength = 0;
     char** tagsList = strToArrayStr(tags, &tagsLength, ",)");
 
-    deleteFolder(action.name);
-    createFolder(action.name);
+    removeDirectory(action.name);
+    createDirectoryTreeStruct(action.name);// maxDepth de 1 à 150000000 WTF
 
     if(maxDepth <= 0) {
         execute(tagsList, action.url, tagsLength, action.name);
@@ -77,8 +78,9 @@ void executeTags(Action action, char* tags, int maxDepth) {
 
     firstWave(action.url);
     if(maxDepth > 1) {
+
         for (int i = 0; i < maxDepth; ++i) {
-            nextWave(i);//faire un sort puis uniq puis merge puis resort et uniq <3
+            nextWave(i);
         }
     }
 

@@ -4,7 +4,9 @@
 
 #ifndef SCRAPPER_FILE_H
 #define SCRAPPER_FILE_H
+#include <ftw.h>
 
+void createDirectoryTreeStruct(char *path);
 int removeDirectoryFiles(const char *filePath, const struct stat *sb, int flag, struct FTW *ftwbuf);
 int createDirectory(char* path, int mode);
 int removeDirectory(char* path);

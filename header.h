@@ -33,7 +33,6 @@ typedef struct Param {
     char* codeHtml;
 } Param;
 
-void commandInFile(char* command, char* file);
 
 void firstWave(char* url);
 
@@ -50,10 +49,6 @@ void counterIncrem(CounterFile* counterFile, char* tag);
 CounterFile initCounterFile();
 char* getHostName(char* url );
 char* getBeginUrl(char *url,int slash);
-
-void deleteFolder(char* folderName);
-
-void createFolder(char* folderName);
 
 char* filenameDynamicContainer(char* folder, char* type, int i, char* ext);
 

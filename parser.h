@@ -26,6 +26,8 @@ typedef struct Task {
     long nextOccurence;
 } Task;
 
+int delimitersStillExist(char* string, char* delimiters);
+
 char** strToArrayStr(char* line, int* length, char* delimiters);
 
 char* getStrUntilChrs(char* str, int* position, char* chrs);
