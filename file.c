@@ -1,10 +1,13 @@
-#include "header.h"
-#include "parser.h"
-#include "manager.h"
-#include <ftw.h>
-#include <unistd.h>
+//
+// Created by Jérémy TERNISIEN on 16/11/2019.
+//
 
-// VALIDES ET FONCITONNELLES
+#include <stdio.h>
+#include <stdlib.h>
+#include <ftw.h>
+#include <string.h>
+#include "parser.h"
+#include "file.h"
 
 int removeDirectoryFiles(const char *filePath, const struct stat *sb, int flag, struct FTW *ftwbuf) {
     int code = remove(filePath);
@@ -142,57 +145,4 @@ int filterLinesFile(FILE* file, char* filePath, char** filters, int filtersLengt
     rename("temp.txt", filePath);
 
     return 0;
-}
-
-int main(int argc, char* argv[]) {
-
-    char** str = malloc(sizeof(char*) * 3);
-
-    str[0] = malloc(sizeof(char) * 6);
-    strcpy(str[0], ".png");
-
-    str[1] = malloc(sizeof(char) * 6);
-    strcpy(str[1], ".jpeg");
-
-    str[2] = malloc(sizeof(char) * 6);
-    strcpy(str[2], ".svg");
-
-    //printf("%d", filterLinesFile("../testg.txt",  str, 3));
-
-    FILE* f1 = fopen("../testg.txt", "r");
-
-    printf("%d", removeDuplicateLines(f1, "../testg.txt"));
-    //fclose(f1);
-
-
-   /* printf("%s\n", "--------------------------------------------------------------");
-    printf("%s", "  _________                                 .__                \n"
-                 " /   _____/ ________________  ______ ______ |__| ____    ____  \n"
-                 " \\_____  \\_/ ___\\_  __ \\__  \\ \\____ \\\\____ \\|  |/    \\  / ___\\ \n"
-                 " /        \\  \\___|  | \\// __ \\|  |_> >  |_> >  |   |  \\/ /_/  >\n"
-                 "/_______  /\\___  >__|  (____  /   __/|   __/|__|___|  /\\___  / \n"
-                 "        \\/     \\/           \\/|__|   |__|           \\//_____/  ");
-    printf("\n%s\n", "--------------------------------------------------------------");
-
-    char* filePath = "../configFile.sconf";//getFilePath();// à remplacer par getFilePath() mais là on gagne du temps pour les tests
-
-    FILE* file = fopen(filePath, "r");
-    if (file == NULL) {
-        return EXIT_FAILURE;
-    }
-
-    int actionsLength = 0;
-    int tasksLength = 0;
-    Action* actions = getActions(file, &actionsLength);
-    Task* tasks = getTasks(file, &tasksLength, actions, actionsLength);
-
-    for (int i = 0; i < tasksLength; ++i) {
-        for (int j = 0; j < tasks[i].actionsLength; ++j) {
-            //printf("%s\n%d\n", tasks[i].actions[j].name, j);
-            executeAction(tasks[i].actions[j]);
-        }
-    }
-
-    fclose(file);*/
-   return EXIT_SUCCESS;
 }

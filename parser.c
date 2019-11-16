@@ -73,8 +73,8 @@ char* getFilePath() {
     return filePath;
 }
 
-long getMaxLineSize(FILE* file) {
-
+int getMaxLineSize(FILE* file) {
+    rewind(file);
     long count = 0;
     long max = 0;
     char currentChar = fgetc(file);

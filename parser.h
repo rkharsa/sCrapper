@@ -54,7 +54,7 @@ int checkFileExists(char* filePath);
 
 char* getFilePath();
 
-long getMaxLineSize(FILE* file);
+int getMaxLineSize(FILE* file);
 
 void printActions(Action* actions, int length);
 
