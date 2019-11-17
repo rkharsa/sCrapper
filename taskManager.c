@@ -93,13 +93,13 @@ void executeTags(Action action, char *tags, int maxDepth) {
             nextWave(i);//faire un sort puis uniq puis merge puis resort et uniq <3
         }
     }
-    printf("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\n");
+    printf("EXECUTE TAG\n");
 
     execute(tagsList, action.url, tagsLength, action.name,"0");
 }
 
 void executeAction(Action action) { // parcourir chaque option
-    printf("oooooooooooooooooooooooooooooooooooooooooooooooooooo\n");
+    printf("EXECUTE ACTION\n");
 
     for (int i = 0; i < action.optionsLength; ++i) {
         //d'abord check si ya un max-depth ? OUI ok je parle tout seul
@@ -116,14 +116,13 @@ void executeAction(Action action) { // parcourir chaque option
     }
    // executeIsAvailable(0);
 
-
 }
 
 void taskExec(Task* task, int taskLenght) {
-    int j = 1;
     long fromtime = getCurrentTime();
-    while (j == 1) {
-        for (int i = 0; i < taskLenght; ++i) {
+    while (1) {
+        printf("WHGILE\n");
+        for (int i = 0; i < taskLenght; i++) {
             long newTime = getCurrentTime();
             long destime = 0;
             int hours = task[i].hours;
@@ -135,10 +134,12 @@ void taskExec(Task* task, int taskLenght) {
             destime = task[i].nextOccurence;
             if (destime == newTime) {
                 for (int j = 0; j < task[i].actionsLength; j++) {
+                    printf("FOR\n");
                     char* value = findValueByKey("versionning", task[i].actions[j]);
                     if (strcmp(value, "on") == 0) {
                         writeInFile(task[i].name, task[i].actions[j].name);
                     }
+                    printf("NEW ACTION\n");
                     executeAction(task[i].actions[j]);
                 }
                 task[i].nextOccurence = incrementTime(newTime, hours, minutes, seconds);
