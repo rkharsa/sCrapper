@@ -1,6 +1,7 @@
 #include "header.h"
 #include "parser.h"
 #include "manager.h"
+#include "file.h"
 
 int main(int argc, char* argv[]) {
     printf("%s\n", "--------------------------------------------------------------");

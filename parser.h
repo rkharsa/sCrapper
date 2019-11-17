@@ -13,7 +13,7 @@ typedef struct Action {
     char* url;
     int optionsLength;
     char** keys;// option1 option2 versionning
-    char** values;// value1 value2 valueversionning
+    char** values;// value1 value2 on
 } Action;
 
 typedef struct Task {
@@ -25,6 +25,8 @@ typedef struct Task {
     Action* actions;
     long nextOccurence;
 } Task;
+
+int delimitersStillExist(char* string, char* delimiters);
 
 char** strToArrayStr(char* line, int* length, char* delimiters);
 
@@ -54,7 +56,7 @@ int checkFileExists(char* filePath);
 
 char* getFilePath();
 
-long getMaxLineSize(FILE* file);
+int getMaxLineSize(FILE* file);
 
 void printActions(Action* actions, int length);
 

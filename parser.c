@@ -73,8 +73,8 @@ char* getFilePath() {
     return filePath;
 }
 
-long getMaxLineSize(FILE* file) {
-
+int getMaxLineSize(FILE* file) {
+    rewind(file);
     long count = 0;
     long max = 0;
     char currentChar = fgetc(file);
@@ -333,19 +333,30 @@ char* getStrUntilChrs(char* str, int* position, char* chrs) {
     return newStr;
 }
 
+int delimitersStillExist(char* string, char* delimiters) {
+    for (int i = 0; i < strlen(delimiters); ++i) {
+        if(strchr(string, delimiters[i]) != NULL) {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 char** strToArrayStr(char* line, int* length, char* delimiters) {// ex : (bjr, bye) -> [0] -> "bjr" [1] -> "bye"
 
     char** list = malloc(sizeof(char*));
     char** reallocList;
     int position = 0;
 
-    while (position < strlen(line)) {
+    while (position < strlen(line) && delimitersStillExist(line + position, delimiters) == 1) {
+
         reallocList = realloc(list, sizeof(char*) * (*length + 1));
         list = reallocList;
 
-        char* newUrl = getStrUntilChrs(line + position, &position, delimiters);
-        list[*length] = malloc(sizeof(char) * (strlen(newUrl) + 1));
-        strcpy(list[*length], removeStrSpaces(newUrl));
+        char* newStr = getStrUntilChrs(line + position, &position, delimiters);
+        list[*length] = malloc(sizeof(char) * (strlen(newStr) + 1));
+        strcpy(list[*length], removeStrSpaces(newStr));
         *length += 1;
         position++;
     }

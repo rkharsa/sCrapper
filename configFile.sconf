@@ -3,7 +3,7 @@
 {name -> Marmiton} # Correspond au nom de l'action
 { url -> https://www.marmiton.org} # Correspond à l'url du site
 +
-{tags -> (img)}
+{tags -> (a, img, p, strong)}
 {option2 -> value2}
 {max-depth -> 1}
 {versionning -> off}
