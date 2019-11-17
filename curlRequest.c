@@ -80,7 +80,7 @@ char* getHtmlCode(char* url) {
  * @brief permit to save the result of the request in file
  */
 void getCodeInFile(char* url, int i, char* tag, char* folder,char* toSearchMime) {
-    if(!strcmp(toSearchMime ,"0") || verifTypeMime(url, toSearchMime) == 1 ) {
+    if(!strcmp(toSearchMime ,"0") || verifTypeMime(url, toSearchMime, getTypeMime(url)) == 1 ) {
         char filename[200];
         int result;
         char *urlCpy = malloc(sizeof(char) * strlen(url) + 10);
@@ -161,18 +161,16 @@ char* getTypeMime(char *url){
 
     return ct;
 }
-int verifTypeMime(char *url,char*typeMimeToSearch){
+int verifTypeMime(char *url,char*typeMimeToSearch, char* typeMime){
     int itThisType=0;
     printf(" lurl buh %s",url);
     if(strcmp(typeMimeToSearch, "0") != 0) {
-        char * typeMimeFind=malloc(sizeof(char)*100);
-        strcpy(typeMimeFind,getTypeMime(url));
 
-        if (strstr(typeMimeFind,typeMimeToSearch) != NULL) {
+        if (strstr(typeMime, typeMimeToSearch) != NULL) {
             itThisType = 1;
         }
     }
-    printf("\ntype mimmei verif %s\n", getTypeMime(url));
+    //printf("\ntype mimmei verif %s\n", getTypeMime(url));
 
     return itThisType;
 }
@@ -185,7 +183,7 @@ int verifTypeMime(char *url,char*typeMimeToSearch){
  * @brief save media in local
  */
 void saveMedia(char* url, int i, char* tag, char* folder,char* toSearchMime) {//verif type mime
-  if(!strcmp(toSearchMime ,"0") || verifTypeMime(url, toSearchMime) == 1 ){
+  if(!strcmp(toSearchMime ,"0") || verifTypeMime(url, toSearchMime, getTypeMime(url)) == 1 ){
       CURL* curl;
       curl = curl_easy_init();
       char* urlCpy = malloc(sizeof(char) * strlen(url) + 10);

@@ -89,6 +89,6 @@ void task(char* url, int i, char* beginTag);
 
 void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,char* tag,char*folder,
               CounterFile* counterFile,char* toSearchMime );
-int verifTypeMime(char *url,char*typeMimeToSearch);
+int verifTypeMime(char *url,char*typeMimeToSearch, char *typeMime);
 char* getTypeMime(char *url);
 #endif // HEADER_H_INCLUDED

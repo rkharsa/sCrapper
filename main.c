@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 
     fclose(file);*/
   CounterFile counterFile=initCounterFile();
-    extractAll("https://www.marmiton.org/recettes/recette_oeuf-cocotte-en-fromage_347098.aspx","source",&counterFile,"download","image/jpeg");
+    extractAll("https://www.marmiton.org/recettes/recette_oeuf-cocotte-en-fromage_347098.aspx","img",&counterFile,"download","image/png");
    /*char *ct = NULL;
     int res;
     char*url ="https://www.marmiton.org/reloaded/front/img/nav/nav_cocacola.png ";
