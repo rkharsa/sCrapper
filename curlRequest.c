@@ -80,7 +80,7 @@ char* getHtmlCode(char* url) {
  * @brief permit to save the result of the request in file
  */
 void getCodeInFile(char* url, int i, char* tag, char* folder,char* toSearchMime) {
-    //if(!strcmp(toSearchMime ,"0") || verifTypeMime(url, toSearchMime, getTypeMime(url)) == 1 ) {
+    if(!strcmp(toSearchMime ,"0") || verifTypeMime(url, toSearchMime) == 1 ) {
         char filename[200];
         int result;
         char *urlCpy = malloc(sizeof(char) * strlen(url) + 10);
@@ -113,7 +113,7 @@ void getCodeInFile(char* url, int i, char* tag, char* folder,char* toSearchMime)
         } else {
             printf("Can't open the file file :%s \n", filename);
         }
-   // }
+    }
 }
 
 /**
@@ -162,16 +162,17 @@ char* getTypeMime(char *url){
 
     return ct;
 }
-int verifTypeMime(char *url,char*typeMimeToSearch, char* typeMime){
+int verifTypeMime(char *url,char*typeMimeToSearch){
     int itThisType=0;
     printf(" lurl buh %s",url);
+   // char* typeMime = getTypeMime(url);
     if(strcmp(typeMimeToSearch, "0") != 0) {
 
-        if (strstr(typeMime, typeMimeToSearch) != NULL) {
+        if (getTypeMime(url) != NULL && strcmp(getTypeMime(url), typeMimeToSearch) == 0) {
             itThisType = 1;
         }
     }
-    //printf("\ntype mimmei verif %s\n", getTypeMime(url));
+    printf("\ntype mimmei verif %s\n", getTypeMime(url));
 
     return itThisType;
 }
@@ -184,7 +185,7 @@ int verifTypeMime(char *url,char*typeMimeToSearch, char* typeMime){
  * @brief save media in local
  */
 void saveMedia(char* url, int i, char* tag, char* folder,char* toSearchMime) {//verif type mime
- // if(!strcmp(toSearchMime ,"0") || verifTypeMime(url, toSearchMime, getTypeMime(url)) == 1 ){
+  if(!strcmp(toSearchMime ,"0") || verifTypeMime(url, toSearchMime) == 1 ){
       CURL* curl;
       curl = curl_easy_init();
       char* urlCpy = malloc(sizeof(char) * strlen(url) + 10);
@@ -212,7 +213,7 @@ void saveMedia(char* url, int i, char* tag, char* folder,char* toSearchMime) {//
           printf("Can't open  the file\n");
       }
       curl_easy_cleanup(curl);
-    //}
+    }
 
 }
 

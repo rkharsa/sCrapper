@@ -40,7 +40,7 @@ void extractAll(char* url, char* tag, CounterFile* counterFile, char* folder,cha
         !strcmp(tag, "link")) {
         FILE* file = fopen(filenameDynamicTxt(folder, tag, *routerCounter(counterFile, " ")), "w+");
         if (file != NULL) {
-            extractLink(codeHtml, file, tag, counterFile, folder,url,"0");
+            extractLink(codeHtml, file, tag, counterFile, folder,url,toSearchMime);
             fclose(file);
         } else {
             printf("Can't open the file");
@@ -199,12 +199,19 @@ void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, c
     printf("%s \n", urlFind);
     int* counter = routerCounter(counterFile, tag);
     if (!strcmp(tag, "img") || !strcmp(tag, "source")) {
-        fprintf(file, "%s \n", urlFind);
-        saveMedia(urlFind, *counter, tag, folder,toSearchMime);
-        counterIncrem(counterFile, tag);
+
+        if(strcmp(toSearchMime, "0") == 0 || verifTypeMime(urlFind, toSearchMime) == 1) {
+            fprintf(file, "%s \n", urlFind);
+            saveMedia(urlFind, *counter, tag, folder,toSearchMime);
+            counterIncrem(counterFile, tag);
+        }
+
+
     } else if (!strcmp(tag, "a")) {
-        fprintf(file, "%s \n", urlFind);
-        printf("%s\n", "Download successful");
+
+            fprintf(file, "%s \n", urlFind);
+            printf("%s\n", "Download successful");
+
     } else if (!strcmp(tag, "link") || !strcmp(tag, "script")) {
         char* urlCpy = malloc(sizeof(char) * strlen(urlFind) + 10);
         strcpy(urlCpy, urlFind);
@@ -218,6 +225,7 @@ void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, c
         }
         counterIncrem(counterFile,tag);
     }
+
 }
 
 
