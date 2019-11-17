@@ -136,7 +136,7 @@ char* getExtension(char* url) {
     return ext;
 }
 char* getTypeMime(char *url){
-    char *ct = NULL;
+    char *ct = malloc(sizeof(char) * 500);
     int res;
    CURL *curl = curl_easy_init();
     if(curl) {
