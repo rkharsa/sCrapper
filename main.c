@@ -1,3 +1,11 @@
+/**
+ * sCrapper by Jérémy Ternisien, Rani Kharsa and Frantz Nestan
+ * This application allows you to make web scraping and save websites data in your hard drive
+ * To take full advantage of it, make sure to create a well constructed configuration file with the .sconf extension
+ * Enjoy
+ */
+
+
 #include "header.h"
 #include "parser.h"
 #include "manager.h"
