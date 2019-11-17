@@ -1,10 +1,11 @@
+{runTime -> 35}
 =
-{name -> Facebook} # Correspond au nom de l'action
-{ url -> https://www.deepl.com/fr/translator} # Correspond à l'url du site
+{name -> Marmiton} # Correspond au nom de l'action
+{ url -> https://www.marmiton.org} # Correspond à l'url du site
 +
 {tags -> (a, img, p, strong)}
 {option2 -> value2}
-{max-depth -> 2}
+{max-depth -> 1}
 {versionning -> off}
 
 =
@@ -18,9 +19,9 @@
 
 ==
 {name -> Ma première super tâche}
-{second -> 3} # Lance les deux req ttes les 10 secondes
+{second -> 3} # Lance les deux actions ttes les 3 secondes
 +
-(https://www.deepl.com/fr/translator, youtube.com)
+(https://www.marmiton.org)
 
 ==
 {name -> Ma deuxieme super tâche}

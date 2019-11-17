@@ -11,7 +11,11 @@
 
 void createDirectoryTreeStruct(char *path) {
     char* tempDirectory = malloc(sizeof(char) * strlen(path) + 20);
+    #ifdef _WIN32
+       mkdir(path);
+    #else
     createDirectory(path, 0777);
+    #endif
 
     sprintf(tempDirectory, "%s/content", path);
     createDirectory(tempDirectory, 0777);
@@ -38,13 +42,22 @@ int removeDirectoryFiles(const char *filePath, const struct stat *sb, int flag, 
 }
 
 int createDirectory(char* path, int mode) {
+    #ifdef _WIN32
+        if(mkdir(path) == 0) {
+            return 0;
+        } else {
+            printf("Directory %s could not be create\n", path);
+            return -1;
+        }
+    #else
+        if(mkdir(path, mode) == 0) {
+            return 0;
+        } else {
+            printf("Directory %s could not be create\n", path);
+            return -1;
+        }
+    #endif
 
-    if(mkdir(path, mode) == 0) {
-        return 0;
-    } else {
-        printf("Directory %s could not be create\n", path);
-        return -1;
-    }
 }
 
 int removeDirectory(char* path) {
