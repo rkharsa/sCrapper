@@ -69,7 +69,7 @@ void executeTags(Action action, char* tags, int maxDepth) {
     char** tagsList = strToArrayStr(tags, &tagsLength, ",)");
 
     removeDirectory(action.name);
-    createDirectoryTreeStruct(action.name);// maxDepth de 1 à 150000000 WTF
+    createDirectoryTreeStruct(action.name);
 
     if(maxDepth <= 0) {
         execute(tagsList, action.url, tagsLength, action.name,"0");
