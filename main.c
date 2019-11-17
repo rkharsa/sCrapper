@@ -1,7 +1,6 @@
 #include "header.h"
 #include "parser.h"
 #include "manager.h"
-#include "file.h"
 
 int main(int argc, char* argv[]) {
     printf("%s\n", "--------------------------------------------------------------");
@@ -17,15 +16,22 @@ int main(int argc, char* argv[]) {
 
 
     char* filePath = "../configFile.sconf";//getFilePath();// à remplacer par getFilePath() mais là on gagne du temps pour les tests
+
     FILE* file = fopen(filePath, "r");
     if (file == NULL) {
         return EXIT_FAILURE;
     }
+
     int actionsLength = 0;
     int tasksLength = 0;
     Action* actions = getActions(file, &actionsLength);
     Task* tasks = getTasks(file, &tasksLength, actions, actionsLength);
-    taskExec(tasks,tasksLength);
+
+    for (int i = 0; i < tasksLength; ++i) {
+        for (int j = 0; j < tasks[i].actionsLength; ++j) {
+            executeAction(tasks[i].actions[j]);
+        }
+    }
 
     fclose(file);
 
