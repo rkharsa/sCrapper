@@ -33,8 +33,8 @@ int main(int argc, char* argv[]) {
 
     fclose(file);*/
   CounterFile counterFile=initCounterFile();
-    extractAll("https://github.com/","img",&counterFile,"download","image/svg");
-  /*  char *ct = NULL;
+    extractAll("https://www.marmiton.org/recettes/recette_oeuf-cocotte-en-fromage_347098.aspx","source",&counterFile,"download","image/jpeg");
+   /*char *ct = NULL;
     int res;
     char*url ="https://www.marmiton.org/reloaded/front/img/nav/nav_cocacola.png ";
     CURL *curl = curl_easy_init();
@@ -48,7 +48,6 @@ int main(int argc, char* argv[]) {
         res = curl_easy_perform(curl);
 
         if(res==CURLE_OK) {
-             extract the content-type
 
             res = curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &ct);
             if(!res && ct) {

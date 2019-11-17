@@ -164,14 +164,14 @@ char* getTypeMime(char *url){
 int verifTypeMime(char *url,char*typeMimeToSearch){
     int itThisType=0;
     printf(" lurl buh %s",url);
-    /*if(strcmp(typeMimeToSearch,0) != 0) {
+    if(strcmp(typeMimeToSearch, "0") != 0) {
         char * typeMimeFind=malloc(sizeof(char)*100);
         strcpy(typeMimeFind,getTypeMime(url));
 
         if (strstr(typeMimeFind,typeMimeToSearch) != NULL) {
             itThisType = 1;
         }
-    }*/
+    }
     printf("\ntype mimmei verif %s\n", getTypeMime(url));
 
     return itThisType;
