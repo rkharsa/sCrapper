@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
                  "        \\/     \\/           \\/|__|   |__|           \\//_____/  ");
     printf("\n%s\n", "--------------------------------------------------------------");
 
-    /*char* filePath = "../configFile.sconf";//getFilePath();// à remplacer par getFilePath() mais là on gagne du temps pour les tests
+    char* filePath = "../configFile.sconf";//getFilePath();// à remplacer par getFilePath() mais là on gagne du temps pour les tests
 
     FILE* file = fopen(filePath, "r");
     if (file == NULL) {
@@ -30,9 +30,9 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    fclose(file);*/
-    CounterFile counterFile = initCounterFile();
-    extractAll("https://www.marmiton.org/recettes/recette_oeuf-cocotte-en-fromage_347098.aspx","img",&counterFile,"download","image/png");
+    fclose(file);
+    //CounterFile counterFile = initCounterFile();
+    //extractAll("https://www.marmiton.org/recettes/recette_oeuf-cocotte-en-fromage_347098.aspx","img",&counterFile,"download","image/png");
 
 
     return EXIT_SUCCESS;
