@@ -112,8 +112,6 @@ void getCodeInFile(char* url, int i, char* tag, char* folder,char* toSearchMime)
             }
 
             fclose(fp);
-        } else {
-            printf("Can't open the file file :%s \n", filename);
         }
     }
 }
@@ -211,15 +209,13 @@ void saveMedia(char* url, int i, char* tag, char* folder,char* toSearchMime) {//
           // curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
           result = curl_easy_perform(curl);
 
-          if (result == CURLE_OK) {
-              printf("Download successful\n");
-          } else {
+          if (result != CURLE_OK) {
               printf("ERROR: %s\n", curl_easy_strerror(result));
+          } else {
+              printf("Download successful\n");
           }
 
           fclose(fp);
-      } else {
-          printf("Can't open  the file\n");
       }
       curl_easy_cleanup(curl);
     }

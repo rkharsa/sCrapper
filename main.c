@@ -27,10 +27,13 @@ int main(int argc, char* argv[]) {
         return EXIT_FAILURE;
     }
 
+
     int actionsLength = 0;
     int tasksLength = 0;
     Action* actions = getActions(file, &actionsLength);
     Task* tasks = getTasks(file, &tasksLength, actions, actionsLength);
+
+    printf("\n\nSCRAPING WEBISTES...\n\n");
 
     for (int i = 0; i < tasksLength; ++i) {
         for (int j = 0; j < tasks[i].actionsLength; ++j) {
@@ -42,6 +45,7 @@ int main(int argc, char* argv[]) {
     //CounterFile counterFile = initCounterFile();
     //extractAll("https://www.marmiton.org/recettes/recette_oeuf-cocotte-en-fromage_347098.aspx","img",&counterFile,"download","image/png");
 
+    printf("\n\nSCRAPING SUCCESS !\n\n");
 
     return EXIT_SUCCESS;
 }

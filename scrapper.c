@@ -12,7 +12,6 @@
  */
 void execute(char** tabaction, char* url, int taille, char* folder,char* toSearchMime) {
 
-    printf("EXECUTE\n");
     CounterFile counterFile = initCounterFile();
     for (int i = 0; i < taille; i++) {
         printf("%s\n", "--------------------------------------------------------------");
@@ -56,7 +55,6 @@ char* getEndTag(char* tag) {
  */
 
 void extractAll(char* url, char* tag, CounterFile* counterFile, char* folder,char*toSearchMime) {
-    printf("EXTRACT ALL\n");
     char* codeHtml = getHtmlCode(url);
     counterIncrem(counterFile, " ");
     if (!strcmp(tag, "img") || !strcmp(tag, "source") || !strcmp(tag, "a") || !strcmp(tag, "script") ||
@@ -233,7 +231,7 @@ void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,
   */
 
  void extractLink(char *  codeHtml,FILE*file ,char *tag,CounterFile* counterFile,char * folder,char*url,char* toSearchMime) {
-     printf("EXTRACTLINK\n");
+
      int end, begin, posHref;
      char *searchBeginTag = getBeginTag(tag), *tagOpen = codeHtml;
      if (file != NULL) {
