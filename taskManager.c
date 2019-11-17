@@ -12,6 +12,10 @@ long getCurrentTime() {
     return t;
 }
 
+int executeIsAvailable(int val) {
+    return val;
+}
+
 long incrementTime(long currentTime, int hours, int minutes, int seconds) {
     long destime = currentTime;
     long h = hours * 3600;
@@ -92,18 +96,25 @@ void executeTags(Action action, char *tags, int maxDepth) {
 }
 
 void executeAction(Action action) { // parcourir chaque option
+    printf("oooooooooooooooooooooooooooooooooooooooooooooooooooo\n");
 
     for (int i = 0; i < action.optionsLength; ++i) {
+
         //d'abord check si ya un max-depth ? OUI ok je parle tout seul
         //getMaxDepth
         if (strcmp(action.keys[i], "type") == 0) {
             // à implémenter
         } else if (strcmp(action.keys[i], "tags") == 0) {
+            printf("%d\n",i);
 
             executeTags(action, action.values[i], findIntValueByKey(action,
                                                                     "max-depth"));
         }
     }
+    executeIsAvailable(0);
+    printf("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\n");
+
+
 }
 
 void taskExec(Task *task, int taskLenght) {
@@ -120,23 +131,15 @@ void taskExec(Task *task, int taskLenght) {
                 task[i].nextOccurence = incrementTime(fromtime, hours, minutes, seconds);
             }
             destime = task[i].nextOccurence;
-           printf("dest%d\n",destime);
-            printf("from%d\n",newTime);
             if (destime == newTime) {
-
                 for (int j = 0; j < task[i].actionsLength; j++) {
                     char *value = findValueByKey("versionning", task[i].actions[j]);
                     if (strcmp(value, "on") == 0) {
                         writeInFile(task[i].name, task[i].actions[j].name);
                     }
-                    printf("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee%d\n",task[i].actionsLength);
                     executeAction(task[i].actions[j]);
-                    /*
-                    pthread_t thread1;
-                    pthread_create(&thread1, NULL, taskthread, &task[i].actions[j]);*/
                 }
                 task[i].nextOccurence = incrementTime(newTime, hours, minutes, seconds);
-                continue;
             }
         }
     }
