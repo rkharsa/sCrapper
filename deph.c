@@ -27,7 +27,7 @@ void firstWave(char* url) {
     CounterFile counterFile = initCounterFile();
     FILE* fp = fopen("tmp/vague0.txt", "w+");
     if (fp != NULL) {
-        extractLink(codeHtml, fp, "a", &counterFile, "tmp", "0");
+        extractLink(codeHtml, fp, "a", &counterFile, "tmp",url,"0");
 
         int filtersLength = 0;
         char** filters = strToArrayStr(".png,.svg,.jpeg,.gif,.jpg", &filtersLength, ",");
