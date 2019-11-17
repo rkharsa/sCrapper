@@ -1,11 +1,10 @@
-{runTime -> 35}
 =
-{name -> Marmiton} # Correspond au nom de l'action
-{ url -> https://www.marmiton.org} # Correspond à l'url du site
+{name -> Facebook} # Correspond au nom de l'action
+{ url -> https://curl.haxx.se/} # Correspond à l'url du site
 +
 {tags -> (a, img, p, strong)}
 {option2 -> value2}
-{max-depth -> 1}
+{max-depth -> 2}
 {versionning -> off}
 
 =
@@ -19,6 +18,12 @@
 
 ==
 {name -> Ma première super tâche}
-{second -> 3} # Lance les deux actions ttes les 3 secondes
+{second -> 3} # Lance les deux req ttes les 10 secondes
 +
-(https://www.marmiton.org)
+(https://curl.haxx.se/, youtube.com)
+
+==
+{name -> Ma deuxieme super tâche}
+{second -> 5}
++
+(youtube.com)
