@@ -10,7 +10,7 @@
  * @param folder
  * @param toSearchMime
  */
-void execute(char** tabaction, char* url, int taille, char* folder,char* toSearchMime) {
+void execute(char** tabaction, char* url, int taille, char* folder, char* toSearchMime) {
 
     CounterFile counterFile = initCounterFile();
     for (int i = 0; i < taille; i++) {
@@ -18,9 +18,10 @@ void execute(char** tabaction, char* url, int taille, char* folder,char* toSearc
         printf("                                %s  \n", tabaction[i]);
         printf("%s\n", "--------------------------------------------------------------");
         //essayer de mettre en place une barre de progression du style [#########]
-        extractAll(url, tabaction[i], &counterFile, folder,toSearchMime);
+        extractAll(url, tabaction[i], &counterFile, folder, toSearchMime);
     }
 }
+
 /**
  * @author Rani Kharsa
  * @param tag
@@ -34,6 +35,7 @@ char* getBeginTag(char* tag) {
     sprintf(beginTag, "<%s", tag);
     return beginTag;
 }
+
 /**
  * @author Rani Kharsa
  * @param tag
@@ -54,14 +56,14 @@ char* getEndTag(char* tag) {
  * @brief extract all what  we need
  */
 
-void extractAll(char* url, char* tag, CounterFile* counterFile, char* folder,char*toSearchMime) {
+void extractAll(char* url, char* tag, CounterFile* counterFile, char* folder, char* toSearchMime) {
     char* codeHtml = getHtmlCode(url);
     counterIncrem(counterFile, " ");
     if (!strcmp(tag, "img") || !strcmp(tag, "source") || !strcmp(tag, "a") || !strcmp(tag, "script") ||
         !strcmp(tag, "link")) {
         FILE* file = fopen(filenameDynamicTxt(folder, tag, *routerCounter(counterFile, " ")), "w+");
         if (file != NULL) {
-            extractLink(codeHtml, file, tag, counterFile, folder,url,toSearchMime);
+            extractLink(codeHtml, file, tag, counterFile, folder, url, toSearchMime);
             fclose(file);
         } else {
             printf("Can't open the file");
@@ -72,6 +74,7 @@ void extractAll(char* url, char* tag, CounterFile* counterFile, char* folder,cha
     }
 
 }
+
 /**
  * @author Rani Kharsa
  * @param counterSpace
@@ -88,6 +91,7 @@ void counterSpaceFunc(int* counterSpace, char value) {
 
     }
 }
+
 /**
  * @author Rani Kharsa
  * @param counterReturnLine
@@ -103,6 +107,7 @@ void counterReturnLineFunc(int* counterReturnLine, char value) {
         }
     }
 }
+
 /**
  * @author Rani Kharsa
  * @param posBeginTag
@@ -158,34 +163,38 @@ void extractContentBetweenTag(char* codeHtml, int number, char* tag, char* folde
         fclose(file);
         printf("%s\n", "Download successful");
     }
- }
- /**
-  * @author Rani Kharsa
-  * @param i
-  * @param posEndTag
-  * @param urlFind
-  * @param url
-  * @param codeHtml
-  * @param counter
-  * @param findBeginSave
-  * @brief check if link have a good begin pattern
-  */
-void checkBeginLink(int* i,int posEndTag ,char**urlFind,char* url,char* codeHtml,int* counter,int *findBeginSave){
+}
+
+/**
+ * @author Rani Kharsa
+ * @param i
+ * @param posEndTag
+ * @param urlFind
+ * @param url
+ * @param codeHtml
+ * @param counter
+ * @param findBeginSave
+ * @brief check if link have a good begin pattern
+ */
+void
+checkBeginLink(int* i, int posEndTag, char** urlFind, char* url, char* codeHtml, int* counter, int* findBeginSave) {
     int http;
-    if ((codeHtml[*i] == '"' || codeHtml[*i]=='\'') && codeHtml[*i+1]!='#') {
-        http=positionOfAttribut(*i,posEndTag,codeHtml,"http");
-        if(http!=-1){
-            if(codeHtml[http+5]!='&' && ((codeHtml[http+5]==':' && codeHtml[http+6]=='/') || (codeHtml[http+6]==':' && codeHtml[http+7]=='/'))) {
+    if ((codeHtml[*i] == '"' || codeHtml[*i] == '\'') && codeHtml[*i + 1] != '#') {
+        http = positionOfAttribut(*i, posEndTag, codeHtml, "http");
+        if (http != -1) {
+            if (codeHtml[http + 5] != '&' && ((codeHtml[http + 5] == ':' && codeHtml[http + 6] == '/') ||
+                                              (codeHtml[http + 6] == ':' && codeHtml[http + 7] == '/'))) {
                 *findBeginSave = 1;
             }
             return;
-        } else if(codeHtml[*i+1]=='/' ){
-            strcpy(*urlFind,getBeginUrl(url));
-            *counter=(int)strlen(*urlFind);
-            *findBeginSave=1;
+        } else if (codeHtml[*i + 1] == '/') {
+            strcpy(*urlFind, getBeginUrl(url));
+            *counter = (int) strlen(*urlFind);
+            *findBeginSave = 1;
         }
     }
 }
+
 /**
  * @author Rani Kharsa
  * @param posBeginTag
@@ -199,55 +208,56 @@ void checkBeginLink(int* i,int posEndTag ,char**urlFind,char* url,char* codeHtml
  * @param toSearchMime
  * @brief permit to find url and then make a treatment
  */
-void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,char* tag,char*folder,
-        CounterFile* counterFile,char* toSearchMime ){
-    int findBeginSave=0,counter=0;
-    char* urlFind=malloc(sizeof(char)*400);
-    for(int i=posBeginTag;i<posEndTag;i++){
-        if(findBeginSave==1) {
-            if (codeHtml[i] == '"' || codeHtml[i]=='\'' ) {
-                urlFind[counter]='\0';
-                if(strlen(urlFind)!=0){
-                    treatment(urlFind,tag,file,counterFile,folder,toSearchMime);
+void saveLink(int posBeginTag, int posEndTag, char* codeHtml, FILE* file, char* url, char* tag, char* folder,
+              CounterFile* counterFile, char* toSearchMime) {
+    int findBeginSave = 0, counter = 0;
+    char* urlFind = malloc(sizeof(char) * 400);
+    for (int i = posBeginTag; i < posEndTag; i++) {
+        if (findBeginSave == 1) {
+            if (codeHtml[i] == '"' || codeHtml[i] == '\'') {
+                urlFind[counter] = '\0';
+                if (strlen(urlFind) != 0) {
+                    treatment(urlFind, tag, file, counterFile, folder, toSearchMime);
                 }
                 break;
             }
-            urlFind[counter]=codeHtml[i];
+            urlFind[counter] = codeHtml[i];
             counter++;
-        }else{
-            checkBeginLink(&i,posEndTag,&urlFind,url,codeHtml,&counter,&findBeginSave);
+        } else {
+            checkBeginLink(&i, posEndTag, &urlFind, url, codeHtml, &counter, &findBeginSave);
         }
     }
 
 }
 
- /**
-  * @author Rani Kharsa
-  * @param code_html
-  * @param file
-  * @param search_begin_tag
-  * @param typeHrefOrSrc
-  * @brief extract all link
-  */
+/**
+ * @author Rani Kharsa
+ * @param code_html
+ * @param file
+ * @param search_begin_tag
+ * @param typeHrefOrSrc
+ * @brief extract all link
+ */
 
- void extractLink(char *  codeHtml,FILE*file ,char *tag,CounterFile* counterFile,char * folder,char*url,char* toSearchMime) {
+void extractLink(char* codeHtml, FILE* file, char* tag, CounterFile* counterFile, char* folder, char* url,
+                 char* toSearchMime) {
 
-     int end, begin, posHref;
-     char *searchBeginTag = getBeginTag(tag), *tagOpen = codeHtml;
-     if (file != NULL) {
-         while ((tagOpen = strstr(tagOpen, searchBeginTag)) != NULL) {
-             begin = tagOpen - codeHtml;
-             end = positionOfSymbole(begin, codeHtml, '>');
-             if (end != -1) {
-                 posHref = positionOfAttribut(begin, end, codeHtml, hrefOrSrcRouter(tag));
-                 if (posHref != -1) {
-                     saveLink(posHref, end, codeHtml, file,url,tag,folder,counterFile,toSearchMime);
-                 }
-             }
-             tagOpen += strlen(searchBeginTag);
-         }
-     }
- }
+    int end, begin, posHref;
+    char* searchBeginTag = getBeginTag(tag), * tagOpen = codeHtml;
+    if (file != NULL) {
+        while ((tagOpen = strstr(tagOpen, searchBeginTag)) != NULL) {
+            begin = tagOpen - codeHtml;
+            end = positionOfSymbole(begin, codeHtml, '>');
+            if (end != -1) {
+                posHref = positionOfAttribut(begin, end, codeHtml, hrefOrSrcRouter(tag));
+                if (posHref != -1) {
+                    saveLink(posHref, end, codeHtml, file, url, tag, folder, counterFile, toSearchMime);
+                }
+            }
+            tagOpen += strlen(searchBeginTag);
+        }
+    }
+}
 
 /**
 * @author Rani kharsa
@@ -257,21 +267,21 @@ void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,
 * @param nb_url
  * @brief redirection  to the good function for save
 */
-void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, char* folder,char* toSearchMime) {
+void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, char* folder, char* toSearchMime) {
     printf("%s \n", urlFind);
     int* counter = routerCounter(counterFile, tag);
     if (!strcmp(tag, "img") || !strcmp(tag, "source")) {
 
-        if(strcmp(toSearchMime, "0") == 0 || verifTypeMime(urlFind, toSearchMime) == 1) {
+        if (strcmp(toSearchMime, "0") == 0 || verifTypeMime(urlFind, toSearchMime) == 1) {
             fprintf(file, "%s \n", urlFind);
-            saveMedia(urlFind, *counter, tag, folder,toSearchMime);
+            saveMedia(urlFind, *counter, tag, folder, toSearchMime);
             counterIncrem(counterFile, tag);
         }
 
     } else if (!strcmp(tag, "a")) {
 
-            fprintf(file, "%s \n", urlFind);
-            printf("%s\n", "Download successful");
+        fprintf(file, "%s \n", urlFind);
+        printf("%s\n", "Download successful");
 
     } else if (!strcmp(tag, "link") || !strcmp(tag, "script")) {
 
@@ -281,19 +291,18 @@ void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, c
             !strcmp(getExtension(urlFind), "svg")) {
 
             fprintf(file, "%s \n", urlCpy);
-            saveMedia(urlCpy, *counter, tag, folder,toSearchMime);
+            saveMedia(urlCpy, *counter, tag, folder, toSearchMime);
 
         } else {
 
             fprintf(file, "%s \n", urlCpy);
-            getCodeInFile(urlCpy, *counter, tag, folder,toSearchMime);
+            getCodeInFile(urlCpy, *counter, tag, folder, toSearchMime);
         }
-        counterIncrem(counterFile,tag);
+        counterIncrem(counterFile, tag);
 
     }
 
 }
-
 
 
 /**
@@ -307,7 +316,7 @@ void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, c
  */
 int positionOfAttribut(int begin, int end, char* codeHtml, char* attrToFind) {
     char* str = malloc(sizeof(char) * (end - begin));
-    int position,pos, counter = 0;
+    int position, pos, counter = 0;
     for (int i = begin; i < end; i++) {
         str[counter] = codeHtml[i];
         counter++;
@@ -329,14 +338,14 @@ int positionOfAttribut(int begin, int end, char* codeHtml, char* attrToFind) {
  * @return postion
  * @brief give the position of the symbole in the string
  */
- int positionOfSymbole(int begin, char *codeHtml, char charToFind) {
-        for (int i = 0; i <500 ; i++) {
-            if (charToFind != '>' && i == 10) {
-                return -1;
-            }
-            if (codeHtml[ begin +i] == charToFind) {
-                return begin + i;
-            }
+int positionOfSymbole(int begin, char* codeHtml, char charToFind) {
+    for (int i = 0; i < 500; i++) {
+        if (charToFind != '>' && i == 10) {
+            return -1;
         }
-        return -1;
- }
+        if (codeHtml[begin + i] == charToFind) {
+            return begin + i;
+        }
+    }
+    return -1;
+}

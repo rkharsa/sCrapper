@@ -17,6 +17,7 @@ long getCurrentTime() {
     long t = current_time;
     return t;
 }
+
 /**
  *
  * @param currentTime
@@ -35,6 +36,7 @@ long incrementTime(long currentTime, int hours, int minutes, int seconds) {
     return destime;
 
 }
+
 /**
  *
  * @param taskname
@@ -42,19 +44,19 @@ long incrementTime(long currentTime, int hours, int minutes, int seconds) {
  *
  * for versionning write in a file when an action is executed
  */
-void writeInFile(char *taskname, char *actionName) {
+void writeInFile(char* taskname, char* actionName) {
     time_t now;
     time(&now);
-    char *time = ctime(&now);
+    char* time = ctime(&now);
     char message[100];
     strcpy(message, "Nom de l'action: ");
     strcat(message, actionName);
     strcat(message, " Nom de la tâche: ");
     strcat(message, taskname);
     strcat(message, " Date: ");
-    char *fn = malloc(sizeof(char) * 100);
+    char* fn = malloc(sizeof(char) * 100);
     sprintf(fn, "%s.txt", actionName);
-    FILE *f = fopen(fn, "a+");
+    FILE* f = fopen(fn, "a+");
     if (f != NULL) {
         fputs(message, f);
         fputs(time, f);
@@ -71,7 +73,7 @@ void writeInFile(char *taskname, char *actionName) {
  *
  * find the value of a key for an action
  */
-char *findValueByKey(char *key, Action action) {
+char* findValueByKey(char* key, Action action) {
     for (int j = 0; j < action.optionsLength; j++) {
         if (strcmp(action.keys[j], key) == 0) {
             return action.values[j];
@@ -87,7 +89,7 @@ char *findValueByKey(char *key, Action action) {
  * @return
  * find the value  integer of a key for an action
  */
-int findIntValueByKey(Action action, char *key) {
+int findIntValueByKey(Action action, char* key) {
 
     for (int i = 0; i < action.optionsLength; ++i) {
         if (strcmp(action.keys[i], key) == 0) {
@@ -97,14 +99,15 @@ int findIntValueByKey(Action action, char *key) {
 
     return 0;
 }
+
 /**
  *
  * @param arg
  * @return
  * thread for executeAction
  */
-void *taskthread(void *arg) {
-    Task *t = (struct Task *) arg;
+void* taskthread(void* arg) {
+    Task* t = (struct Task*) arg;
     for (int i = 0; i < 1; ++i) {
         for (int j = 0; j < t[i].actionsLength; ++j) {
             executeAction(t[i], t[i].actions[j]);
@@ -119,15 +122,15 @@ void *taskthread(void *arg) {
  * @param tags
  * @param maxDepth
  */
-void executeTags(Action action, char *tags, int maxDepth) {
+void executeTags(Action action, char* tags, int maxDepth) {
     int tagsLength = 0;
     char** tagsList = strToArrayStr(tags + 1, &tagsLength, ",)");
 
     removeDirectory(action.name);
     createDirectoryTreeStruct(action.name);
 
-    if(maxDepth <= 0) {
-        execute(tagsList, action.url, tagsLength, action.name,"0");
+    if (maxDepth <= 0) {
+        execute(tagsList, action.url, tagsLength, action.name, "0");
         return;
     }
 
@@ -146,7 +149,7 @@ void executeTags(Action action, char *tags, int maxDepth) {
  * @param action
  */
 void executeAction(Task task, Action action) {
-    char *value = findValueByKey("versionning", action);
+    char* value = findValueByKey("versionning", action);
     if (strcmp(value, "on") == 0) {
         writeInFile(task.name, action.name);
     }
@@ -159,17 +162,18 @@ void executeAction(Task task, Action action) {
         } else if (strcmp(action.keys[i], "tags") == 0) {
 
             executeTags(action, action.values[i], findIntValueByKey(action,
-                    "max-depth"));
+                                                                    "max-depth"));
         }
     }
 }
+
 /**
  *
  * @param task
  * @param taskLenght
  * check when a task need to be executed create a thread
  */
-void taskExec(Task *task, int taskLenght) {
+void taskExec(Task* task, int taskLenght) {
     long fromtime = getCurrentTime();
     while (1) {
         for (int i = 0; i < taskLenght; i++) {
@@ -184,7 +188,7 @@ void taskExec(Task *task, int taskLenght) {
             destime = task[i].nextOccurence;
             if (destime == newTime) {
                 for (int j = 0; j < task[i].actionsLength; j++) {
-                    char *value = findValueByKey("versionning", task[i].actions[j]);
+                    char* value = findValueByKey("versionning", task[i].actions[j]);
                     if (strcmp(value, "on") == 0) {
                         writeInFile(task[i].name, task[i].actions[j].name);
                     }

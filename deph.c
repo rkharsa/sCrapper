@@ -1,6 +1,7 @@
 #include "header.h"
 #include "file.h"
 #include "parser.h"
+
 /**
  * file containing depth functions
  */
@@ -36,7 +37,7 @@ void firstWave(char* url) {
     CounterFile counterFile = initCounterFile();
     FILE* fp = fopen("tmp/vague0.txt", "w+");
     if (fp != NULL) {
-        extractLink(codeHtml, fp, "a", &counterFile, "tmp",url,"0");
+        extractLink(codeHtml, fp, "a", &counterFile, "tmp", url, "0");
 
         int filtersLength = 0;
         char** filters = strToArrayStr(".png,.svg,.jpeg,.gif,.jpg", &filtersLength, ",");
@@ -72,10 +73,10 @@ void nextWave(int waveDeph) {
         if (file != NULL) {
             do {
                 caractereActuel = fgetc(fp);
-                if(caractereActuel=='\n') {
+                if (caractereActuel == '\n') {
                     url[counter] = '\0';
-                    char *codeHtml = getHtmlCode(url);
-                    extractLink(codeHtml, file, "a", &counterFile, "tmp",url,"0");
+                    char* codeHtml = getHtmlCode(url);
+                    extractLink(codeHtml, file, "a", &counterFile, "tmp", url, "0");
                     counter = 0;
                 } else {
                     url[counter] = caractereActuel;

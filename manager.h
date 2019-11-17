@@ -9,12 +9,19 @@
 #include <pthread.h>
 
 void executeAction(Task task, Action action);
+
 void taskExec(Task* task, int taskLenght);
+
 char* findValueByKey(char* key, Action action);
+
 void writeInFile(char* taskname, char* actionName);
+
 long incrementTime(long currentTime, int hours, int minutes, int seconds);
+
 long getCurrentTime();
+
 int findIntValueByKey(Action action, char* key);
-void *taskthread(void *arg);
+
+void* taskthread(void* arg);
 
 #endif //SCRAPPER_MANAGER_H

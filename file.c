@@ -17,12 +17,12 @@
  * create a directory tree struct
  * @param path
  */
-void createDirectoryTreeStruct(char *path) {
+void createDirectoryTreeStruct(char* path) {
     char* tempDirectory = malloc(sizeof(char) * strlen(path) + 20);
     #ifdef _WIN32
-       mkdir(path);
+        mkdir(path);
     #else
-    createDirectory(path, 0777);
+        createDirectory(path, 0777);
     #endif
 
     sprintf(tempDirectory, "%s/content", path);
@@ -47,7 +47,7 @@ void createDirectoryTreeStruct(char *path) {
  * @param ftwbuf
  * @return
  */
-int removeDirectoryFiles(const char *filePath, const struct stat *sb, int flag, struct FTW *ftwbuf) {
+int removeDirectoryFiles(const char* filePath, const struct stat* sb, int flag, struct FTW* ftwbuf) {
     int code = remove(filePath);
 
     return code;
@@ -67,7 +67,7 @@ int createDirectory(char* path, int mode) {
             return -1;
         }
     #else
-        if(mkdir(path, mode) == 0) {
+        if (mkdir(path, mode) == 0) {
             return 0;
         } else {
             return -1;
@@ -96,7 +96,7 @@ int copyPasteFile(FILE* srcFile, FILE* destFile) {
     rewind(srcFile);
     rewind(destFile);
 
-    while((c = fgetc(srcFile)) != EOF) {
+    while ((c = fgetc(srcFile)) != EOF) {
         fputc(c, destFile);
     }
 
@@ -116,13 +116,13 @@ int countLinesFromFile(FILE* file, char* line, int lineSize) {
     int countLine = 0;
 
     rewind(file);
-    while(fgets(currentLine, lineSize, file) != NULL) {
+    while (fgets(currentLine, lineSize, file) != NULL) {
 
-        if(currentLine[strlen(currentLine) - 1] == '\n') {
+        if (currentLine[strlen(currentLine) - 1] == '\n') {
             currentLine[strlen(currentLine) - 1] = '\0';
         }
 
-        if(strcmp(currentLine, line) == 0) {
+        if (strcmp(currentLine, line) == 0) {
             countLine += 1;
         }
     }
@@ -140,7 +140,7 @@ int countLinesFromFile(FILE* file, char* line, int lineSize) {
 int isLineCorrect(char** filters, int filtersLength, char* line) {
     int exist = 0;
     for (int i = 0; i < filtersLength; ++i) {
-        if(strstr(line, filters[i]) != NULL) {
+        if (strstr(line, filters[i]) != NULL) {
             exist++;
         }
     }
@@ -161,18 +161,18 @@ int removeDuplicateLines(FILE* file, char* filePath) {
     char* line = malloc(sizeof(char) * (lineSize + 1));
     FILE* tempFile = fopen("temp.txt", "w+");
 
-    if(tempFile == NULL) {
+    if (tempFile == NULL) {
         fclose(file);
         return -1;
     }
 
-    while(fgets(line, lineSize, file) != NULL) {
+    while (fgets(line, lineSize, file) != NULL) {
 
-        if(line[strlen(line) - 1] == '\n') {
+        if (line[strlen(line) - 1] == '\n') {
             line[strlen(line) - 1] = '\0';
         }
 
-        if(countLinesFromFile(tempFile, line, lineSize) < 1) {
+        if (countLinesFromFile(tempFile, line, lineSize) < 1) {
             fputs(line, tempFile);
             fputc('\n', tempFile);
         }
@@ -204,18 +204,18 @@ int filterLinesFile(FILE* file, char* filePath, char** filters, int filtersLengt
 
     FILE* tempFile = fopen("temp.txt", "w+");
 
-    if(tempFile == NULL) {
+    if (tempFile == NULL) {
         fclose(file);
         return -1;
     }
 
-    while(fgets(line, lineSize, file) != NULL) {
+    while (fgets(line, lineSize, file) != NULL) {
 
-        if(line[strlen(line) - 1] == '\n') {
+        if (line[strlen(line) - 1] == '\n') {
             line[strlen(line) - 1] = '\0';
         }
 
-        if(isLineCorrect(filters, filtersLength, line) == 1) {
+        if (isLineCorrect(filters, filtersLength, line) == 1) {
             fputs(line, tempFile);
             fputc('\n', tempFile);
         }

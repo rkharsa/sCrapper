@@ -9,7 +9,7 @@
  * @brief init the struct
  */
 
-CounterFile initCounterFile(){
+CounterFile initCounterFile() {
     CounterFile counterFile;
     counterFile.nbLink = 0;
     counterFile.nbJs = 0;
@@ -19,6 +19,7 @@ CounterFile initCounterFile(){
     counterFile.nbImg = 0;
     return counterFile;
 }
+
 /**
  * @author Rani Kharsa
  * @param counterFile
@@ -40,6 +41,7 @@ int* routerCounter(CounterFile* counterFile, char* tag) {
         return &counterFile->nbLink;
     }
 }
+
 /**
  * @autor Rani Kharsa
  * @param counterFile

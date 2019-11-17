@@ -464,7 +464,7 @@ char* getStrUntilChrs(char* str, int* position, char* chrs) {
  */
 int delimitersStillExist(char* string, char* delimiters) {
     for (int i = 0; i < strlen(delimiters); ++i) {
-        if(strchr(string, delimiters[i]) != NULL) {
+        if (strchr(string, delimiters[i]) != NULL) {
             return 1;
         }
     }
