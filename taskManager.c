@@ -1,6 +1,7 @@
 //
 // Created by Frantz on 19/10/2019.
 //
+
 #include "parser.h"
 #include "header.h"
 #include "manager.h"
@@ -75,6 +76,12 @@ void *taskthread(void *arg) {
     return NULL;
 }
 
+/**
+ * execute action with tags option
+ * @param action
+ * @param tags
+ * @param maxDepth
+ */
 void executeTags(Action action, char *tags, int maxDepth) {
     int tagsLength = 0;
     char** tagsList = strToArrayStr(tags + 1, &tagsLength, ",)");
@@ -98,6 +105,11 @@ void executeTags(Action action, char *tags, int maxDepth) {
     execute(tagsList, action.url, tagsLength, action.name,"0");
 }
 
+/**
+ * execute all actions
+ * @param task
+ * @param action
+ */
 void executeAction(Task task, Action action) { // parcourir chaque option
     printf("EXECUTE ACTION\n");
     char* value = findValueByKey("versionning", action);
