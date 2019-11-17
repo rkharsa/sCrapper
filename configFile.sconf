@@ -1,17 +1,17 @@
 =
 {name -> Facebook} # Correspond au nom de l'action
-{ url -> https://curl.haxx.se/} # Correspond à l'url du site
+{ url -> https://www.marmiton.org/recettes/index/categorie/pizza} # Correspond à l'url du site
 +
 {tags -> (a, img, p, strong)}
 {option2 -> value2}
-{max-depth -> 2}
+{max-depth -> 1}
 {versionning -> off}
 
 =
-{name -> Youtube} # Deuxieme action
-{url -> youtube.com} # Correspond à l'url du site
+{name -> curl} # Deuxieme action
+{url -> https://curl.haxx.se/libcurl/c/example.html} # Correspond à l'url du site
 +
-{option1 -> value1}
+{tags -> (a, img, p, strong)}
 {option2 -> value2}
 {option2 -> value2}
 {versionning -> on}
@@ -20,10 +20,10 @@
 {name -> Ma première super tâche}
 {second -> 3} # Lance les deux req ttes les 10 secondes
 +
-(https://curl.haxx.se/, youtube.com)
+(https://www.marmiton.org/recettes/index/categorie/pizza, https://curl.haxx.se/libcurl/c/example.html)
 
 ==
 {name -> Ma deuxieme super tâche}
 {second -> 5}
 +
-(youtube.com)
+(https://curl.haxx.se/libcurl/c/example.html)

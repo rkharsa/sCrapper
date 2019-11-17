@@ -8,7 +8,7 @@
 #include "parser.h"
 #include <pthread.h>
 
-void executeAction(Action action);
+void executeAction(Task task, Action action);
 void taskExec(Task* task, int taskLenght);
 char* findValueByKey(char* key, Action action);
 void writeInFile(char* taskname, char* actionName);

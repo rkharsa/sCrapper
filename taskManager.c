@@ -70,7 +70,7 @@ int findIntValueByKey(Action action, char* key) {
 
 void *taskthread(void *arg) {
     Action *a = (struct Action *) arg;
-    executeAction(*a);
+//    executeAction(*a);
     //free(a);
     return NULL;
 }
@@ -98,8 +98,12 @@ void executeTags(Action action, char *tags, int maxDepth) {
     execute(tagsList, action.url, tagsLength, action.name,"0");
 }
 
-void executeAction(Action action) { // parcourir chaque option
+void executeAction(Task task, Action action) { // parcourir chaque option
     printf("EXECUTE ACTION\n");
+    char* value = findValueByKey("versionning", action);
+    if (strcmp(value, "on") == 0) {
+        writeInFile(task.name, action.name);
+    }
 
     for (int i = 0; i < action.optionsLength; ++i) {
         //d'abord check si ya un max-depth ? OUI ok je parle tout seul
@@ -136,7 +140,7 @@ void taskExec(Task* task, int taskLenght) {
                         writeInFile(task[i].name, task[i].actions[j].name);
                     }
                     printf("NEW ACTION\n");
-                    executeAction(task[i].actions[j]);
+                    executeAction(task[i], task[i].actions[j]);
                 }
                 task[i].nextOccurence = incrementTime(newTime, hours, minutes, seconds);
             }

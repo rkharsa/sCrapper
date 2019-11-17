@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
 
     for (int i = 0; i < tasksLength; ++i) {
         for (int j = 0; j < tasks[i].actionsLength; ++j) {
-            executeAction(tasks[i].actions[j]);
+            executeAction(tasks[i], tasks[i].actions[j]);
         }
     }
 
