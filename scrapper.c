@@ -37,7 +37,7 @@ void extractAll(char* url, char* tag, CounterFile* counterFile, char* folder,cha
         !strcmp(tag, "link")) {
         FILE* file = fopen(filenameDynamicTxt(folder, tag, *routerCounter(counterFile, " ")), "w+");
         if (file != NULL) {
-            extractLink(codeHtml, file, tag, counterFile, folder,url,toSearchMime);
+            extractLink(codeHtml, file, tag, counterFile, folder,url,"0");
             fclose(file);
         } else {
             printf("Can't open the file");
@@ -262,5 +262,3 @@ int positionOfAttribut(int begin, int end, char* codeHtml, char* attrToFind) {
         }
         return -1;
  }
-
-

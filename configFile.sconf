@@ -5,7 +5,7 @@
 +
 {tags -> (a, img, p, strong)}
 {option2 -> value2}
-{max-depth -> 1}
+{max-depth -> 0}
 {versionning -> off}
 
 =
@@ -21,10 +21,4 @@
 {name -> Ma première super tâche}
 {second -> 3} # Lance les deux actions ttes les 3 secondes
 +
-(https://www.marmiton.org, youtube.com)
-
-==
-{name -> Ma deuxieme super tâche}
-{second -> 5}
-+
-(youtube.com)
+(https://www.marmiton.org)

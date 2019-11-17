@@ -13,6 +13,10 @@ long getCurrentTime() {
     return t;
 }
 
+int executeIsAvailable(int val) {
+    return val;
+}
+
 long incrementTime(long currentTime, int hours, int minutes, int seconds) {
     long destime = currentTime;
     long h = hours * 3600;
@@ -64,7 +68,14 @@ int findIntValueByKey(Action action, char* key) {
     return 0;
 }
 
-void executeTags(Action action, char* tags, int maxDepth) {
+void *taskthread(void *arg) {
+    Action *a = (struct Action *) arg;
+    executeAction(*a);
+    //free(a);
+    return NULL;
+}
+
+void executeTags(Action action, char *tags, int maxDepth) {
     int tagsLength = 0;
     char** tagsList = strToArrayStr(tags, &tagsLength, ",)");
 
@@ -78,16 +89,17 @@ void executeTags(Action action, char* tags, int maxDepth) {
 
     firstWave(action.url);
     if(maxDepth > 1) {
-
         for (int i = 0; i < maxDepth; ++i) {
-            nextWave(i);
+            nextWave(i);//faire un sort puis uniq puis merge puis resort et uniq <3
         }
     }
+    printf("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\n");
 
     execute(tagsList, action.url, tagsLength, action.name,"0");
 }
 
 void executeAction(Action action) { // parcourir chaque option
+    printf("oooooooooooooooooooooooooooooooooooooooooooooooooooo\n");
 
     for (int i = 0; i < action.optionsLength; ++i) {
         //d'abord check si ya un max-depth ? OUI ok je parle tout seul
@@ -96,11 +108,15 @@ void executeAction(Action action) { // parcourir chaque option
         if (strcmp(action.keys[i], "type") == 0) {
             // à implémenter
         } else if (strcmp(action.keys[i], "tags") == 0) {
+            printf("%d\n",i);
 
             executeTags(action, action.values[i], findIntValueByKey(action,
                     "max-depth"));
         }
     }
+   // executeIsAvailable(0);
+
+
 }
 
 void taskExec(Task* task, int taskLenght) {
