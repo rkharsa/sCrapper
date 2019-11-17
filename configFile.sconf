@@ -1,6 +1,7 @@
+{runTime -> 35}
 =
-{name -> Facebook} # Correspond au nom de l'action
-{ url -> https://fr.wikipedia.org/wiki/Mot} # Correspond à l'url du site
+{name -> Marmiton} # Correspond au nom de l'action
+{ url -> https://www.marmiton.org} # Correspond à l'url du site
 +
 {tags -> (a, img, p, strong)}
 {option2 -> value2}
@@ -18,6 +19,6 @@
 
 ==
 {name -> Ma première super tâche}
-{second -> 7} # Lance les deux req ttes les 10 secondes
+{second -> 3} # Lance les deux actions ttes les 3 secondes
 +
-(https://fr.wikipedia.org/wiki/Mot)
+(https://www.marmiton.org, youtube.com)

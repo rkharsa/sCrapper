@@ -23,7 +23,7 @@ void firstWave(char* url) {
     CounterFile counterFile = initCounterFile();
     FILE* fp = fopen("tmp/vague0.txt", "w+");
     if (fp != NULL) {
-        extractLink(codeHtml, fp, "a", &counterFile, "tmp",url);
+        extractLink(codeHtml, fp, "a", &counterFile, "tmp",url,"0");
         fclose(fp);
     }
 
@@ -52,7 +52,7 @@ void nextWave(int waveDeph) {
                 if(caractereActuel=='\n') {
                     url[counter] = '\0';
                     char *codeHtml = getHtmlCode(url);
-                    extractLink(codeHtml, file, "a", &counterFile, "tmp",url);
+                    extractLink(codeHtml, file, "a", &counterFile, "tmp",url,"0");
                     counter = 0;
                 } else {
                     url[counter] = caractereActuel;

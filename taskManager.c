@@ -46,7 +46,7 @@ void writeInFile(char *taskname, char *actionName) {
     free(fn);
 }
 
-char *findValueByKey(char *key, Action action) {
+char* findValueByKey(char* key, Action action) {
     for (int j = 0; j < action.optionsLength; j++) {
         if (strcmp(action.keys[j], key) == 0) {
             return action.values[j];
@@ -55,10 +55,10 @@ char *findValueByKey(char *key, Action action) {
     return NULL;
 }
 
-int findIntValueByKey(Action action, char *key) {
+int findIntValueByKey(Action action, char* key) {
 
     for (int i = 0; i < action.optionsLength; ++i) {
-        if (strcmp(action.keys[i], key) == 0) {
+        if(strcmp(action.keys[i], key) == 0) {
             return atoi(action.values[i]);
         }
     }
@@ -70,18 +70,18 @@ void *taskthread(void *arg) {
     Action *a = (struct Action *) arg;
     executeAction(*a);
     //free(a);
-
+    return NULL;
 }
 
 void executeTags(Action action, char *tags, int maxDepth) {
     int tagsLength = 0;
-    char **tagsList = strToArrayStr(tags, &tagsLength, ",)");
+    char** tagsList = strToArrayStr(tags, &tagsLength, ",)");
 
     deleteFolder(action.name);
     createFolder(action.name);
 
-    if (maxDepth <= 0) {
-        execute(tagsList, action.url, tagsLength, action.name);
+    if(maxDepth <= 0) {
+        execute(tagsList, action.url, tagsLength, action.name,"0");
         return;
     }
 
@@ -92,7 +92,7 @@ void executeTags(Action action, char *tags, int maxDepth) {
         }
     }
 
-    execute(tagsList, action.url, tagsLength, action.name);
+    execute(tagsList, action.url, tagsLength, action.name,"0");
 }
 
 void executeAction(Action action) { // parcourir chaque option
@@ -108,7 +108,7 @@ void executeAction(Action action) { // parcourir chaque option
             printf("%d\n",i);
 
             executeTags(action, action.values[i], findIntValueByKey(action,
-                                                                    "max-depth"));
+                    "max-depth"));
         }
     }
     executeIsAvailable(0);
@@ -117,7 +117,7 @@ void executeAction(Action action) { // parcourir chaque option
 
 }
 
-void taskExec(Task *task, int taskLenght) {
+void taskExec(Task* task, int taskLenght) {
     int j = 1;
     long fromtime = getCurrentTime();
     while (j == 1) {
@@ -133,7 +133,7 @@ void taskExec(Task *task, int taskLenght) {
             destime = task[i].nextOccurence;
             if (destime == newTime) {
                 for (int j = 0; j < task[i].actionsLength; j++) {
-                    char *value = findValueByKey("versionning", task[i].actions[j]);
+                    char* value = findValueByKey("versionning", task[i].actions[j]);
                     if (strcmp(value, "on") == 0) {
                         writeInFile(task[i].name, task[i].actions[j].name);
                     }

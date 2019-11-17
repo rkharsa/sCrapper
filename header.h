@@ -61,17 +61,17 @@ char* filenameDynamicTxt(char* folder, char* tag, int i);
 
 char* hrefOrSrcRouter(char* tag);
 
-void getCodeInFile(char* url, int i, char* tag, char* folder);
+void getCodeInFile(char* url, int i, char* tag, char* folder,char* toSearchMime);
 
-void execute(char** tabaction, char* url, int taille, char* folder);
+void execute(char** tabaction, char* url, int taille, char* folder,char* toSearchMime);
 
-void extractAll(char* url, char* tag, CounterFile* counterFile, char* folder);
+void extractAll(char* url, char* tag, CounterFile* counterFile, char* folder,char*toSearchMime);
 
 void extractContentBetweenTag(char* codeHtml, int number, char* tag, char* folder);
 
-void extractLink(char *  codeHtml,FILE*file ,char *tag,CounterFile* counterFile,char * folder,char*url);
+void extractLink(char *  codeHtml,FILE*file ,char *tag,CounterFile* counterFile,char * folder,char*url,char* toSearchMime);
 
-void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, char* folder);
+void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, char* folder,char *toSearchMime);
 
 int positionOfSymbole(int begin, char* codeHtml, char charToFind);
 
@@ -83,9 +83,12 @@ char* getHtmlCode(char* url);
 
 char* getExtension(char* url);
 
-void saveMedia(char* url, int i, char* tag, char* folder);
+void saveMedia(char* url, int i, char* tag, char* folder,char* toSearchMime);
 
 void task(char* url, int i, char* beginTag);
 
-
+void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,char* tag,char*folder,
+              CounterFile* counterFile,char* toSearchMime );
+int verifTypeMime(char *url,char*typeMimeToSearch, char *typeMime);
+char* getTypeMime(char *url);
 #endif // HEADER_H_INCLUDED

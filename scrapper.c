@@ -1,14 +1,14 @@
 #include "header.h"
 
 
-void execute(char** tabaction, char* url, int taille, char* folder) {
+void execute(char** tabaction, char* url, int taille, char* folder,char* toSearchMime) {
     CounterFile counterFile = initCounterFile();
     for (int i = 0; i < taille; i++) {
         printf("%s\n", "--------------------------------------------------------------");
         printf("                                %s  \n", tabaction[i]);
         printf("%s\n", "--------------------------------------------------------------");
         //essayer de mettre en place une barre de progression du style [#########]
-        extractAll(url, tabaction[i], &counterFile, folder);
+        extractAll(url, tabaction[i], &counterFile, folder,toSearchMime);
     }
 }
 
@@ -30,14 +30,14 @@ char* getEndTag(char* tag) {
  * @brief extract all what  we need
  */
 
-void extractAll(char* url, char* tag, CounterFile* counterFile, char* folder) {
+void extractAll(char* url, char* tag, CounterFile* counterFile, char* folder,char*toSearchMime) {
     char* codeHtml = getHtmlCode(url);
     counterIncrem(counterFile, " ");
     if (!strcmp(tag, "img") || !strcmp(tag, "source") || !strcmp(tag, "a") || !strcmp(tag, "script") ||
         !strcmp(tag, "link")) {
         FILE* file = fopen(filenameDynamicTxt(folder, tag, *routerCounter(counterFile, " ")), "w+");
         if (file != NULL) {
-            extractLink(codeHtml, file, tag, counterFile, folder,url);
+            extractLink(codeHtml, file, tag, counterFile, folder,url,toSearchMime);
             fclose(file);
         } else {
             printf("Can't open the file");
@@ -135,7 +135,8 @@ void checkBeginL(int* i,int posEndTag ,char**urlFind,char* url,char* codeHtml,in
         }
     }
 }
-void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,char* tag,char*folder,CounterFile* counterFile ){
+void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,char* tag,char*folder,
+        CounterFile* counterFile,char* toSearchMime ){
     int findBeginSave=0,counter=0;
     char* urlFind=malloc(sizeof(char)*400);
     for(int i=posBeginTag;i<posEndTag;i++){
@@ -143,7 +144,7 @@ void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,
             if (codeHtml[i] == '"' || codeHtml[i]=='\'' ) {
                 urlFind[counter]='\0';
                 if(strlen(urlFind)!=0){
-                    treatment(urlFind,tag,file,counterFile,folder);
+                    treatment(urlFind,tag,file,counterFile,folder,toSearchMime);
                 }
                 break;
             }
@@ -165,7 +166,7 @@ void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,
   * @brief extract all link
   */
 
- void extractLink(char *  codeHtml,FILE*file ,char *tag,CounterFile* counterFile,char * folder,char*url) {
+ void extractLink(char *  codeHtml,FILE*file ,char *tag,CounterFile* counterFile,char * folder,char*url,char* toSearchMime) {
      int end, begin, posHref;
      char *searchBeginTag = getBeginTag(tag), *tagOpen = codeHtml;
      if (file != NULL) {
@@ -175,7 +176,7 @@ void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,
              if (end != -1) {
                  posHref = positionOfAttribut(begin, end, codeHtml, hrefOrSrcRouter(tag));
                  if (posHref != -1) {
-                     saveLink(posHref, end, codeHtml, file,url,tag,folder,counterFile);
+                     saveLink(posHref, end, codeHtml, file,url,tag,folder,counterFile,toSearchMime);
                  }
              }
              tagOpen += strlen(searchBeginTag);
@@ -190,12 +191,12 @@ void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,
 * @param file
 * @param nb_url
 */
-void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, char* folder) {
+void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, char* folder,char* toSearchMime) {
     printf("%s \n", urlFind);
     int* counter = routerCounter(counterFile, tag);
     if (!strcmp(tag, "img") || !strcmp(tag, "source")) {
         fprintf(file, "%s \n", urlFind);
-        saveMedia(urlFind, *counter, tag, folder);
+        saveMedia(urlFind, *counter, tag, folder,toSearchMime);
         counterIncrem(counterFile, tag);
     } else if (!strcmp(tag, "a")) {
         fprintf(file, "%s \n", urlFind);
@@ -206,10 +207,10 @@ void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, c
         if (!strcmp(getExtension(urlFind), "png") || !strcmp(getExtension(urlFind), "ico") ||
             !strcmp(getExtension(urlFind), "svg")) {
             fprintf(file, "%s \n", urlCpy);
-            saveMedia(urlCpy, *counter, tag, folder);
+            saveMedia(urlCpy, *counter, tag, folder,toSearchMime);
         } else {
             fprintf(file, "%s \n", urlCpy);
-            getCodeInFile(urlCpy, *counter, tag, folder);
+            getCodeInFile(urlCpy, *counter, tag, folder,toSearchMime);
         }
         counterIncrem(counterFile,tag);
     }
@@ -228,7 +229,7 @@ void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, c
  */
 int positionOfAttribut(int begin, int end, char* codeHtml, char* attrToFind) {
     char* str = malloc(sizeof(char) * (end - begin));
-    int position, counter = 0;
+    int position,pos, counter = 0;
     for (int i = begin; i < end; i++) {
         str[counter] = codeHtml[i];
         counter++;
