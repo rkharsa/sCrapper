@@ -323,7 +323,7 @@ char* getStrUntilChrs(char* str, int* position, char* chrs) {
         for (int j = 0; j < strlen(chrs); ++j) {
             if (str[i] == chrs[j]) {
                 *position += i;
-                newStr[++i] = '\0';
+                newStr[i] = '\0';
                 return newStr;
             }
         }
