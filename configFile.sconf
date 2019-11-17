@@ -1,10 +1,10 @@
 =
 {name -> Facebook} # Correspond au nom de l'action
-{ url -> https://curl.haxx.se/} # Correspond à l'url du site
+{ url -> https://fr.wikipedia.org/wiki/Mot} # Correspond à l'url du site
 +
 {tags -> (a, img, p, strong)}
 {option2 -> value2}
-{max-depth -> 2}
+{max-depth -> 1}
 {versionning -> off}
 
 =
@@ -18,12 +18,6 @@
 
 ==
 {name -> Ma première super tâche}
-{second -> 3} # Lance les deux req ttes les 10 secondes
+{second -> 7} # Lance les deux req ttes les 10 secondes
 +
-(https://curl.haxx.se/, youtube.com)
-
-==
-{name -> Ma deuxieme super tâche}
-{second -> 5}
-+
-(youtube.com)
+(https://fr.wikipedia.org/wiki/Mot)
