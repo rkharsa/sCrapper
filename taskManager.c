@@ -91,8 +91,10 @@ void executeTags(Action action, char *tags, int maxDepth) {
             nextWave(i);//faire un sort puis uniq puis merge puis resort et uniq <3
         }
     }
+    printf("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\n");
 
     execute(tagsList, action.url, tagsLength, action.name,"0");
+
 }
 
 void executeAction(Action action) { // parcourir chaque option
@@ -111,8 +113,7 @@ void executeAction(Action action) { // parcourir chaque option
                     "max-depth"));
         }
     }
-    executeIsAvailable(0);
-    printf("rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\n");
+   // executeIsAvailable(0);
 
 
 }
