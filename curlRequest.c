@@ -63,13 +63,13 @@ char* getHtmlCode(char* url) {
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
         }
         //clean and close session curl
-
+        curl_easy_cleanup(curl);
         return s.ptr;
     } else {
         printf("curl_easy_init() failed");
         return NULL;
     }
-    curl_easy_cleanup(curl);
+
 }
 
 /**
@@ -80,7 +80,7 @@ char* getHtmlCode(char* url) {
  * @brief permit to save the result of the request in file
  */
 void getCodeInFile(char* url, int i, char* tag, char* folder,char* toSearchMime) {
-    //if(!strcmp(toSearchMime ,"0") || verifTypeMime(url, toSearchMime, getTypeMime(url)) == 1 ) {
+    if(!strcmp(toSearchMime ,"0") || verifTypeMime(url, toSearchMime, getTypeMime(url)) == 1 ) {
         char filename[200];
         int result;
         char *urlCpy = malloc(sizeof(char) * strlen(url) + 10);
@@ -104,16 +104,16 @@ void getCodeInFile(char* url, int i, char* tag, char* folder,char* toSearchMime)
                     printf("Download successful\n");
                 }
                 //clean and close session curl
-
+                curl_easy_cleanup(curl);
             } else {
                 printf("curl_easy_init() failed");
             }
-            curl_easy_cleanup(curl);
+
             fclose(fp);
         } else {
             printf("Can't open the file file :%s \n", filename);
         }
-    //}
+    }
 }
 
 /**
@@ -135,6 +135,7 @@ char* getExtension(char* url) {
     //printf("%s\n",ext);
     return ext;
 }
+
 char* getTypeMime(char *url){
     char *ct = malloc(sizeof(char) * 500);
     int res;
@@ -183,7 +184,7 @@ int verifTypeMime(char *url,char*typeMimeToSearch, char* typeMime){
  * @brief save media in local
  */
 void saveMedia(char* url, int i, char* tag, char* folder,char* toSearchMime) {//verif type mime
-  //if(!strcmp(toSearchMime ,"0") || verifTypeMime(url, toSearchMime, getTypeMime(url)) == 1 ){
+  if(!strcmp(toSearchMime ,"0") || verifTypeMime(url, toSearchMime, getTypeMime(url)) == 1 ){
       CURL* curl;
       curl = curl_easy_init();
       char* urlCpy = malloc(sizeof(char) * strlen(url) + 10);
@@ -211,7 +212,7 @@ void saveMedia(char* url, int i, char* tag, char* folder,char* toSearchMime) {//
           printf("Can't open  the file\n");
       }
       curl_easy_cleanup(curl);
- // }
+  }
 
 }
 
