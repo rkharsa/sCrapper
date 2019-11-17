@@ -113,15 +113,21 @@ void *taskthread(void *arg) {
     return NULL;
 }
 
+/**
+ * execute action with tags option
+ * @param action
+ * @param tags
+ * @param maxDepth
+ */
 void executeTags(Action action, char *tags, int maxDepth) {
     int tagsLength = 0;
-    char **tagsList = strToArrayStr(tags + 1, &tagsLength, ",)");
+    char** tagsList = strToArrayStr(tags + 1, &tagsLength, ",)");
 
     removeDirectory(action.name);
     createDirectoryTreeStruct(action.name);
 
-    if (maxDepth <= 0) {
-        execute(tagsList, action.url, tagsLength, action.name, "0");
+    if(maxDepth <= 0) {
+        execute(tagsList, action.url, tagsLength, action.name,"0");
         return;
     }
 
@@ -134,6 +140,11 @@ void executeTags(Action action, char *tags, int maxDepth) {
     execute(tagsList, action.url, tagsLength, action.name, "0");
 }
 
+/**
+ * execute all actions
+ * @param task
+ * @param action
+ */
 void executeAction(Task task, Action action) {
     char *value = findValueByKey("versionning", action);
     if (strcmp(value, "on") == 0) {
@@ -148,7 +159,7 @@ void executeAction(Task task, Action action) {
         } else if (strcmp(action.keys[i], "tags") == 0) {
 
             executeTags(action, action.values[i], findIntValueByKey(action,
-                                                                    "max-depth"));
+                    "max-depth"));
         }
     }
 }

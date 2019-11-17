@@ -1,11 +1,18 @@
 //
 // Created by Jérémy TERNISIEN on 14/10/2019.
-//
+// FILE CONTAINING FUNCTIONS FOR THE CONFIGURATION FILE PARSING
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "parser.h"
 
+/**
+ *
+ * @param str
+ * @param banned
+ * @return str without consecutive chars
+ */
 char* removeConsecutiveChars(char* str, char banned) {
     char* newStr = malloc(sizeof(char) * strlen(str) + 1);
     int newIndex = 0;
@@ -28,6 +35,12 @@ char* removeConsecutiveChars(char* str, char banned) {
     return newStr;
 }
 
+/**
+ *
+ * @param filePath
+ * @param extension
+ * @return verify extension of a file
+ */
 int checkFileExtension(char* filePath, char* extension) {
 
     if (strrchr(filePath, '.') != NULL && strcmp(extension, strrchr(filePath, '.') + 1) != 0) {
@@ -38,6 +51,11 @@ int checkFileExtension(char* filePath, char* extension) {
     return 1;
 }
 
+/**
+ *
+ * @param filePath
+ * @return check if a file exists
+ */
 int checkFileExists(char* filePath) {
 
     FILE* file = NULL;
@@ -53,6 +71,10 @@ int checkFileExists(char* filePath) {
     return 1;
 }
 
+/**
+ *
+ * @return path of .sconf file
+ */
 char* getFilePath() {
 
     char* filePath = malloc(sizeof(char) * LINE_FILE_MAX + 1);
@@ -73,6 +95,11 @@ char* getFilePath() {
     return filePath;
 }
 
+/**
+ *
+ * @param file
+ * @return size of the longest line of the file
+ */
 int getMaxLineSize(FILE* file) {
     rewind(file);
     long count = 0;
@@ -97,6 +124,11 @@ int getMaxLineSize(FILE* file) {
     return max + 1;
 }
 
+/**
+ * print the actions
+ * @param actions
+ * @param length
+ */
 void printActions(Action* actions, int length) {
 
     for (int i = 0; i < length; i++) {
@@ -111,6 +143,11 @@ void printActions(Action* actions, int length) {
 
 }
 
+/**
+ * print the tasks
+ * @param tasks
+ * @param length
+ */
 void printTasks(Task* tasks, int length) {
 
     for (int i = 0; i < length; i++) {
@@ -123,6 +160,11 @@ void printTasks(Task* tasks, int length) {
     }
 }
 
+/**
+ *
+ * @param str
+ * @return str without blank spaces
+ */
 char* removeStrSpaces(char* str) {
     int i = 0;
     int j = 0;
@@ -142,6 +184,13 @@ char* removeStrSpaces(char* str) {
     return newStr;
 }
 
+/**
+ *
+ * @param line
+ * @param first
+ * @param last
+ * @return check the first and last characters of a line
+ */
 int checkLineEnds(char* line, char* first, char* last) {
     if (strstr(line, first) == NULL
         || strstr(line, last) == NULL) {
@@ -155,6 +204,14 @@ int checkLineEnds(char* line, char* first, char* last) {
     return 1;
 }
 
+/**
+ *
+ * @param line
+ * @param first
+ * @param middle
+ * @param last
+ * @return if the format of aline is good like {opt1 -> val1}
+ */
 int checkLineFormat(char* line, char* first, char* middle, char* last) {
 
     if (strstr(line, first) == NULL
@@ -172,6 +229,11 @@ int checkLineFormat(char* line, char* first, char* middle, char* last) {
     return 1;
 }
 
+/**
+ *
+ * @param line
+ * @return if action still have more options
+ */
 int isActionFinished(char* line) {
     int i;
     for (i = 0; i < strlen(line); i++) {
@@ -191,6 +253,11 @@ int isActionFinished(char* line) {
     return 0;
 }
 
+/**
+ *
+ * @param line
+ * @return if task still have more options
+ */
 int isTaskFinished(char* line) {
     int i;
     for (i = 0; i < strlen(line); i++) {
@@ -210,6 +277,12 @@ int isTaskFinished(char* line) {
     return 0;
 }
 
+/**
+ *
+ * @param file
+ * @param size
+ * @return fgets with \0 and not \n
+ */
 char* fgetsWithCheck(FILE* file, int size) {
 
     char* line = malloc(sizeof(char) * (size + 1));
@@ -225,6 +298,12 @@ char* fgetsWithCheck(FILE* file, int size) {
     return line;
 }
 
+/**
+ * set option in action
+ * @param action
+ * @param key
+ * @param value
+ */
 void setKeyValue(Action* action, char* key, char* value) {
 
     if (action->optionsLength > 0) {
@@ -244,6 +323,12 @@ void setKeyValue(Action* action, char* key, char* value) {
     action->optionsLength++;
 }
 
+/**
+ * set option of an action
+ * @param action
+ * @param key
+ * @param value
+ */
 void setActionAttribute(Action* action, char* key, char* value) {
 
     if (strcmp(key, "name") == 0) {
@@ -261,6 +346,13 @@ void setActionAttribute(Action* action, char* key, char* value) {
     }
 
 }
+
+/**
+ * set option of a task
+ * @param task
+ * @param key
+ * @param value
+ */
 
 void setTaskAttribute(Task* task, char* key, char* value) {
 
@@ -280,6 +372,14 @@ void setTaskAttribute(Task* task, char* key, char* value) {
     }
 }
 
+/**
+ *
+ * @param line
+ * @param first
+ * @param delimiter
+ * @return get key in file config
+ */
+
 char* getKey(char* line, char* first, char* delimiter) {
 
     char* key = malloc(sizeof(char) * strlen(line) + 1);
@@ -291,6 +391,13 @@ char* getKey(char* line, char* first, char* delimiter) {
     return removeStrSpaces(key);
 }
 
+/**
+ *
+ * @param line
+ * @param delimiter
+ * @param last
+ * @return get value in file config
+ */
 char* getValue(char* line, char* delimiter, char* last) {
 
     char* value = malloc(sizeof(char) * strlen(line) + 1);
@@ -301,6 +408,15 @@ char* getValue(char* line, char* delimiter, char* last) {
 
     return removeStrSpaces(value);
 }
+
+/**
+ * set option of an action
+ * @param action
+ * @param line
+ * @param first
+ * @param delimiter
+ * @param last
+ */
 
 void setActionOption(Action* action, char* line, char* first, char* delimiter, char* last) {
 
@@ -314,6 +430,13 @@ void setActionOption(Action* action, char* line, char* first, char* delimiter, c
     setActionAttribute(action, key, value);
 }
 
+/**
+ * return str until one char of chrs
+ * @param str
+ * @param position
+ * @param chrs
+ * @return
+ */
 char* getStrUntilChrs(char* str, int* position, char* chrs) {
 
     char* newStr = malloc(sizeof(char) * strlen(str) + 1);
@@ -333,6 +456,12 @@ char* getStrUntilChrs(char* str, int* position, char* chrs) {
     return newStr;
 }
 
+/**
+ * check if delimiters still existing in the rest of the string
+ * @param string
+ * @param delimiters
+ * @return
+ */
 int delimitersStillExist(char* string, char* delimiters) {
     for (int i = 0; i < strlen(delimiters); ++i) {
         if(strchr(string, delimiters[i]) != NULL) {
@@ -343,6 +472,13 @@ int delimitersStillExist(char* string, char* delimiters) {
     return 0;
 }
 
+/**
+ *
+ * @param line
+ * @param length
+ * @param delimiters
+ * @return an array of strings delimited by delimiters
+ */
 char** strToArrayStr(char* line, int* length, char* delimiters) {// ex : (bjr, bye) -> [0] -> "bjr" [1] -> "bye"
 
     char** list = malloc(sizeof(char*));
@@ -364,6 +500,14 @@ char** strToArrayStr(char* line, int* length, char* delimiters) {// ex : (bjr, b
     return list;
 }
 
+/**
+ * make the link between actions and tasks
+ * @param task
+ * @param urls
+ * @param urlsLength
+ * @param actions
+ * @param actionsLength
+ */
 void linkTaskActions(Task* task, char** urls, int urlsLength, Action* actions, int actionsLength) {
 
     Action* tempActions;
@@ -385,6 +529,13 @@ void linkTaskActions(Task* task, char** urls, int urlsLength, Action* actions, i
     }
 }
 
+/**
+ * set all task actions
+ * @param action
+ * @param file
+ * @param position
+ */
+
 void setAllActionOptions(Action* action, FILE* file, int position) {
 
     long maxLineSize = getMaxLineSize(file);
@@ -402,6 +553,14 @@ void setAllActionOptions(Action* action, FILE* file, int position) {
 
 }
 
+/**
+ * set all tasks options
+ * @param task
+ * @param file
+ * @param position
+ * @param actions
+ * @param actionsLength
+ */
 void setAllTaskOptions(Task* task, FILE* file, int position, Action* actions, int actionsLength) {
 
     long maxLineSize = getMaxLineSize(file);
@@ -425,6 +584,13 @@ void setAllTaskOptions(Task* task, FILE* file, int position, Action* actions, in
 
 }
 
+/**
+ * return line after a specific char
+ * @param charToFind
+ * @param file
+ * @param iteration
+ * @return
+ */
 long getLinePosAfterChar(char charToFind, FILE* file, int iteration) {
 
     rewind(file);
@@ -450,6 +616,13 @@ long getLinePosAfterChar(char charToFind, FILE* file, int iteration) {
     return -1;
 }
 
+/**
+ * return line after a specific string
+ * @param strToFind
+ * @param file
+ * @param iteration
+ * @return
+ */
 long getLinePosAfterStr(char* strToFind, FILE* file, int iteration) {
 
     rewind(file);//revenir au debut du fichier
@@ -474,6 +647,12 @@ long getLinePosAfterStr(char* strToFind, FILE* file, int iteration) {
     return -1;
 }
 
+/**
+ * fill the actions depending on the config file
+ * @param file
+ * @param actionsLength
+ * @return
+ */
 Action* getActions(FILE* file, int* actionsLength) {
 
     rewind(file);
@@ -495,7 +674,14 @@ Action* getActions(FILE* file, int* actionsLength) {
     return actions;
 }
 
-
+/**
+ * fill the tasks depending on the config file
+ * @param file
+ * @param tasksLength
+ * @param actions
+ * @param actionsLength
+ * @return
+ */
 Task* getTasks(FILE* file, int* tasksLength, Action* actions, int actionsLength) {
 
     rewind(file);
