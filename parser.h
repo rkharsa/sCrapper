@@ -13,7 +13,7 @@ typedef struct Action {
     char* url;
     int optionsLength;
     char** keys;// option1 option2 versionning
-    char** values;// value1 value2 valueversionning
+    char** values;// value1 value2 on
 } Action;
 
 typedef struct Task {
