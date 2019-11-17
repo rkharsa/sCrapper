@@ -1,6 +1,6 @@
 //
 // Created by Jérémy TERNISIEN on 16/11/2019.
-//
+// FILE CONTAINING FUNCTIONS TO MANIPULATE FILES
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -13,7 +13,10 @@
 #include "file.h"
 
 
-
+/**
+ * create a directory tree struct
+ * @param path
+ */
 void createDirectoryTreeStruct(char *path) {
     char* tempDirectory = malloc(sizeof(char) * strlen(path) + 20);
     #ifdef _WIN32
@@ -36,39 +39,58 @@ void createDirectoryTreeStruct(char *path) {
     createDirectory(tempDirectory, 0777);
 }
 
+/**
+ * function required for ntfw for each file in a directory
+ * @param filePath
+ * @param sb
+ * @param flag
+ * @param ftwbuf
+ * @return
+ */
 int removeDirectoryFiles(const char *filePath, const struct stat *sb, int flag, struct FTW *ftwbuf) {
     int code = remove(filePath);
-
-    if(code != 0) {
-        printf("Error deleting %s\n", filePath);
-    }
 
     return code;
 }
 
+/**
+ * create a directory
+ * @param path
+ * @param mode
+ * @return
+ */
 int createDirectory(char* path, int mode) {
     #ifdef _WIN32
         if(mkdir(path) == 0) {
             return 0;
         } else {
-            printf("Directory %s could not be create\n", path);
             return -1;
         }
     #else
         if(mkdir(path, mode) == 0) {
             return 0;
         } else {
-            printf("Directory %s could not be create\n", path);
             return -1;
         }
     #endif
 
 }
 
+/**
+ * remove a directory and all of its subfiles
+ * @param path
+ * @return
+ */
 int removeDirectory(char* path) {
     return nftw(path, removeDirectoryFiles, 64, FTW_DEPTH | FTW_PHYS);
 }
 
+/**
+ * copy paste the content of a file to an other file
+ * @param srcFile
+ * @param destFile
+ * @return
+ */
 int copyPasteFile(FILE* srcFile, FILE* destFile) {
     char c;
     rewind(srcFile);
@@ -81,6 +103,13 @@ int copyPasteFile(FILE* srcFile, FILE* destFile) {
     return 0;
 }
 
+/**
+ *
+ * @param file
+ * @param line
+ * @param lineSize
+ * @return
+ */
 int countLinesFromFile(FILE* file, char* line, int lineSize) {
 
     char* currentLine = malloc(sizeof(char) * lineSize + 1);
@@ -101,6 +130,13 @@ int countLinesFromFile(FILE* file, char* line, int lineSize) {
     return countLine;
 }
 
+/**
+ *
+ * @param filters
+ * @param filtersLength
+ * @param line
+ * @return
+ */
 int isLineCorrect(char** filters, int filtersLength, char* line) {
     int exist = 0;
     for (int i = 0; i < filtersLength; ++i) {
@@ -112,6 +148,13 @@ int isLineCorrect(char** filters, int filtersLength, char* line) {
     return exist == 0 && line != NULL && line[0] != '\0';
 }
 
+
+/**
+ * remove duplicate lines of a file
+ * @param file
+ * @param filePath
+ * @return
+ */
 int removeDuplicateLines(FILE* file, char* filePath) {
 
     int lineSize = getMaxLineSize(file);
@@ -119,7 +162,6 @@ int removeDuplicateLines(FILE* file, char* filePath) {
     FILE* tempFile = fopen("temp.txt", "w+");
 
     if(tempFile == NULL) {
-        printf("Can not open %s\n", "temp.txt");
         fclose(file);
         return -1;
     }
@@ -147,7 +189,14 @@ int removeDuplicateLines(FILE* file, char* filePath) {
 }
 
 
-
+/**
+ * remove lines with specific characters in from a file
+ * @param file
+ * @param filePath
+ * @param filters
+ * @param filtersLength
+ * @return
+ */
 int filterLinesFile(FILE* file, char* filePath, char** filters, int filtersLength) {
 
     int lineSize = getMaxLineSize(file);
@@ -156,7 +205,6 @@ int filterLinesFile(FILE* file, char* filePath, char** filters, int filtersLengt
     FILE* tempFile = fopen("temp.txt", "w+");
 
     if(tempFile == NULL) {
-        printf("Can not open %s\n", "temp.txt");
         fclose(file);
         return -1;
     }
