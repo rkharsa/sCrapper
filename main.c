@@ -12,7 +12,7 @@ int main(int argc, char* argv[]) {
                  "        \\/     \\/           \\/|__|   |__|           \\//_____/  ");
     printf("\n%s\n", "--------------------------------------------------------------");
 
-    char* filePath = "../configFile.sconf";//getFilePath();// à remplacer par getFilePath() mais là on gagne du temps pour les tests
+  /*  char* filePath = "../configFile.sconf";//getFilePath();// à remplacer par getFilePath() mais là on gagne du temps pour les tests
 
     FILE* file = fopen(filePath, "r");
     if (file == NULL) {
@@ -31,6 +31,35 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    fclose(file);
+    fclose(file);*/
+  CounterFile counterFile=initCounterFile();
+    extractAll("https://github.com/","img",&counterFile,"download","image/svg");
+  /*  char *ct = NULL;
+    int res;
+    char*url ="https://www.marmiton.org/reloaded/front/img/nav/nav_cocacola.png ";
+    CURL *curl = curl_easy_init();
+    if(curl) {
+
+
+
+        curl_easy_setopt(curl, CURLOPT_URL, url);//work on this url
+        curl_easy_setopt(curl, CURLOPT_FAILONERROR, 1L);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+        res = curl_easy_perform(curl);
+
+        if(res==CURLE_OK) {
+             extract the content-type
+
+            res = curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &ct);
+            if(!res && ct) {
+                printf("Content-Type: %s\n", ct);
+            }
+        }else{
+            fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+        }
+
+    }
+    curl_easy_cleanup(curl);*/
+
    return EXIT_SUCCESS;
 }

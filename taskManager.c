@@ -71,7 +71,7 @@ void executeTags(Action action, char* tags, int maxDepth) {
     createFolder(action.name);
 
     if(maxDepth <= 0) {
-        execute(tagsList, action.url, tagsLength, action.name);
+        execute(tagsList, action.url, tagsLength, action.name,"0");
         return;
     }
 
@@ -82,7 +82,7 @@ void executeTags(Action action, char* tags, int maxDepth) {
         }
     }
 
-    execute(tagsList, action.url, tagsLength, action.name);
+    execute(tagsList, action.url, tagsLength, action.name,"0");
 }
 
 void executeAction(Action action) { // parcourir chaque option
