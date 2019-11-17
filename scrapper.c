@@ -1,6 +1,15 @@
 #include "header.h"
-
-
+/**
+ * file who group all algorithm of  scrapping
+ */
+/**
+ *@author Rani Kharsa
+ * @param tabaction
+ * @param url
+ * @param taille
+ * @param folder
+ * @param toSearchMime
+ */
 void execute(char** tabaction, char* url, int taille, char* folder,char* toSearchMime) {
 
     printf("EXECUTE\n");
@@ -13,13 +22,27 @@ void execute(char** tabaction, char* url, int taille, char* folder,char* toSearc
         extractAll(url, tabaction[i], &counterFile, folder,toSearchMime);
     }
 }
-
+/**
+ * @author Rani Kharsa
+ * @param tag
+ * @return begin tag
+ * @example
+ * tag = a
+ * return <a
+ */
 char* getBeginTag(char* tag) {
     char* beginTag = malloc(sizeof(char) * strlen(tag) + 10);
     sprintf(beginTag, "<%s", tag);
     return beginTag;
 }
-
+/**
+ * @author Rani Kharsa
+ * @param tag
+ * @return end tag
+ * @example
+ * tag = a
+ * return </a>
+ */
 char* getEndTag(char* tag) {
     char* beginTag = malloc(sizeof(char) * strlen(tag) + 10);
     sprintf(beginTag, "</%s>", tag);
@@ -51,7 +74,12 @@ void extractAll(char* url, char* tag, CounterFile* counterFile, char* folder,cha
     }
 
 }
-
+/**
+ * @author Rani Kharsa
+ * @param counterSpace
+ * @param value
+ * @brief  count the number of space between 2 char
+ */
 void counterSpaceFunc(int* counterSpace, char value) {
     if (value == ' ' || value == 9) {
         *counterSpace += 1;
@@ -62,7 +90,12 @@ void counterSpaceFunc(int* counterSpace, char value) {
 
     }
 }
-
+/**
+ * @author Rani Kharsa
+ * @param counterReturnLine
+ * @param value
+ * @brief count the number of line break
+ */
 void counterReturnLineFunc(int* counterReturnLine, char value) {
     if (value == '\n') {
         *counterReturnLine += 1;
@@ -72,7 +105,14 @@ void counterReturnLineFunc(int* counterReturnLine, char value) {
         }
     }
 }
-
+/**
+ * @author Rani Kharsa
+ * @param posBeginTag
+ * @param posEndTag
+ * @param codeHtml
+ * @param file
+ * @brief save  the content text between 2 tag
+ */
 void saveContent(int posBeginTag, int posEndTag, char* codeHtml, FILE* file) {
     int counterSpace = 0, counterReturnLine = 0;
     int findBeginSave = 0;
@@ -103,7 +143,6 @@ void saveContent(int posBeginTag, int posEndTag, char* codeHtml, FILE* file) {
  * @param title_level
  * @brief extract all between a tag
  */
-/* si il a plus de 6 espace il arrete d'enregistrer et reprends quand il rencontre des lettres*/
 void extractContentBetweenTag(char* codeHtml, int number, char* tag, char* folder) {
     int end, begin;
     char* searchBeginTag = getBeginTag(tag), * tagOpen = codeHtml;
@@ -122,7 +161,18 @@ void extractContentBetweenTag(char* codeHtml, int number, char* tag, char* folde
         printf("%s\n", "Download successful");
     }
  }
-void checkBeginL(int* i,int posEndTag ,char**urlFind,char* url,char* codeHtml,int* counter,int *findBeginSave){
+ /**
+  * @author Rani Kharsa
+  * @param i
+  * @param posEndTag
+  * @param urlFind
+  * @param url
+  * @param codeHtml
+  * @param counter
+  * @param findBeginSave
+  * @brief check if link have a good begin pattern
+  */
+void checkBeginLink(int* i,int posEndTag ,char**urlFind,char* url,char* codeHtml,int* counter,int *findBeginSave){
     int http;
     if ((codeHtml[*i] == '"' || codeHtml[*i]=='\'') && codeHtml[*i+1]!='#') {
         http=positionOfAttribut(*i,posEndTag,codeHtml,"http");
@@ -132,12 +182,25 @@ void checkBeginL(int* i,int posEndTag ,char**urlFind,char* url,char* codeHtml,in
             }
             return;
         } else if(codeHtml[*i+1]=='/' ){
-            strcpy(*urlFind,getBeginUrl(url,0));
+            strcpy(*urlFind,getBeginUrl(url));
             *counter=(int)strlen(*urlFind);
             *findBeginSave=1;
         }
     }
 }
+/**
+ * @author Rani Kharsa
+ * @param posBeginTag
+ * @param posEndTag
+ * @param codeHtml
+ * @param file
+ * @param url
+ * @param tag
+ * @param folder
+ * @param counterFile
+ * @param toSearchMime
+ * @brief permit to find url and then make a treatment
+ */
 void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,char* tag,char*folder,
         CounterFile* counterFile,char* toSearchMime ){
     int findBeginSave=0,counter=0;
@@ -154,7 +217,7 @@ void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,
             urlFind[counter]=codeHtml[i];
             counter++;
         }else{
-            checkBeginL(&i,posEndTag,&urlFind,url,codeHtml,&counter,&findBeginSave);
+            checkBeginLink(&i,posEndTag,&urlFind,url,codeHtml,&counter,&findBeginSave);
         }
     }
 
@@ -194,6 +257,7 @@ void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,
 * @param begin_tag
 * @param file
 * @param nb_url
+ * @brief redirection  to the good function for save
 */
 void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, char* folder,char* toSearchMime) {
     printf("%s \n", urlFind);
@@ -206,24 +270,28 @@ void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, c
             counterIncrem(counterFile, tag);
         }
 
-
     } else if (!strcmp(tag, "a")) {
 
             fprintf(file, "%s \n", urlFind);
             printf("%s\n", "Download successful");
 
     } else if (!strcmp(tag, "link") || !strcmp(tag, "script")) {
+
         char* urlCpy = malloc(sizeof(char) * strlen(urlFind) + 10);
         strcpy(urlCpy, urlFind);
         if (!strcmp(getExtension(urlFind), "png") || !strcmp(getExtension(urlFind), "ico") ||
             !strcmp(getExtension(urlFind), "svg")) {
+
             fprintf(file, "%s \n", urlCpy);
             saveMedia(urlCpy, *counter, tag, folder,toSearchMime);
+
         } else {
+
             fprintf(file, "%s \n", urlCpy);
             getCodeInFile(urlCpy, *counter, tag, folder,toSearchMime);
         }
         counterIncrem(counterFile,tag);
+
     }
 
 }
@@ -237,7 +305,7 @@ void treatment(char* urlFind, char* tag, FILE* file, CounterFile* counterFile, c
  * @param code_html
  * @param attr_to_find
  * @return position
- * @brief give the position of world in string
+ * @brief give the position of world in string  between 2 positions
  */
 int positionOfAttribut(int begin, int end, char* codeHtml, char* attrToFind) {
     char* str = malloc(sizeof(char) * (end - begin));

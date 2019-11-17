@@ -1,6 +1,9 @@
 #include "header.h"
 #include "file.h"
 #include "parser.h"
+/**
+ * file containing depth functions
+ */
 
 
 void commandInFile(char* command, char* file) {
@@ -16,7 +19,13 @@ void commandInFile(char* command, char* file) {
     system(cmd);
 }
 
-
+/**
+ * @autor Rani Kharsa
+ * @param url
+ * @brief depth 1
+ * create file vague0.txt
+ * write the result in vague0.txt
+ */
 
 void firstWave(char* url) {
 
@@ -37,7 +46,15 @@ void firstWave(char* url) {
     }
 }
 
-
+/**
+ * @autor Rani Kharsa
+ * @param waveDeph
+ * @brief waveDepth=0
+ * @example
+ * vague0.txt >scrappe> write the  result in vague1.txt
+ * waveDepth=1
+ * vague1.txt>scrappe> write the result in vague2.txt
+ * */
 
 void nextWave(int waveDeph) {
     char filename1[200], filename2[200];

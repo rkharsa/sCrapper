@@ -48,7 +48,7 @@ void counterIncrem(CounterFile* counterFile, char* tag);
 
 CounterFile initCounterFile();
 char* getHostName(char* url );
-char* getBeginUrl(char *url,int slash);
+char* getBeginUrl(char *url);
 
 char* filenameDynamicContainer(char* folder, char* type, int i, char* ext);
 
@@ -86,4 +86,5 @@ void saveLink(int posBeginTag,int posEndTag,char* codeHtml,FILE* file,char* url,
               CounterFile* counterFile,char* toSearchMime );
 int verifTypeMime(char *url,char*typeMimeToSearch);
 char* getTypeMime(char *url);
+void checkBeginLink(int* i,int posEndTag ,char**urlFind,char* url,char* codeHtml,int* counter,int *findBeginSave);
 #endif // HEADER_H_INCLUDED

@@ -1,5 +1,7 @@
 #include "header.h"
-
+/**
+ * file who group all the curl request and parsing off url
+ */
 /**
  * @author Jerem
  * @param s
@@ -135,7 +137,12 @@ char* getExtension(char* url) {
     //printf("%s\n",ext);
     return ext;
 }
-
+/**
+ * @author Rani Kharsa
+ * @param url
+ * @return  content type
+ * @brief permit to get content type  from url
+ */
 char* getTypeMime(char *url){
     char *ct = malloc(sizeof(char) * 500);
     int res;
@@ -147,7 +154,6 @@ char* getTypeMime(char *url){
         res = curl_easy_perform(curl);
 
         if(res==CURLE_OK) {
-
             res = curl_easy_getinfo(curl, CURLINFO_CONTENT_TYPE, &ct);
             if(!res && ct) {
                 printf("Content-Type: %s\n", ct);
@@ -157,23 +163,24 @@ char* getTypeMime(char *url){
         }
         curl_easy_cleanup(curl);
     }else{
-        printf("\nerreur curlllll\n");
+        printf("\nerror  curl\n");
     }
 
     return ct;
 }
+/**
+ * @author Rani Kharsa
+ * @param url
+ * @param typeMimeToSearch
+ * @return 0 : is the good content type or 1: isn't the good content type
+ */
 int verifTypeMime(char *url,char*typeMimeToSearch){
     int itThisType=0;
-    printf(" lurl buh %s",url);
-   // char* typeMime = getTypeMime(url);
     if(strcmp(typeMimeToSearch, "0") != 0) {
-
         if (getTypeMime(url) != NULL && strcmp(getTypeMime(url), typeMimeToSearch) == 0) {
             itThisType = 1;
         }
     }
-    printf("\ntype mimmei verif %s\n", getTypeMime(url));
-
     return itThisType;
 }
 
@@ -182,7 +189,7 @@ int verifTypeMime(char *url,char*typeMimeToSearch){
  * @param url
  * @param i
  * @param begin_tag
- * @brief save media in local
+ * @brief get and save media (picture or video)in  folder
  */
 void saveMedia(char* url, int i, char* tag, char* folder,char* toSearchMime) {//verif type mime
   if(!strcmp(toSearchMime ,"0") || verifTypeMime(url, toSearchMime) == 1 ){
@@ -203,11 +210,13 @@ void saveMedia(char* url, int i, char* tag, char* folder,char* toSearchMime) {//
           curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
           // curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
           result = curl_easy_perform(curl);
+
           if (result == CURLE_OK) {
               printf("Download successful\n");
           } else {
               printf("ERROR: %s\n", curl_easy_strerror(result));
           }
+
           fclose(fp);
       } else {
           printf("Can't open  the file\n");
@@ -216,7 +225,12 @@ void saveMedia(char* url, int i, char* tag, char* folder,char* toSearchMime) {//
     }
 
 }
-
+/**
+ * @autor Rani Kharsa
+ * @param url
+ * @return the host name
+ * @example https://example.com/   hostName = example.com
+ */
 
 
 char* getHostName(char* url ){
@@ -225,22 +239,24 @@ char* getHostName(char* url ){
     char *host;
     char *path;
 
-    h = curl_url(); /* get a handle to work with */
+    h = curl_url();
     if(!h)
         return "1";
 
-    /* parse a full URL */
     uc = curl_url_set(h, CURLUPART_URL, url, 0);
-
-    /* extract host name from the parsed URL */
     uc = curl_url_get(h, CURLUPART_HOST, &host, 0);
 
     curl_url_cleanup(h);
     return host;
 
 }
-
-char* getBeginUrl(char *url,int slash){
+/**
+ * @autor Rani Kharsa
+ * @param url
+ * @param slash
+ * @return char url
+ */
+char* getBeginUrl(char *url){
     char *beginUrl=malloc (sizeof(char)*strlen(url));
     char *httpsOrHttp=malloc (sizeof(char)*7);
     if(strstr(url, "https")!=NULL){
@@ -249,7 +265,5 @@ char* getBeginUrl(char *url,int slash){
         httpsOrHttp="http";
     }
         sprintf(beginUrl, "%s://%s",httpsOrHttp,getHostName(url) );
-
-
     return beginUrl;
 }
