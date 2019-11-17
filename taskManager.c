@@ -77,7 +77,7 @@ void *taskthread(void *arg) {
 
 void executeTags(Action action, char *tags, int maxDepth) {
     int tagsLength = 0;
-    char** tagsList = strToArrayStr(tags, &tagsLength, ",)");
+    char** tagsList = strToArrayStr(tags + 1, &tagsLength, ",)");
 
     removeDirectory(action.name);
     createDirectoryTreeStruct(action.name);
@@ -104,18 +104,14 @@ void executeAction(Action action) { // parcourir chaque option
     for (int i = 0; i < action.optionsLength; ++i) {
         //d'abord check si ya un max-depth ? OUI ok je parle tout seul
         //getMaxDepth
-        printf("%s\n",action.keys[i]);
         if (strcmp(action.keys[i], "type") == 0) {
             // à implémenter
         } else if (strcmp(action.keys[i], "tags") == 0) {
-            printf("%d\n",i);
 
             executeTags(action, action.values[i], findIntValueByKey(action,
                     "max-depth"));
         }
     }
-   // executeIsAvailable(0);
-
 }
 
 void taskExec(Task* task, int taskLenght) {

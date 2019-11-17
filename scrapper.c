@@ -2,6 +2,7 @@
 
 
 void execute(char** tabaction, char* url, int taille, char* folder,char* toSearchMime) {
+
     printf("EXECUTE\n");
     CounterFile counterFile = initCounterFile();
     for (int i = 0; i < taille; i++) {

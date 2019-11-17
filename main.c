@@ -12,9 +12,6 @@ int main(int argc, char* argv[]) {
                  "        \\/     \\/           \\/|__|   |__|           \\//_____/  ");
     printf("\n%s\n", "--------------------------------------------------------------");
 
-
-
-
     char* filePath = "../configFile.sconf";//getFilePath();// à remplacer par getFilePath() mais là on gagne du temps pour les tests
 
     FILE* file = fopen(filePath, "r");
@@ -36,5 +33,4 @@ int main(int argc, char* argv[]) {
     fclose(file);
 
     return EXIT_SUCCESS;
-
 }
